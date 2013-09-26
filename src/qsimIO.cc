@@ -8,11 +8,11 @@
 
 #include "qsimDetectorHit.hh"
 #include "qsimEvent.hh"
-#include "qsimRun.hh"
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <assert.h>
 
 
 qsimIO::qsimIO(){
@@ -49,8 +49,6 @@ void qsimIO::InitializeTree(){
     fTree = new TTree("T", "Geant4 Moller Simulation");
 
     // Event information
-    fTree->Branch("ev.beamp",  &fEvBeamP,   "ev.beamp/D");
-
     fTree->Branch("ev.pid",   &fEvPart_PID, "ev.pid/I");
     fTree->Branch("ev.vx",    &fEvPart_X,   "ev.vx/D");
     fTree->Branch("ev.vy",    &fEvPart_Y,   "ev.vy/D");
@@ -74,7 +72,6 @@ void qsimIO::InitializeTree(){
     fTree->Branch("hit.x",    &fDetHit_X,   "hit.x[hit.n]/D");
     fTree->Branch("hit.y",    &fDetHit_Y,   "hit.y[hit.n]/D");
     fTree->Branch("hit.z",    &fDetHit_Z,   "hit.z[hit.n]/D");
-    fTree->Branch("hit.r",    &fDetHit_R,   "hit.r[hit.n]/D");
 
     fTree->Branch("hit.px",   &fDetHit_Px,   "hit.px[hit.n]/D");
     fTree->Branch("hit.py",   &fDetHit_Py,   "hit.py[hit.n]/D");
@@ -106,8 +103,7 @@ void qsimIO::FillTree(){
 
 void qsimIO::Flush(){
     //  Set arrays to 0
-    fNGenDetHit = 0;
-    fNGenDetSum = 0;
+    fNDetHit = 0;
 }
 
 void qsimIO::WriteTree(){
@@ -124,7 +120,6 @@ void qsimIO::WriteTree(){
     fFile->cd();
 
     fTree->Write("T", TObject::kOverwrite);
-    qsimRun::GetRun()->GetData()->Write("run_data", TObject::kOverwrite); 
 
     fTree->ResetBranchAddresses();
     delete fTree;
@@ -146,7 +141,7 @@ void qsimIO::WriteTree(){
 // Event Data
 
 void qsimIO::SetEventData(qsimEvent *ev){
-    fEvPart_PID[idx] = ev->fPartType->GetPDGEncoding();
+    fEvPart_PID = ev->fPartType[0]->GetPDGEncoding();
 
     fEvPart_X = ev->fPartPos[0].x()/__L_UNIT;
     fEvPart_Y = ev->fPartPos[0].y()/__L_UNIT;
@@ -156,14 +151,14 @@ void qsimIO::SetEventData(qsimEvent *ev){
     fEvPart_Py = ev->fPartMom[0].y()/__E_UNIT;
     fEvPart_Pz = ev->fPartMom[0].z()/__E_UNIT;
 
-    fEvPart_P[idx] = ev->fPartMom.mag()/__E_UNIT;
+    fEvPart_P = ev->fPartMom[0].mag()/__E_UNIT;
 
     return;
 }
 
 // DetectorHit
 
-void qsimIO::AddDetectorHit(qsimericDetectorHit *hit){
+void qsimIO::AddDetectorHit(qsimDetectorHit *hit){
     int n = fNDetHit;
     if( n >= __IO_MAXHIT ){
 //	G4cerr << "WARNING: " << __PRETTY_FUNCTION__ << " line " << __LINE__ << ":  Buffer size exceeded!" << G4endl;
@@ -181,7 +176,6 @@ void qsimIO::AddDetectorHit(qsimericDetectorHit *hit){
     fDetHit_X[n]  = hit->f3X.x()/__L_UNIT;
     fDetHit_Y[n]  = hit->f3X.y()/__L_UNIT;
     fDetHit_Z[n]  = hit->f3X.z()/__L_UNIT;
-    fDetHit_R[n]  = sqrt(hit->f3X.x()*hit->f3X.x()+hit->f3X.y()*hit->f3X.y())/__L_UNIT;
 
     fDetHit_Px[n]  = hit->f3P.x()/__E_UNIT;
     fDetHit_Py[n]  = hit->f3P.y()/__E_UNIT;
@@ -200,6 +194,8 @@ void qsimIO::AddDetectorHit(qsimericDetectorHit *hit){
     fDetHit_M[n]  = hit->fM/__E_UNIT;
 
     fNDetHit++;
+
+    return;
 }
 
 

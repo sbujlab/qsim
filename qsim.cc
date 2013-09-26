@@ -83,8 +83,6 @@ int main(int argc, char** argv){
     runManager->SetUserInitialization(detector);
     rmmess->SetDetCon( ((qsimDetectorConstruction *) detector) );
 
-    ((qsimDetectorConstruction *) detector)->SetIO(io);
-
     // Physics we want to use
     G4int verbose = 0;
     G4PhysListFactory factory;
@@ -188,8 +186,6 @@ int main(int argc, char** argv){
 	/* Copy contents of macro into buffer to be written out
 	 * into ROOT file
 	 * */
-	rundata->SetMacroFile(argv[1]);
-
 
 	UI->ApplyCommand(command+fileName);
     }
@@ -200,7 +196,7 @@ int main(int argc, char** argv){
 #endif
 
     // Initialize Run manager
-    // runManager->Initialize();
+    runManager->Initialize();
 
     return 0;
 }

@@ -3,7 +3,6 @@
 
 #include "G4VSensitiveDetector.hh"
 #include "qsimDetectorHit.hh"
-#include "qsimDetectorSum.hh"
 
 #include <map>
 

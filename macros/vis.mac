@@ -1,0 +1,10 @@
+/vis/open OGLIQt 1200x800
+/remoll/setgeofile geometry_pvdis/solid_pvdis.gdml
+
+/remoll/likekryptonite  true
+/run/initialize
+#/remoll/optical true
+/remoll/addfield CLEO_rm.dat
+/control/execute vis/vis.mac
+/gun/position 0.0 0.0 0.1 m
+/gun/momentum 0.5 1.0 2.0 GeV

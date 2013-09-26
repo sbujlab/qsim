@@ -26,6 +26,11 @@ class qsimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
     qsimEvent *fDefaultEvent;
     qsimIO *fIO;
+
+  public:
+    G4double fXmin, fXmax, fYmin, fYmax;
+    G4double fZ, fTheta, fPhi;
+    G4double fEmin, fEmax;
 };
 
 #endif

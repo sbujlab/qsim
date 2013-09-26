@@ -72,14 +72,14 @@ target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 #FILE( GLOB QSIM_GEO "geometry/*" )
 
 set(QSIM_SCRIPTS
-#    macros/vis.mac
-#    vis/OIX.mac
-#    vis/Qt.mac
-#    vis/vis.mac
-#    vis/X.mac
+    macros/vis.mac
+    vis/OIX.mac
+    vis/Qt.mac
+    vis/vis.mac
+    vis/X.mac
     macros/runexample.mac
-#    macros/gui.mac
-#    macros/vis.mac
+    macros/gui.mac
+    macros/vis.mac
 )
 
 foreach(_script ${QSIM_SCRIPTS})

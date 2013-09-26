@@ -3,12 +3,10 @@
 #include "G4Timer.hh"
 
 #include "qsimRunAction.hh"
-#include "qsimBeamTarget.hh"
 #include "G4Run.hh"
 #include "G4UImanager.hh"
 #include "G4ios.hh"
 #include "qsimIO.hh"
-#include "qsimRun.hh"
 
 qsimRunAction::qsimRunAction()
 {

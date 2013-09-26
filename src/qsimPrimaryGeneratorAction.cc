@@ -9,6 +9,8 @@
 #include "qsimtypes.hh"
 #include "globals.hh"
 
+#include "CLHEP/Random/RandFlat.h"
+#include "CLHEP/Random/RandGauss.h"
 
 qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
   G4int n_particle = 1;
@@ -16,6 +18,20 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
 
 
   fDefaultEvent = new qsimEvent();
+
+  fXmin = -7.5*cm;
+  fXmax =  7.5*cm;
+
+  fYmin =  -0.75*cm;
+  fYmax =  0.75*cm;
+
+  fEmin =  900.0*MeV;
+  fEmax =  900.0*MeV;
+
+  fZ = -10.6*cm;
+
+  fTheta = 45.0*deg;
+  fPhi   = 0.0*deg;
 }
 
 qsimPrimaryGeneratorAction::~qsimPrimaryGeneratorAction() {
@@ -36,10 +52,26 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     // Set data //////////////////////////////////
     // Magic happens here
 
+    double xPos = CLHEP::RandFlat::shoot( fXmin, fXmax );
+    double yPos = CLHEP::RandFlat::shoot( fYmin, fYmax );
+    double zPos = fZ;
+    double E = CLHEP::RandFlat::shoot( fEmin, fEmax );
+
+    double mass = fParticleGun->GetParticleDefinition()->GetPDGMass();
+    
+    assert( E > 0.0 );
+    assert( E > mass );
+
+    double p = sqrt( E*E - mass*mass );
+
+    double pX = sin(fTheta)*cos(fPhi)*p;
+    double pY = sin(fTheta)*sin(fPhi)*p;
+    double pZ = cos(fTheta)*p;
+
     fDefaultEvent->ProduceNewParticle(
-	    G4ThreeVector(0.*cm,0.*cm,-100.*cm),
-	    G4ThreeVector(0.0,0.0, gDefaultBeamE),
-	    "e-" );
+	    G4ThreeVector(xPos, yPos, zPos),
+	    G4ThreeVector(pX, pY, pZ ),
+	    fParticleGun->GetParticleDefinition()->GetParticleName() );
 
     /////////////////////////////////////////////////////////////
     // Register and create event
