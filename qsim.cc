@@ -12,8 +12,6 @@
 #include "CLHEP/Random/Random.h"
 
 #include "qsimRunAction.hh"
-#include "qsimRun.hh"
-#include "qsimRunData.hh"
 #include "qsimPrimaryGeneratorAction.hh"
 #include "qsimEventAction.hh"
 #include "qsimSteppingAction.hh"
@@ -68,8 +66,6 @@ int main(int argc, char** argv){
 
     CLHEP::HepRandom::createInstance();
     CLHEP::HepRandom::setTheSeed(seed);
-
-    qsimRun::GetRun()->GetData()->SetSeed(seed);
 
     qsimIO *io = new qsimIO();
 
