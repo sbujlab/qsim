@@ -95,7 +95,7 @@ void qsimIO::InitializeTree(){
     fTree->Branch("sci.n",    &fNScintDetHit,     "sci.n/I");
     fTree->Branch("sci.det",  &fScintDetHit_det,  "sci.det[sci.n]/I");
     fTree->Branch("sci.id",  &fScintDetHit_id,  "sci.id[sci.n]/I");
-    fTree->Branch("sci.edep",  &fScintDetHit_edep,  "sci.id[sci.edep]/I");
+    fTree->Branch("sci.edep",  &fScintDetHit_edep,  "sci.id[sci.n]/I");
 
     return;
 }
@@ -217,7 +217,7 @@ void qsimIO::AddScintDetectorHit(qsimScintDetectorHit *hit){
     fScintDetHit_det[n]  = hit->fDetID;
     fScintDetHit_id[n]   = hit->fCopyID;
 
-    fScintDetHit_edep[n] = hit->fEdep;
+    fScintDetHit_edep[n] = hit->fEdep/__E_UNIT;
 
     fNScintDetHit++;
 
