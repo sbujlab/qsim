@@ -2,6 +2,7 @@
 #include "qsimDetectorConstruction.hh"
 
 #include "qsimDetector.hh"
+#include "qsimScintDetector.hh"
 #include "G4SDManager.hh"
 
 #include "G4Material.hh"
@@ -475,7 +476,7 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
   
   G4String DetSDname = "/tracker1";
 
-  qsimDetector* trackerSD = new qsimDetector(DetSDname, 1);
+  qsimDetector* trackerSD = new qsimDetector(DetSDname, 0);
   
   SDman->AddNewDetector(trackerSD);
   pmt_log->SetSensitiveDetector(trackerSD);
@@ -527,7 +528,7 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 			//G4String 
 	DetSDname = "/tracker3";
 
-	qsimDetector* upScintSD = new qsimDetector(DetSDname, 2);
+	qsimScintDetector* upScintSD = new qsimScintDetector(DetSDname, 1);
   
 	SDman->AddNewDetector(upScintSD);
 	uScint_log->SetSensitiveDetector(upScintSD);
@@ -563,7 +564,7 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 	
 		DetSDname = "/tracker2";
 	 
-	 qsimDetector* loScintSD = new qsimDetector(DetSDname, 3);
+	 qsimScintDetector* loScintSD = new qsimScintDetector(DetSDname, 0);
 	 
 	 SDman->AddNewDetector(loScintSD);
 	 lScint_log->SetSensitiveDetector(loScintSD);
