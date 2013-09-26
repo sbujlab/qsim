@@ -7,6 +7,7 @@
 #include "G4ParticleDefinition.hh"
 
 #include "qsimDetectorHit.hh"
+#include "qsimScintDetectorHit.hh"
 #include "qsimEvent.hh"
 
 #include <sys/types.h>
@@ -88,6 +89,13 @@ void qsimIO::InitializeTree(){
     fTree->Branch("hit.p",    &fDetHit_P,   "hit.p[hit.n]/D");
     fTree->Branch("hit.e",    &fDetHit_E,   "hit.e[hit.n]/D");
     fTree->Branch("hit.m",    &fDetHit_M,   "hit.m[hit.n]/D");
+
+
+    // ScintDetectorHit
+    fTree->Branch("sci.n",    &fNScintDetHit,     "sci.n/I");
+    fTree->Branch("sci.det",  &fScintDetHit_det,  "sci.det[sci.n]/I");
+    fTree->Branch("sci.id",  &fScintDetHit_id,  "sci.id[sci.n]/I");
+    fTree->Branch("sci.edep",  &fScintDetHit_edep,  "sci.id[sci.edep]/I");
 
     return;
 }
@@ -198,6 +206,23 @@ void qsimIO::AddDetectorHit(qsimDetectorHit *hit){
     return;
 }
 
+
+void qsimIO::AddScintDetectorHit(qsimScintDetectorHit *hit){
+    int n = fNScintDetHit;
+    if( n >= __IO_MAXHIT ){
+//	G4cerr << "WARNING: " << __PRETTY_FUNCTION__ << " line " << __LINE__ << ":  Buffer size exceeded!" << G4endl;
+	return;
+    }
+
+    fScintDetHit_det[n]  = hit->fDetID;
+    fScintDetHit_id[n]   = hit->fCopyID;
+
+    fScintDetHit_edep[n] = hit->fEdep;
+
+    fNScintDetHit++;
+
+    return;
+}
 
 
 

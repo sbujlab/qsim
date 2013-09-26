@@ -19,6 +19,7 @@
 /qsim/phi      0 deg
 
 /gun/particle e-
+#/gun/particle mu-
 
 
 /run/beamOn 1

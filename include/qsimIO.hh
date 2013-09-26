@@ -14,6 +14,7 @@ class TFile;
 class TTree;
 
 class qsimDetectorHit;
+class qsimScintDetectorHit;
 
 #define __IO_MAXHIT 10000
 #define __FILENAMELEN 255
@@ -64,7 +65,7 @@ class qsimIO {
 	Int_t fEvPart_PID;
 
 
-	//  GenericDetectorHit
+	//  DetectorHit
     public:
 	void AddDetectorHit(qsimDetectorHit *);
     private:
@@ -94,6 +95,17 @@ class qsimIO {
 	Double_t fDetHit_Vdx[__IO_MAXHIT];
 	Double_t fDetHit_Vdy[__IO_MAXHIT];
 	Double_t fDetHit_Vdz[__IO_MAXHIT];
+
+	//  ScintDetectorHit
+    public:
+	void AddScintDetectorHit(qsimScintDetectorHit *);
+    private:
+	Int_t fNScintDetHit;
+	Int_t fScintDetHit_det[__IO_MAXHIT];
+	Int_t fScintDetHit_id[__IO_MAXHIT];
+
+	Int_t fScintDetHit_edep[__IO_MAXHIT];
+
 };
 
 #endif//qsimIO_HH

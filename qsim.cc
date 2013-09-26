@@ -112,6 +112,8 @@ int main(int argc, char** argv){
     runManager->SetUserAction(stepping_action);
     rmmess->SetStepAct((qsimSteppingAction *) stepping_action);
 
+    // Initialize Run manager
+    runManager->Initialize();
 
     G4UIsession* session = 0;
 
@@ -195,8 +197,6 @@ int main(int argc, char** argv){
     delete visManager;
 #endif
 
-    // Initialize Run manager
-    runManager->Initialize();
 
     return 0;
 }

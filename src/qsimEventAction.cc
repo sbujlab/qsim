@@ -1,5 +1,6 @@
 #include "qsimEventAction.hh"
 #include "qsimDetectorHit.hh"
+#include "qsimScintDetectorHit.hh"
 
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -24,7 +25,7 @@ qsimEventAction::~qsimEventAction(){
 
 void qsimEventAction::BeginOfEventAction(const G4Event*ev) {
     // Pretty ongoing status with flush
-    if( (ev->GetEventID() % 1000) == 0 ){
+    if( (ev->GetEventID() % 10) == 0 ){
 	printf("Event %8d\r", ev->GetEventID() );
 	fflush(stdout);
     }
@@ -44,7 +45,7 @@ void qsimEventAction::EndOfEventAction(const G4Event* evt ) {
       if(thiscol){ // This is NULL if nothing is stored
 	  // Dyanmic cast to test types, process however see fit and feed to IO
 	  
-	  ////  Generic Detector Hits ///////////////////////////////////
+	  ////  Detector Hits ///////////////////////////////////
 	  if( qsimDetectorHitsCollection *thiscast = 
 		  dynamic_cast<qsimDetectorHitsCollection *>(thiscol)){
 	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
@@ -53,6 +54,15 @@ void qsimEventAction::EndOfEventAction(const G4Event* evt ) {
 	      }
 	  }
 	  
+	  ////  Scint Generic Detector Hits ///////////////////////////////////
+	  if( qsimScintDetectorHitsCollection *thiscast =
+		  dynamic_cast<qsimScintDetectorHitsCollection *>(thiscol)){
+	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
+		  fIO->AddScintDetectorHit(
+			  (qsimScintDetectorHit *) thiscast->GetHit(hidx) );
+	      }
+	  }
+
 
       }
   }
