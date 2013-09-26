@@ -95,7 +95,7 @@ void qsimIO::InitializeTree(){
     fTree->Branch("sci.n",    &fNScintDetHit,     "sci.n/I");
     fTree->Branch("sci.det",  &fScintDetHit_det,  "sci.det[sci.n]/I");
     fTree->Branch("sci.id",  &fScintDetHit_id,  "sci.id[sci.n]/I");
-    fTree->Branch("sci.edep",  &fScintDetHit_edep,  "sci.id[sci.n]/I");
+    fTree->Branch("sci.edep",  &fScintDetHit_edep,  "sci.id[sci.n]/D");
 
     return;
 }
@@ -112,6 +112,7 @@ void qsimIO::FillTree(){
 void qsimIO::Flush(){
     //  Set arrays to 0
     fNDetHit = 0;
+    fNScintDetHit = 0;
 }
 
 void qsimIO::WriteTree(){

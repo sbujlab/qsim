@@ -7,10 +7,12 @@ qsimDetector::qsimDetector( G4String name, G4int detnum ) : G4VSensitiveDetector
     fDetNo = detnum;
     assert( fDetNo > 0 );
 
+    fHCID = -1;
+
 //    fTrackSecondaries = false;
     fTrackSecondaries = true;
 
-    sprintf(colname, "genhit_%d", detnum);
+    sprintf(colname, "genhit_%s_%d", name.data(), detnum);
     collectionName.insert(G4String(colname));
 
 }
@@ -29,6 +31,7 @@ G4bool qsimDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
     G4bool badedep = false;
     G4bool badhit  = false;
 
+
     // Get touchable volume info
     G4TouchableHistory *hist = 
 	(G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
@@ -38,6 +41,8 @@ G4bool qsimDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
     G4Track     *track   = step->GetTrack();
 
     G4Material* material = track->GetMaterial();
+
+//    printf("Standard detector hit by %s!\n", track->GetParticleDefinition()->GetParticleName().data());
 
     G4double edep = step->GetTotalEnergyDeposit();
 

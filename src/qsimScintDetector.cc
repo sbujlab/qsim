@@ -7,10 +7,12 @@ qsimScintDetector::qsimScintDetector( G4String name, G4int detnum ) : G4VSensiti
     fDetNo = detnum;
     assert( fDetNo > 0 );
 
+    fHCID = -1;
+
 //    fTrackSecondaries = false;
     fTrackSecondaries = true;
 
-    sprintf(colname, "genhit_%d", detnum);
+    sprintf(colname, "scihit_%s_%d", name.data(), detnum);
     collectionName.insert(G4String(colname));
 
 }
@@ -19,7 +21,6 @@ qsimScintDetector::~qsimScintDetector(){
 }
 
 void qsimScintDetector::Initialize(G4HCofThisEvent *){
-
     fHitColl = new qsimScintDetectorHitsCollection( SensitiveDetectorName, collectionName[0] );
 
     fSumMap.clear();
@@ -43,6 +44,8 @@ G4bool qsimScintDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 
     G4double edep = step->GetTotalEnergyDeposit();
 
+//    printf("Hit in %s by %s with edep %f MeV\n", hist->GetVolume()->GetName().data(), track->GetParticleDefinition()->GetParticleName().data(), edep/MeV  );
+
     qsimScintDetectorHit *thissum = NULL;
 
     if( !fSumMap.count(copyID) ){
@@ -50,6 +53,7 @@ G4bool qsimScintDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 	    thissum = new qsimScintDetectorHit(fDetNo, copyID);
 	    fSumMap[copyID] = thissum;
 	    fHitColl->insert( thissum );
+
 	} else {
 	    badedep = true;
 	}

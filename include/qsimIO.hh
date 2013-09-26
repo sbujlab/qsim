@@ -104,7 +104,7 @@ class qsimIO {
 	Int_t fScintDetHit_det[__IO_MAXHIT];
 	Int_t fScintDetHit_id[__IO_MAXHIT];
 
-	Int_t fScintDetHit_edep[__IO_MAXHIT];
+	Double_t fScintDetHit_edep[__IO_MAXHIT];
 
 };
 

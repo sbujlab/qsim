@@ -19,14 +19,14 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
 
   fDefaultEvent = new qsimEvent();
 
-  fXmin = -7.5*cm;
-  fXmax =  7.5*cm;
+  fXmin =  -15.0*cm;
+  fXmax =  -2.75*cm;
 
-  fYmin =  -0.75*cm;
-  fYmax =  0.75*cm;
+  fYmin =  -1.5*cm;
+  fYmax =   1.5*cm;
 
-  fEmin =  900.0*MeV;
-  fEmax =  900.0*MeV;
+  fEmin = 1000.0*MeV;
+  fEmax = 1000.0*MeV;
 
   fZ = -10.6*cm;
 

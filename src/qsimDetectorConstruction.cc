@@ -254,6 +254,8 @@ const G4int nEntries = 190;
 
   CATH->SetMaterialPropertiesTable(myMPT4);
 
+  G4SDManager* SDman = G4SDManager::GetSDMpointer();
+
 //
 //	------------- Volumes --------------
 
@@ -290,6 +292,11 @@ const G4int nEntries = 190;
 
   G4LogicalVolume* quartz_log
     = new G4LogicalVolume(quartz_box,Quartz,"Quartz",0,0,0);
+
+  qsimScintDetector* quartzSD = new qsimScintDetector("QuartzSD", 10);
+
+  SDman->AddNewDetector(quartzSD);
+  quartz_log->SetSensitiveDetector(quartzSD);
 
   G4RotationMatrix* rotQ = new G4RotationMatrix;
 //	rotQ->rotateZ(0.*rad);
@@ -472,9 +479,8 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 
   // Make PMT Sensitive
 	
-  G4SDManager* SDman = G4SDManager::GetSDMpointer();
   
-  G4String DetSDname = "/tracker1";
+  G4String DetSDname = "tracker1";
 
   qsimDetector* trackerSD = new qsimDetector(DetSDname, 1);
   
@@ -526,7 +532,7 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 
 	// Make sensitive
 			//G4String 
-	DetSDname = "/tracker3";
+	DetSDname = "tracker3";
 
 	qsimScintDetector* upScintSD = new qsimScintDetector(DetSDname, 1);
   
@@ -562,7 +568,7 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 	lScint_log->SetSensitiveDetector(loScintSD);
 */	
 	
-		DetSDname = "/tracker2";
+		DetSDname = "tracker2";
 	 
 	 qsimScintDetector* loScintSD = new qsimScintDetector(DetSDname, 2);
 	 
