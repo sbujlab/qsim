@@ -21,6 +21,7 @@ class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithAString;
 class G4UIcmdWithABool;
+class G4UIDirectory;
 
 class qsimMessenger : public G4UImessenger {
     public:
