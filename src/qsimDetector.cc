@@ -40,11 +40,11 @@ G4bool qsimDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
     G4StepPoint *prestep = step->GetPreStepPoint();
     G4Track     *track   = step->GetTrack();
 
-    G4Material* material = track->GetMaterial();
+//    G4Material* material = track->GetMaterial();
 
-//    printf("Standard detector hit by %s!\n", track->GetParticleDefinition()->GetParticleName().data());
+//    printf("Standard detector %d hit by %s!\n", fDetNo, track->GetParticleDefinition()->GetParticleName().data());
 
-    G4double edep = step->GetTotalEnergyDeposit();
+//    G4double edep = step->GetTotalEnergyDeposit();
 
     //  Make pointer to new hit if it's a valid track
     qsimDetectorHit *thishit;

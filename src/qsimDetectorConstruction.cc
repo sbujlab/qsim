@@ -513,6 +513,11 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
   G4LogicalVolume* cath_log
     = new G4LogicalVolume(cath,CATH,"CATH",0,0,0);
 
+  qsimDetector* cathSD = new qsimDetector("cath", 2);
+  
+  SDman->AddNewDetector(cathSD);
+  cath_log->SetSensitiveDetector(cathSD);
+
   // Rotation
 
   G4VPhysicalVolume* cath_phys;
