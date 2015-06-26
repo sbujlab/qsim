@@ -1,6 +1,6 @@
 # Example macro for qsim
 
-/qsim/filename qsim.out
+/qsim/filename qsim.root
 
 /qsim/seed 50
 

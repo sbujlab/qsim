@@ -4,10 +4,12 @@ Seamus Riordan
 sriordan@physics.umass.edu
 September 26, 2013
 
+Updated June 26, 2015
+
 ---------------------------------------------------
 Packages to build this:
 
->=Geant4.9.5
+>=Geant4.10
 cmake > 2.6
 root
 

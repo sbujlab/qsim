@@ -22,7 +22,9 @@
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
 #include "G4PVPlacement.hh"
-#include "G4OpBoundaryProcess.hh"
+#include "G4OpticalSurface.hh"
+
+#include "G4VisAttributes.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -153,8 +155,8 @@ const G4int nEntries = 190;
 //		Reflectivity3[i] = 0; //.6;
 	
 //Aluminum Real
-   if (PhotonEnergy[i] < 4.135) Reflectivity3[i] = .75;  // regularly .75, .7 below  .56/.53/.46 tunes to 50 PEs
-		else if (PhotonEnergy[i] >= 4.135 && PhotonEnergy[i] < 6.203) Reflectivity3[i] = .7;
+   if (PhotonEnergy[i] < 4.135*eV) Reflectivity3[i] = .75;  // regularly .75, .7 below  .56/.53/.46 tunes to 50 PEs
+		else if (PhotonEnergy[i] >= 4.135*eV && PhotonEnergy[i] < 6.203*eV) Reflectivity3[i] = .7;
    else Reflectivity3[i] = .6;		// .6
 		
 //ALZAK		
@@ -167,7 +169,7 @@ const G4int nEntries = 190;
 		
 //		Absorption1[i] = 50.*cm;  //Uniform
 
-        Absorption1[i] = (exp(4.325)*exp(1.191*PhotonEnergy[i])*exp(-.213*PhotonEnergy[i]*PhotonEnergy[i])*exp(-.04086*PhotonEnergy[i]*PhotonEnergy[i]*PhotonEnergy[i]))*m;
+        Absorption1[i] = (exp(4.325)*exp(1.191*PhotonEnergy[i]/eV)*exp(-.213*PhotonEnergy[i]*PhotonEnergy[i]/eV/eV)*exp(-.04086*PhotonEnergy[i]*PhotonEnergy[i]*PhotonEnergy[i]/eV/eV/eV))*m;
 
        if (Absorption1[i] > 25*m) {Absorption1[i] = 25*m;}
 
@@ -266,6 +268,8 @@ const G4int nEntries = 190;
 
   G4LogicalVolume* det_log
     = new G4LogicalVolume(det_box,Air,"World",0,0,0);
+
+  det_log->SetVisAttributes(G4VisAttributes::Invisible);
 
   G4VPhysicalVolume* det_phys
     = new G4PVPlacement(0,G4ThreeVector(),det_log,"World",0,false,0);
@@ -627,10 +631,23 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 
   G4OpticalSurface* MOpSurface = new G4OpticalSurface("MirrorOpSurface");
   G4OpticalSurface* CTHOpSurface = new G4OpticalSurface("CathodeOpSurface");
+  G4OpticalSurface* TubeOpSurface = new G4OpticalSurface("TubeOpSurface");
 
   MOpSurface -> SetType(dielectric_metal);
   MOpSurface -> SetFinish(ground);
   MOpSurface -> SetModel(glisur);
+
+  CTHOpSurface -> SetType(dielectric_metal);
+  CTHOpSurface -> SetFinish(polishedlumirrorair);
+  CTHOpSurface -> SetModel(glisur);
+
+  TubeOpSurface -> SetType(dielectric_metal);
+  TubeOpSurface -> SetFinish(ground);
+  TubeOpSurface -> SetModel(glisur);
+
+  const G4int num = 2;
+  G4double Ephoton[num] = {2.038*eV, 4.144*eV};
+  G4double Reflectivity5[num] = {0,0};
 
   //  G4double polish = 0.8;
 
@@ -644,6 +661,7 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 
   G4MaterialPropertiesTable* MOpSurfaceProperty = new G4MaterialPropertiesTable();
   G4MaterialPropertiesTable* COpSurfaceProperty = new G4MaterialPropertiesTable();
+  G4MaterialPropertiesTable* TubeSurfaceProperty = new G4MaterialPropertiesTable();
 
   MOpSurfaceProperty -> AddProperty("REFLECTIVITY",PhotonEnergy,Reflectivity3,nEntries);
 
@@ -653,30 +671,9 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
   COpSurfaceProperty -> AddProperty("EFFICIENCY",PhotonEnergy,Efficiency4,nEntries);
 
   CTHOpSurface -> SetMaterialPropertiesTable(COpSurfaceProperty);
- 
+  TubeSurfaceProperty -> AddProperty("REFLECTIVITY",Ephoton,Reflectivity5,2);
 
-  G4LogicalSkinSurface* TSurface = new
-               G4LogicalSkinSurface("TMirrorOpS",tmirror_log,MOpSurface);
-
-	G4LogicalSkinSurface* TopSurface = new
-	G4LogicalSkinSurface("TopMirrorOpS",topPlate_log,MOpSurface);
-	
-	G4LogicalSkinSurface* BotSurface = new
-	G4LogicalSkinSurface("BotMirrorOpS",botPlate_log,MOpSurface);
-
-	G4LogicalSkinSurface* LSurface = new
-	G4LogicalSkinSurface("LMirrorOpS",LPlate_log,MOpSurface);
-	
-	G4LogicalSkinSurface* RSurface = new
-	G4LogicalSkinSurface("RMirrorOpS",RPlate_log,MOpSurface);
-	
-  G4LogicalSkinSurface* CSurface = new
-               G4LogicalSkinSurface("CMirrorOpS",cmirror_log,MOpSurface);
-
-  G4LogicalSkinSurface* CathSurface = new
-               G4LogicalSkinSurface("CathOpS",cath_log,CTHOpSurface);
-
-
+  TubeOpSurface -> SetMaterialPropertiesTable(TubeSurfaceProperty);
 
 
 
@@ -685,8 +682,6 @@ G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
 //
 // Generate & Add Material Properties Table attached to the optical surfaces
 //
-  const G4int num = 2;
-  G4double Ephoton[num] = {2.038*eV, 4.144*eV};
 
   //OpticalQuartzSurface 
   G4double RefractiveIndex[num] = {1.46, 1.46};

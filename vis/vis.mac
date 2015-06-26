@@ -42,7 +42,7 @@
 #
 /vis/viewer/set/style surface
 
-/vis/viewer/addCutawayPlane 0.0 0.0 0.0 m 1.0 0.0 0.0
+#/vis/viewer/addCutawayPlane 0.0 0.0 0.0 m 1.0 0.0 0.0
 /vis/viewer/set/lightsMove with-camera
 #
 # Create style
