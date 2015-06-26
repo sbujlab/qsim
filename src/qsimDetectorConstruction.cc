@@ -1,5 +1,6 @@
 
 #include "qsimDetectorConstruction.hh"
+#include "G4SystemOfUnits.hh"
 
 #include "qsimDetector.hh"
 #include "qsimScintDetector.hh"

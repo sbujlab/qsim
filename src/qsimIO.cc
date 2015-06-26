@@ -1,5 +1,7 @@
 #include "qsimIO.hh"
 
+#include "G4SystemOfUnits.hh"
+
 #include <TFile.h>
 #include <TTree.h>
 #include <TClonesArray.h>

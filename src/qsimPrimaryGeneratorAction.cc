@@ -12,6 +12,8 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Random/RandGauss.h"
 
+#include "G4SystemOfUnits.hh"
+
 qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
   G4int n_particle = 1;
   fParticleGun = new G4ParticleGun(n_particle);

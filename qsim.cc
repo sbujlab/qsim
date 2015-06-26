@@ -17,15 +17,12 @@
 #include "qsimSteppingAction.hh"
 #include "qsimOpticalPhysics.hh"
 
-#include "G4StepLimiterBuilder.hh"
-
 #include "qsimDetectorConstruction.hh"
 
 #include "qsimIO.hh"
 #include "qsimMessenger.hh"
 
 //  Standard physics list
-#include "LHEP.hh"
 #include "G4PhysListFactory.hh"
 #include "G4RunManager.hh"
 

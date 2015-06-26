@@ -1,5 +1,6 @@
 #include "qsimEvent.hh"
 #include <math.h>
+#include "G4SystemOfUnits.hh"
 
 #include "G4ParticleTable.hh"
 
