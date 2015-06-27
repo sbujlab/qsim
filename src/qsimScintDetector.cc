@@ -1,5 +1,7 @@
 #include "qsimScintDetector.hh"
 #include "G4SDManager.hh"
+#include "G4SystemOfUnits.hh"
+
 
 qsimScintDetector::qsimScintDetector( G4String name, G4int detnum ) : G4VSensitiveDetector(name){
     char colname[255];
@@ -44,7 +46,7 @@ G4bool qsimScintDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 
     G4double edep = step->GetTotalEnergyDeposit();
 
-//    printf("Hit in %s by %s with edep %f MeV\n", hist->GetVolume()->GetName().data(), track->GetParticleDefinition()->GetParticleName().data(), edep/MeV  );
+    //printf("Hit in %s by %s with edep %f MeV\n", hist->GetVolume()->GetName().data(), track->GetParticleDefinition()->GetParticleName().data(), edep/MeV  );
 
     qsimScintDetectorHit *thissum = NULL;
 

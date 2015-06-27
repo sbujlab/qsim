@@ -25,7 +25,7 @@ qsimEventAction::~qsimEventAction(){
 
 void qsimEventAction::BeginOfEventAction(const G4Event*ev) {
     // Pretty ongoing status with flush
-    if( (ev->GetEventID() % 10) == 0 ){
+    if( (ev->GetEventID() % 100) == 0 ){
 	printf("Event %8d\r", ev->GetEventID() );
 	fflush(stdout);
     }

@@ -171,6 +171,8 @@ void qsimIO::SetEventData(qsimEvent *ev){
 
 void qsimIO::AddDetectorHit(qsimDetectorHit *hit){
     int n = fNDetHit;
+    //printf("%d hits in detector\n", fNDetHit );
+
     if( n >= __IO_MAXHIT ){
 //	G4cerr << "WARNING: " << __PRETTY_FUNCTION__ << " line " << __LINE__ << ":  Buffer size exceeded!" << G4endl;
 	return;
