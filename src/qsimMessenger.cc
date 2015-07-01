@@ -62,14 +62,23 @@ qsimMessenger::qsimMessenger(){
     fEmaxCmd = new G4UIcmdWithADoubleAndUnit("/qsim/emax", this);
     fEmaxCmd->SetGuidance("Set Energy range maximum");
     fEmaxCmd->SetParameterName("emax", false);
+//
+		fthetaMinCmd = new G4UIcmdWithADoubleAndUnit("/qsim/thetamin", this);
+    fthetaMinCmd->SetGuidance("Set theta range minimum");
+    fthetaMinCmd->SetParameterName("thetamin", false);
 
-    fThetaCmd = new G4UIcmdWithADoubleAndUnit("/qsim/theta", this);
-    fThetaCmd->SetGuidance("Set particle theta");
-    fThetaCmd->SetParameterName("theta", false);
+    fthetaMaxCmd = new G4UIcmdWithADoubleAndUnit("/qsim/thetamax", this);
+    fthetaMaxCmd->SetGuidance("Set theta range maximum");
+    fthetaMaxCmd->SetParameterName("thetamax", false);
 
-    fPhiCmd = new G4UIcmdWithADoubleAndUnit("/qsim/phi", this);
-    fPhiCmd->SetGuidance("Set particle phi");
-    fPhiCmd->SetParameterName("phi", false);
+
+//    fThetaCmd = new G4UIcmdWithADoubleAndUnit("/qsim/theta", this);
+//    fThetaCmd->SetGuidance("Set particle theta");
+//    fThetaCmd->SetParameterName("theta", false);
+
+//    fPhiCmd = new G4UIcmdWithADoubleAndUnit("/qsim/phi", this);
+//    fPhiCmd->SetGuidance("Set particle phi");
+//    fPhiCmd->SetParameterName("phi", false);
 
     fZCmd = new G4UIcmdWithADoubleAndUnit("/qsim/z", this);
     fZCmd->SetGuidance("Set particle z");
@@ -115,16 +124,25 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	G4double x = fEmaxCmd->GetNewDoubleValue(newValue);
 	fprigen->fEmax = x;
     }
-
-    if( cmd == fThetaCmd ){
-	G4double x = fThetaCmd->GetNewDoubleValue(newValue);
-	fprigen->fTheta = x;
+    if( cmd == fthetaMinCmd ){
+	G4double x = fthetaMinCmd->GetNewDoubleValue(newValue);
+	fprigen->fthetaMin = x;
     }
-
-    if( cmd == fPhiCmd ){
-	G4double x = fPhiCmd->GetNewDoubleValue(newValue);
-	fprigen->fPhi = x;
+    if( cmd == fthetaMaxCmd ){
+	G4double x = fthetaMaxCmd->GetNewDoubleValue(newValue);
+	fprigen->fthetaMax = x;
     }
+// INSERT new commands for theta
+
+//    if( cmd == fThetaCmd ){
+//	G4double x = fThetaCmd->GetNewDoubleValue(newValue);
+//	fprigen->fTheta = x;
+//    }
+
+//    if( cmd == fPhiCmd ){
+//	G4double x = fPhiCmd->GetNewDoubleValue(newValue);
+//	fprigen->fPhi = x;
+//    }
     if( cmd == fZCmd ){
 	G4double x = fZCmd->GetNewDoubleValue(newValue);
 	fprigen->fZ = x;

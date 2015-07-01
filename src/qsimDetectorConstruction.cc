@@ -139,13 +139,35 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
         5.8,5.82,5.84,5.86,5.88,5.9,5.92,5.94,5.96,5.98,
         6,6.02,6.04,6.06,6.08,6.1,6.12,6.14,6.16,6.18   };  // 200 nm
 
+
+
     G4double RefractiveIndex1[nEntries];
     G4double Absorption1[nEntries];
     G4double RefractiveIndex2[nEntries];
     G4double RefractiveIndex3[nEntries];
     G4double Reflectivity4[nEntries];
-    G4double Efficiency4[nEntries];
-    G4double Reflectivity3[nEntries];
+    G4double EfficiencyArray4[nEntries] = 
+		{  11.0,12.0,12.5,13.1,13.5,14.5,15.2,16.0,16.5,17.0, // percentages here
+				17.5,18.0,18.5,19.0,19.2,19.7,20.1,20.7,20.9,21.1,
+				21.6,22.0,22.5,22.7,23.0,23.5,23.7,24.0,24.0,24.2,
+				24.2,24.5,25.0,25.0,25.3,25.5,25.5,25.5,25.5,25.5,
+				25.5,25.5,25.5,25.7,26.1,26.1,26.1,26.1,25.6,25.6,
+				25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,
+				25.6,25.6,25.6,26.1,26.1,26.1,26.1,26.1,26.1,26.1,
+				25.6,25.0,25.0,25.0,25.0,24.5,24.5,24.5,24.5,24.3,
+				24.0,24.0,24.0,24.0,24.0,24.0,23.5,23.5,23.5,23.5,
+				23.5,23.5,23.5,23.3,23.1,22.8,22.6,22.6,22.6,22.6, // 4.38 eV
+				22.6,22.6,22.3,22.1,22.1,22.1,22.0,21.8,21.7,21.3, //100 entries 4.58 eV
+				21.2,21.0,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8, // 4.78 eV
+				20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.2,20.0, // 4.98 eV
+				20.0,20.0,20.0,20.0,20.0,20.0,20.0,19.5,19.5,19.5, // 5.18 eV
+				19.5,19.5,19.5,19.5,19.1,19.1,19.1,19.1,19.1,19.1, // 5.38 eV
+				19.1,19.1,19.1,19.0,18.8,18.8,18.8,18.8,18.8,18.8, // 5.58 eV
+			  18.8,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4, // 5.78 eV
+			  18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4, // 5.98eV
+			  18.4,18.2,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0  }; // 6.18 eV	Response obtained from the plot of the quantum efficiency as a function of wavelength and then changed to eV for the Bialkali photocathode (synthetic silica)
+		G4double Efficiency4[nEntries];
+		G4double Reflectivity3[nEntries];
 
     int i;
     for (i = 0; i < nEntries; i++) {
@@ -177,7 +199,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
         RefractiveIndex2[i]=1;
         RefractiveIndex3[i]=0;
         Reflectivity4[i]=0.0;
-        Efficiency4[i]=0.25;
+        Efficiency4[i] = 0.01*EfficiencyArray4[i];
 
 
     }
