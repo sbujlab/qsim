@@ -30,7 +30,7 @@
 
 qsimDetectorConstruction::qsimDetectorConstruction()
 {
-    det_x = det_y = det_z = 275*cm;
+
     quartz_x = 1.75*cm; 
     quartz_y = 7.*cm;  //2.5 
     //Half cm
@@ -272,18 +272,33 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     //
     //	------------- Volumes --------------
+    double world_x, world_y, world_z;
+    double det_x, det_y, det_z;
+
+    world_x = world_y = world_z = 275*cm;
+    det_x = det_y = det_z = 50*cm;
 
     // The detector
     //
-    G4Box* det_box = new G4Box("World",det_x,det_y,det_z);
+    G4Box* world_box = new G4Box("World",world_x,world_y,world_z);
+
+    G4LogicalVolume* world_log
+        = new G4LogicalVolume(world_box,Air,"World",0,0,0);
+
+    world_log->SetVisAttributes(G4VisAttributes::Invisible);
+
+    G4VPhysicalVolume* world_phys
+        = new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
+
+
+
+    G4Box* det_box = new G4Box("Detector",det_x,det_y,det_z);
 
     G4LogicalVolume* det_log
-        = new G4LogicalVolume(det_box,Air,"World",0,0,0);
+        = new G4LogicalVolume(det_box,Air,"Detector_log",0,0,0);
 
     det_log->SetVisAttributes(G4VisAttributes::Invisible);
 
-    G4VPhysicalVolume* det_phys
-        = new G4PVPlacement(0,G4ThreeVector(),det_log,"World",0,false,0);
 
 
     /*
@@ -554,7 +569,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)
 
-    G4Box* upperScint = new G4Box("upperScint",1.0*cm,4.5*cm,4.5*cm);
+    G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.5*cm);
     G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
 
     // Make sensitive
@@ -566,22 +581,23 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     SDman->AddNewDetector(upScintSD);
     uScint_log->SetSensitiveDetector(upScintSD);
 
-    G4double scintAngle = 45.0*deg;
-
-    G4RotationMatrix* scintRoll = new G4RotationMatrix;
-    scintRoll->rotateY(scintAngle);
-
-    G4double upScint_pos=(-1*quartz_z)+(-2.5*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
+    G4double upScint_pos= quartz_z-50*cm;
 
     G4PVPlacement* uScint_phys;
     uScint_phys 
-        = new G4PVPlacement(scintRoll,G4ThreeVector(upScint_pos-1.*cm,0.0*cm,upScint_pos-1.*cm),
-                uScint_log,"upperScint",det_log,false,0);
+        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,upScint_pos-1.*cm),
+                uScint_log,"upperScint",world_log,false,0);
 
+
+    G4RotationMatrix* detrot = new G4RotationMatrix;
+    detrot->rotateY(45.*deg);
+
+    G4VPhysicalVolume* det_phys
+        = new G4PVPlacement(detrot,G4ThreeVector(),det_log,"detector_phys",world_log,false,0);
 
     /////////////
 
-    G4Box* lowScint = new G4Box("lowScint",1.0*cm,4.5*cm,4.5*cm);
+    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.5*cm);
     G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
 
     // Make sensitive
@@ -594,26 +610,26 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     lScint_log->SetSensitiveDetector(loScintSD);
 
 
-    G4double loScint_pos=upScint_pos+70.71*cm;
+    G4double loScint_pos=upScint_pos+1.0*m;
 
     //(-1*quartz_z)+(41.25*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
                 G4PVPlacement* lScint_phys;
                 lScint_phys 
-                = new G4PVPlacement(scintRoll,G4ThreeVector(loScint_pos,0.0*cm,loScint_pos),
-                lScint_log,"lowerScint",det_log,false,0);
+                = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,loScint_pos),
+                lScint_log,"lowerScint",world_log,false,0);
     /////////////
 
-    G4Box* Pb_blox = new G4Box("Pb_blox",10.0*cm,20.0*cm,10.0*cm);
+    G4Box* Pb_blox = new G4Box("Pb_blox", 10.0*cm,5.0*cm, 10.0*cm);
     // Really 10x5x10 cm half-lengths, expanded to ensure nothing
     //   can hit the scint. w/o the lead.
     G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
 
-    G4double Pb_pos=loScint_pos-11.25*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
+    G4double Pb_pos=loScint_pos-15.9*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
 
     G4PVPlacement* Pb_phys;
     Pb_phys 
-        = new G4PVPlacement(scintRoll,G4ThreeVector(Pb_pos,0.0*cm,Pb_pos),
-                Pb_log,"Pb",det_log,false,0);
+        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0*cm,Pb_pos),
+                Pb_log,"Pb",world_log,false,0);
 
 
 
@@ -714,7 +730,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
 
     //always return the physical World
-    return det_phys;
+    return world_phys;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

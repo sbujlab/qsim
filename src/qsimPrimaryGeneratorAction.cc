@@ -36,12 +36,12 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
   fDefaultEvent = new qsimEvent();
 
   fXmin =  -15.0*cm;
-  fXmax =  -2.75*cm;
+  fXmax =  15.*cm;
 
-  fYmin =  -1.5*cm;
-  fYmax =   1.5*cm;
+  fYmin =  -15.*cm;
+  fYmax =  15.*cm;
 
-  fEmin = 0.0*MeV;
+  fEmin = 10.0*MeV;
   fEmax = 50.0*GeV;
 
 	fthetaMin = 0.0*deg;
@@ -51,7 +51,7 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
 //  fEmax = 1000.0*MeV;
 
 // This needs to be well defined  
-	fZ = -10.6*cm;
+	fZ = -0.6*m;
 }
 
 
@@ -61,13 +61,13 @@ qsimPrimaryGeneratorAction::~qsimPrimaryGeneratorAction() {
 }
 
 
-bool qsimPrimaryGeneratorAction::Espectrum(double EE) {
+bool qsimPrimaryGeneratorAction::pspectrum(double p) {
 	double test = CLHEP::RandFlat::shoot(0.0,1.0) ;
 
 
 	// Muon energy spctrum obtained from and fit to PDG data for 0 degree incident angle
 	// good to 25% out to 36 GeV
-	if ( pow(EE,-2.7)*(exp(-0.7324*(log(pow(EE,2))+4.7099*log(EE)-1.5))/0.885967) > test ) 
+	if ( pow(p/GeV,-2.7)*(exp(-0.7324*(log(pow(p/GeV,2))+4.7099*log(p/GeV)-1.5))/0.885967) > test ) 
 		return true;
 	else 
 		return false;
@@ -91,19 +91,24 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     double zPos = fZ;
 
 // begin changed stuff to generate probability distribution of energies as expected
-		bool goodE = false;
-		double E;
+		bool good_p = false;
+		double p3sq, E;
+		double mass = fParticleGun->GetParticleDefinition()->GetPDGMass();
 
-		while ( goodE == false ) {
+		while ( good_p == false ) {
 			E = CLHEP::RandFlat::shoot( fEmin, fEmax );
-			goodE = Espectrum(E);
+                        p3sq = E*E - mass*mass;
+                        if( p3sq < 0 ) continue;
+
+			good_p = pspectrum(sqrt(p3sq));
 		}
+
 
 	// fTheta needs to be a random distribution determined by the cos^2(theta) distribution	
 	bool goodTheta = false;
 	double randTheta;
 
-	while ( goodTheta = false ) {
+	while ( goodTheta == false ) {
 		randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax )*deg;
 		goodTheta = Thetaspectrum(randTheta);
 	}
@@ -115,16 +120,18 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 		
 // end    
 		
-		double mass = fParticleGun->GetParticleDefinition()->GetPDGMass();
+
     
     assert( E > 0.0 );
     assert( E > mass );
+
 
     double p = sqrt( E*E - mass*mass );
 
     double pX = sin(randTheta)*cos(randPhi)*p;
     double pY = sin(randTheta)*sin(randPhi)*p;
     double pZ = cos(randTheta)*p;
+
 
     fDefaultEvent->ProduceNewParticle(
 	    G4ThreeVector(xPos, yPos, zPos),

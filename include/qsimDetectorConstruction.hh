@@ -17,10 +17,6 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume* Construct();
 
   private:
-    G4double det_x;
-    G4double det_y;
-    G4double det_z;
-
     G4double quartz_x;
     G4double quartz_y;
     G4double quartz_z;
