@@ -109,7 +109,7 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	double randTheta;
 
 	while ( goodTheta == false ) {
-		randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax )*deg;
+		randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
 		goodTheta = Thetaspectrum(randTheta);
 	}
 	
