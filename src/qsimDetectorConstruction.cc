@@ -99,7 +99,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     //  G4Material* Pb_Mat = new G4Material("Pb_Mat", 11.34*g/cm3, nelements=1);
     //  Pb_Mat->AddElement(Pb, 1);
 
-    G4Material* Pb_Mat=Air; // To remove lead bricks, uncomment.
+		G4Material* Pb_Mat=Air; // To remove lead bricks, uncomment.
 
     G4Material* Mirror = new G4Material("Mirror", density= 2.7*g/cm3, nelements=1);
     Mirror->AddElement(Al, 1);
@@ -575,7 +575,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)
 
-    G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.5*cm);
+    G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.5*cm);// I think this 0.5 should be 0.75
     G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
 
     // Make sensitive
@@ -587,11 +587,11 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     SDman->AddNewDetector(upScintSD);
     uScint_log->SetSensitiveDetector(upScintSD);
 
-    G4double upScint_pos= quartz_z-50*cm;
+    G4double upScint_pos= quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the original PMT + quartz design on the new stand design.
 
     G4PVPlacement* uScint_phys;
     uScint_phys 
-        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,upScint_pos-1.*cm),
+        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,upScint_pos-1.*cm), // is this 1.*cm supposed to be the height of a scintillator?
                 uScint_log,"upperScint",world_log,false,0);
 
 
@@ -603,7 +603,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     /////////////
 
-    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.5*cm);
+    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.5*cm); // physically I measure 4.5x4.5x0.75...
     G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
 
     // Make sensitive
@@ -616,7 +616,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     lScint_log->SetSensitiveDetector(loScintSD);
 
 
-    G4double loScint_pos=upScint_pos+1.0*m;
+    G4double loScint_pos=upScint_pos+1.006*m; //new setup is 1.02874*m; // measured to be 1.02874 m between the two scintillators in the CAD drawings. Previously was just 1.0 m
 
     //(-1*quartz_z)+(41.25*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
                 G4PVPlacement* lScint_phys;
@@ -625,13 +625,13 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
                 lScint_log,"lowerScint",world_log,false,0);
     /////////////
 
-    G4Box* Pb_blox = new G4Box("Pb_blox", 10.0*cm,5.0*cm, 10.0*cm);
+    G4Box* Pb_blox = new G4Box("Pb_blox", 10.16*cm,7.62*cm, 10.16*cm);
     // Really 10x5x10 cm half-lengths, expanded to ensure nothing
     //   can hit the scint. w/o the lead.
     G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
+    G4double Pb_pos=loScint_pos-15.9; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
 
-    G4double Pb_pos=loScint_pos-15.9*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
-
+		
     G4PVPlacement* Pb_phys;
     Pb_phys 
         = new G4PVPlacement(0,G4ThreeVector(0.0,0.0*cm,Pb_pos),
