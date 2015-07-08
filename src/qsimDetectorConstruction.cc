@@ -629,7 +629,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     // Really 10x5x10 cm half-lengths, expanded to ensure nothing
     //   can hit the scint. w/o the lead.
     G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
-    G4double Pb_pos=loScint_pos-15.9; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
+    G4double Pb_pos=loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
 
 		
     G4PVPlacement* Pb_phys;
