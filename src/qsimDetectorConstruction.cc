@@ -116,7 +116,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
 
 
-    const G4int nEntries = 190;
+    const G4int nEntries = 205;
 
     G4double PhotonEnergy[nEntries] =
     {  2.4,2.42,2.44,2.46,2.48,2.5,2.52,2.54,2.56,2.58,
@@ -137,7 +137,9 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
         5.4,5.42,5.44,5.46,5.48,5.5,5.52,5.54,5.56,5.58,	
         5.6,5.62,5.64,5.66,5.68,5.7,5.72,5.74,5.76,5.78,
         5.8,5.82,5.84,5.86,5.88,5.9,5.92,5.94,5.96,5.98,
-        6,6.02,6.04,6.06,6.08,6.1,6.12,6.14,6.16,6.18   };  // 200 nm
+        6,6.02,6.04,6.06,6.08,6.1,6.12,6.14,6.16,6.18,
+				6.21,6.29,6.38,6.48,6.57,6.67,6.78,6.87,6.98,
+				7.08,7.20,7.32,7.44,7.56,7.69		};  // 200 nm
 
 
 
@@ -165,7 +167,9 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 				19.1,19.1,19.1,19.0,18.8,18.8,18.8,18.8,18.8,18.8, // 5.58 eV
 			  18.8,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4, // 5.78 eV
 			  18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4, // 5.98eV
-			  18.4,18.2,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0  }; // 6.18 eV	Response obtained from the plot of the quantum efficiency as a function of wavelength and then changed to eV for the Bialkali photocathode (synthetic silica)
+			  18.4,18.2,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,
+				18.0,17.6,17.6,17.6,17.6,17.2,16.5,16.2,15.9,
+				15.2,14.9,14.3,12.1,10.2,9.6	}; // 6.18 eV	Response obtained from the plot of the quantum efficiency as a function of wavelength and then changed to eV for the Bialkali photocathode (synthetic silica)
 		G4double Efficiency4[nEntries];
 		G4double Reflectivity3[nEntries];
 
