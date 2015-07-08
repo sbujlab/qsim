@@ -38,7 +38,7 @@ qsimDetectorConstruction::qsimDetectorConstruction()
     //One cm
     //  quartz_z = 0.5*cm;
 
-    quartz_zPos = -.9*cm;//-1.1*cm; //-.9*cm; //-.6*cm;
+    quartz_zPos = 0.0*cm; //-.9*cm;//-1.1*cm; //-.9*cm; //-.6*cm;
 
     cone_rmin1 = 2.1*cm;
     cone_rmax1 = cone_rmin1+.05*cm;
@@ -96,10 +96,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     G4Material* Alu_Mat = new G4Material("Alu_Mat", 2.7*g/cm3, nelements=1);
     Alu_Mat->AddElement(Al, 1);
 
-    //  G4Material* Pb_Mat = new G4Material("Pb_Mat", 11.34*g/cm3, nelements=1);
-    //  Pb_Mat->AddElement(Pb, 1);
+    G4Material* Pb_Mat = new G4Material("Pb_Mat", 11.34*g/cm3, nelements=1);
+    Pb_Mat->AddElement(Pb, 1);
 
-		G4Material* Pb_Mat=Air; // To remove lead bricks, uncomment.
+		//G4Material* Pb_Mat=Air; // To remove lead bricks, uncomment.
 
     G4Material* Mirror = new G4Material("Mirror", density= 2.7*g/cm3, nelements=1);
     Mirror->AddElement(Al, 1);
@@ -386,7 +386,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     rotT->rotateY(-M_PI*.4462*rad);
 
     G4VPhysicalVolume* topPlate_phys
-        = new G4PVPlacement(rotT,G4ThreeVector(-1.1*cm,0,1.25*cm),topPlate_log,"TopPlate_phys",
+        = new G4PVPlacement(rotT,G4ThreeVector(-1.1*cm,0,1.25*cm+0.9*cm),topPlate_log,"TopPlate_phys", // 0.9*cm was added to bring this volume up along with the quartz crystal to be centered at the origin
                 det_log,false,0);  // normally zero vector
 
 
@@ -399,7 +399,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     rotB->rotateY(M_PI*.4794*rad);
 
     G4VPhysicalVolume* botPlate_phys
-        = new G4PVPlacement(rotB,G4ThreeVector(-1.1*cm,0,-2.05*cm),botPlate_log,"botPlate_phys",
+        = new G4PVPlacement(rotB,G4ThreeVector(-1.1*cm,0,0.9*cm-2.05*cm),botPlate_log,"botPlate_phys",
                 det_log,false,0);  // normally zero vector
 
 
@@ -413,7 +413,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     rotR->rotateX(-M_PI*.0127*rad);
 
     G4VPhysicalVolume* RPlate_phys
-        = new G4PVPlacement(rotR,G4ThreeVector(-1.1*cm,-2.2*cm,-.55*cm),RPlate_log,"RPlate_phys",
+        = new G4PVPlacement(rotR,G4ThreeVector(-1.1*cm,-2.2*cm,0.9*cm-.55*cm),RPlate_log,"RPlate_phys",
                 det_log,false,0);  // normally zero vector
 
     G4Trd* LPlate = new G4Trd("LPlate", .5*cm, 2.6*cm, .05*cm, .05*cm, 11*cm);
@@ -425,7 +425,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     rotL->rotateX(M_PI*.0127*rad);
 
     G4VPhysicalVolume* LPlate_phys
-        = new G4PVPlacement(rotL,G4ThreeVector(-1.1*cm,2.2*cm,-.55*cm),LPlate_log,"RPlate_phys",
+        = new G4PVPlacement(rotL,G4ThreeVector(-1.1*cm,2.2*cm,0.9*cm-.55*cm),LPlate_log,"RPlate_phys",
                 det_log,false,0);  // normally zero vector
 
 
@@ -482,7 +482,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     tmirror_phys      // Only for tube at full distance (7.1cm)
         // = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(11.8*cm,0.,0.)),  // Long tube
-        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(12.4*cm,0.,0.)),  // Long tube
+        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(12.4*cm,0.,0.9*cm)),  // Long tube
                 tmirror_log,"TMirror",
                 det_log,false,0);
 
@@ -536,7 +536,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     pmt_phys
         //  = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(10.1*cm,0.,0.)),  // Original sim. position
         //    = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(10.7*cm,0.,0.)),  // Cosmic test sim. position
-        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.1*cm,0.,0.)),  // Final detector-pmt length position
+        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.1*cm,0.,0.9*cm)),  // Final detector-pmt length position
                 pmt_log,"PMT",
                 det_log,false,0);
 
@@ -570,12 +570,12 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     cath_phys
         //    = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(ctmp,0.,0.)),cath_log,"CATH",det_log,false,0);  // Original sim. position
         //	  = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(10.85*cm,0.,0.)),cath_log,"CATH",det_log,false,0);  // Cosmic test position (3.7cm quartz-pmt)
-        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.25*cm,0.,0.)),cath_log,"CATH",det_log,false,0);  // Cosmic test position (7.1cm quartz-pmt)
+        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.25*cm,0.,0.9*cm)),cath_log,"CATH",det_log,false,0);  // Cosmic test position (7.1cm quartz-pmt)
 
 
     // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)
 
-    G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.5*cm);// I think this 0.5 should be 0.75
+    G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
     G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
 
     // Make sensitive
@@ -603,7 +603,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     /////////////
 
-    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.5*cm); // physically I measure 4.5x4.5x0.75...
+    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.75*cm);
     G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
 
     // Make sensitive

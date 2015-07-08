@@ -50,7 +50,6 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
 //  fEmin = 1000.0*MeV;
 //  fEmax = 1000.0*MeV;
 
-// This needs to be well defined  
 	fZ = -0.52*m;
 }
 
@@ -114,8 +113,8 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	}
 	
 // end need
-  srand(rand());
-  double randPhi = CLHEP::RandFlat::shoot( 0.0,360.0)*deg ;
+  //srand(rand());
+		double randPhi = CLHEP::RandFlat::shoot( 0.0,360.0)*deg ;
 	
 		
 // end    
