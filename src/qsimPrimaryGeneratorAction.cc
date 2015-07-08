@@ -67,7 +67,7 @@ bool qsimPrimaryGeneratorAction::pspectrum(double p) {
 
 	// Muon energy spctrum obtained from and fit to PDG data for 0 degree incident angle
 	// good to 25% out to 36 GeV
-	if ( pow(p/GeV,-2.7)*(exp(-0.7324*(log(pow(p/GeV,2))+4.7099*log(p/GeV)-1.5))/0.885967) > test ) 
+	if ( ((pow(p/GeV,-2.7)*(exp(-0.7324*(log(pow(p/GeV,2)))+4.7099*log(p/GeV)-1.5)))/0.885967) > test ) 
 		return true;
 	else 
 		return false;
