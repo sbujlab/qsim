@@ -35,11 +35,11 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
   fParticleGun = new G4ParticleGun(n_particle);
   fDefaultEvent = new qsimEvent();
 
-  fXmin =  -15.0*cm;
-  fXmax =  15.*cm;
+  fXmin =  -5.0*cm;
+  fXmax =  5.*cm;
 
-  fYmin =  -15.*cm;
-  fYmax =  15.*cm;
+  fYmin =  -5.*cm;
+  fYmax =  5.*cm;
 
   fEmin = 10.0*MeV;
   fEmax = 50.0*GeV;
@@ -51,7 +51,7 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
 //  fEmax = 1000.0*MeV;
 
 // This needs to be well defined  
-	fZ = -0.6*m;
+	fZ = -0.52*m;
 }
 
 
@@ -67,7 +67,7 @@ bool qsimPrimaryGeneratorAction::pspectrum(double p) {
 
 	// Muon energy spctrum obtained from and fit to PDG data for 0 degree incident angle
 	// good to 25% out to 36 GeV
-	if ( ((pow(p/GeV,-2.7)*(exp(-0.7324*(log(pow(p/GeV,2)))+4.7099*log(p/GeV)-1.5)))/0.885967) > test ) 
+	if ( ((pow(p/GeV,-2.7)*(exp(-0.7324*(pow(log(p/GeV),2))+4.7099*log(p/GeV)-1.5)))/0.885967) > test ) 
 		return true;
 	else 
 		return false;

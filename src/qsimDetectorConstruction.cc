@@ -276,7 +276,9 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     double det_x, det_y, det_z;
 
     world_x = world_y = world_z = 275*cm;
-    det_x = det_y = det_z = 50*cm;
+    det_x = 15*cm;
+    det_y = 6*cm;
+    det_z = 6*cm;
 
     // The detector
     //

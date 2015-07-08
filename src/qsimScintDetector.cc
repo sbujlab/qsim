@@ -39,14 +39,14 @@ G4bool qsimScintDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 	(G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
     G4int  copyID = hist->GetReplicaNumber();
 
-//    G4StepPoint *prestep = step->GetPreStepPoint();
-//    G4Track     *track   = step->GetTrack();
+ //   G4StepPoint *prestep = step->GetPreStepPoint();
+    //G4Track     *track   = step->GetTrack();
 
-//    G4Material* material = track->GetMaterial();
+    //G4Material* material = track->GetMaterial();
 
     G4double edep = step->GetTotalEnergyDeposit();
 
-    //printf("Hit in %s by %s with edep %f MeV\n", hist->GetVolume()->GetName().data(), track->GetParticleDefinition()->GetParticleName().data(), edep/MeV  );
+//    printf("Hit in %s by %s with edep %f MeV\n", hist->GetVolume()->GetName().data(), track->GetParticleDefinition()->GetParticleName().data(), edep/MeV  );
 
     qsimScintDetectorHit *thissum = NULL;
 
