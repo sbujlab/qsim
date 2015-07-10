@@ -53,5 +53,15 @@ To see the geometry:
 
 ---------------------------------------------------
 
+==== CLI User Commands ===========
 
+Using the Geant4 CLI it is possible to pass commands to modify behavior.
+These are all visible from the menu on the left.
+Recently added though is a boolean switch between the old and new detector
+constructions, fNewStand, which when set to true utilizes the new stand design.
+
+Also needed are new boolean switches between the old and new cherenkov
+detectors and a switch between cosmic and beam mode (changing large amounts
+of geometry and taking out scintillators and lead and also changing particle gun
+characteristics).
 

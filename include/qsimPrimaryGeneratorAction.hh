@@ -29,7 +29,7 @@ class qsimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     qsimIO *fIO;
 
   public:
-    G4double fXmin, fXmax, fYmin, fYmax;
+		G4double fXmin, fXmax, fYmin, fYmax;
     G4double fZ;
     G4double fEmin, fEmax;
 		G4double fthetaMin, fthetaMax;

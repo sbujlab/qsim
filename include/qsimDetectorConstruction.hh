@@ -15,11 +15,13 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
 
   public:
     G4VPhysicalVolume* Construct();
-
+	G4bool fNewStand;
+			
   private:
     G4double quartz_x;
     G4double quartz_y;
     G4double quartz_z;
+
 
 	G4double quartz_zPos;
 

@@ -30,8 +30,11 @@
 
 qsimDetectorConstruction::qsimDetectorConstruction()
 {
+		fNewStand = false; // Default setting is for the setup to reflect to old cosmic stand. True will go to the new design. Messenger has commands to switch between these at command line or at batch mode run time as well.
+		//std::cout<<"New Stand = "<<newStand<<" (0 if false, 1 if true) "<<std::endl;
 
-    quartz_x = 1.75*cm; 
+
+		quartz_x = 1.75*cm; // CSC measures in SolidWorks 0.689 x 2.952 x 0.197 cm 
     quartz_y = 7.*cm;  //2.5 
     //Half cm
     quartz_z = 0.3*cm;
@@ -51,10 +54,7 @@ qsimDetectorConstruction::qsimDetectorConstruction()
     rin = cone_rmin2;  // normally 2.5*cm;
     rout = rin+.05*cm;
     lngth = 1.9*cm;  // PMT dist. = 2*lngth +1cm  (10.4 == 4.5, 6.8 == 2.9)
-
-
 }
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -64,7 +64,6 @@ qsimDetectorConstruction::~qsimDetectorConstruction(){;}
 
 G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 {
-
     //	------------- Materials -------------
 
     G4double a, z, density;
@@ -113,9 +112,6 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     //
     // ------------ Generate & Add Material Properties Table ------------
     //
-
-
-
     const G4int nEntries = 205;
 
     G4double PhotonEnergy[nEntries] =
@@ -274,7 +270,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
-    //
+    /////////////////////////////////////////////////////////////////////////////
     //	------------- Volumes --------------
     double world_x, world_y, world_z;
     double det_x, det_y, det_z;
@@ -284,7 +280,8 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     det_y = 6*cm;
     det_z = 6*cm;
 
-    // The detector
+		//////////////////////////////////////////////////////////////////////////////
+    // The detector // The detector is in fact full of air, as defined above.
     //
     G4Box* world_box = new G4Box("World",world_x,world_y,world_z);
 
@@ -318,9 +315,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     det_log, false, 0);
     */
 
+
+		/////////////////////////////////////////////////////////////////////////////////////
     // The quartz
     //	
-
     G4double q_yLB = quartz_y - (quartz_z);
 
     G4Trap* quartz_box = new G4Trap("Quartz", 2*quartz_x, 2*quartz_z, 2*quartz_y, 2*q_yLB);
@@ -356,9 +354,9 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
           = new G4PVPlacement(0,G4ThreeVector(quartz_y+1.4*cm,0.5*cm,0*cm),ruler_log,"Ruler",
           det_log,false,0);  
           */	 
-
-
-    // The small mirror on the quartz
+   
+		//////////////////////////////////////////////////////////////////////////////
+		// The small mirror on the quartz
     //
 
     G4Box* mirr_Box = new G4Box("QuMirror", .05*cm, quartz_x, quartz_z*1.4142);
@@ -373,9 +371,9 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
     G4VPhysicalVolume* mirr_Phys = new G4PVPlacement(rotM,G4ThreeVector(-1*quartz_y+.05*cm,0,quartz_zPos+.06*cm), mirr_log, "QuMirror",
             det_log,false, 0);  // normally z= .06
-
-
-    // Trapezoid tube plates
+   
+		///////////////////////////////////////////////////////////////////////////////
+		// Trapezoid tube plates
     // Top
 
     G4Trd* topPlate = new G4Trd("topPlate", .05*cm, .05*cm, 1.75*cm, 2.5*cm, 11*cm);
@@ -388,9 +386,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     G4VPhysicalVolume* topPlate_phys
         = new G4PVPlacement(rotT,G4ThreeVector(-1.1*cm,0,1.25*cm+0.9*cm),topPlate_log,"TopPlate_phys", // 0.9*cm was added to bring this volume up along with the quartz crystal to be centered at the origin
                 det_log,false,0);  // normally zero vector
-
-
-    // Bottom 
+    		
+		////////////////////////////////////////////////////////////////////////////		
+		
+		// Bottom 
     G4Trd* botPlate = new G4Trd("botPlate", .05*cm, .05*cm, 2.5*cm, 1.75*cm, 11*cm);
 
     G4LogicalVolume* botPlate_log = new G4LogicalVolume(botPlate, Mirror, "botPlate_log",0,0,0);
@@ -401,10 +400,11 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     G4VPhysicalVolume* botPlate_phys
         = new G4PVPlacement(rotB,G4ThreeVector(-1.1*cm,0,0.9*cm-2.05*cm),botPlate_log,"botPlate_phys",
                 det_log,false,0);  // normally zero vector
-
-
-
-    G4Trd* RPlate = new G4Trd("RPlate", .5*cm, 2.6*cm, .05*cm, .05*cm, 11*cm);
+ 
+		
+		///////////////////////////////////////////////////////////////////////////
+		
+		G4Trd* RPlate = new G4Trd("RPlate", .5*cm, 2.6*cm, .05*cm, .05*cm, 11*cm);
 
     G4LogicalVolume* RPlate_log = new G4LogicalVolume(RPlate, Mirror, "RPlate_log",0,0,0);
 
@@ -416,7 +416,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
         = new G4PVPlacement(rotR,G4ThreeVector(-1.1*cm,-2.2*cm,0.9*cm-.55*cm),RPlate_log,"RPlate_phys",
                 det_log,false,0);  // normally zero vector
 
-    G4Trd* LPlate = new G4Trd("LPlate", .5*cm, 2.6*cm, .05*cm, .05*cm, 11*cm);
+    
+		///////////////////////////////////////////////////////////////////////////
+		
+		G4Trd* LPlate = new G4Trd("LPlate", .5*cm, 2.6*cm, .05*cm, .05*cm, 11*cm);
 
     G4LogicalVolume* LPlate_log = new G4LogicalVolume(LPlate, Mirror, "LPlate_log",0,0,0);
 
@@ -430,9 +433,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
 
 
+		////////////////////////////////////////////////////////////////////////////
     // The cone mirror
     //	
-    G4Cons* cmirror_cone = new G4Cons("CMirror",cone_rmin1,cone_rmax1,
+		G4Cons* cmirror_cone = new G4Cons("CMirror",cone_rmin1,cone_rmax1,
             cone_rmin2,cone_rmax2,cone_z,cone_sphi,cone_fphi);
 
     G4LogicalVolume* cmirror_log
@@ -454,8 +458,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     //                        det_log,false,0);
 
 
-    // The tube mirror
-    //	//	//	//	//	//	//	//	//	//	
+    
+		
+		// The tube mirror
+    //////////////////////////////////////////////////////////////////////////////	
 
     G4double rin = 2.5*cm;
     G4double rout = 2.55*cm;
@@ -463,10 +469,8 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     //    G4double lngth = 3.5*cm;  // long tube	
     G4double anini = 0*deg;
     G4double anspan = 360*deg;
-
-
-
-    G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
+		
+		G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
             2.5*cm,2.55*cm,lngth,cone_sphi,cone_fphi);
 
     G4LogicalVolume* tmirror_log
@@ -486,20 +490,13 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
                 tmirror_log,"TMirror",
                 det_log,false,0);
 
-
     /*   
     // Rotation
 
     G4VPhysicalVolume* cmirror_phys;
-
-
-
     rm.rotateY(rtphi);
-
-
-
 */
-    //	//	//	//	//	//	//	//	//	//	
+		/////////////////////////////////////////////////////////////////////////////////	
 
     // The photomultiplier
     //	quartz window
@@ -508,14 +505,12 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     G4double prout = 2.6*cm;
     G4double plngth = 1.5*mm;
 
-
     G4Tubs* pmt = new G4Tubs("PMT",prin,prout,plngth,anini,anspan);
 
     G4LogicalVolume* pmt_log
         = new G4LogicalVolume(pmt,Air,"PMT",0,0,0);
 
     // Make PMT Sensitive
-
 
     G4String DetSDname = "tracker1";
 
@@ -540,14 +535,15 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
                 pmt_log,"PMT",
                 det_log,false,0);
 
-    // metal cathode
+    
+		///////////////////////////////////////////////////////////////////////////////////////
+		// metal cathode
 
-    G4double cin = 0;
+		G4double cin = 0;
     G4double cout = 2.6*cm;
     G4double clngth = 0.1*mm;
 
-
-    G4Tubs* cath = new G4Tubs("CATH",cin,cout,clngth,anini,anspan);
+		G4Tubs* cath = new G4Tubs("CATH",cin,cout,clngth,anini,anspan);
 
     G4LogicalVolume* cath_log
         = new G4LogicalVolume(cath,CATH,"CATH",0,0,0);
@@ -573,9 +569,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
         = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.25*cm,0.,0.9*cm)),cath_log,"CATH",det_log,false,0);  // Cosmic test position (7.1cm quartz-pmt)
 
 
-    // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)
 
-    G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
+		/////////////////////////////////////////////////////////////////////////////////////////
+    // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)		
+		G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
     G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
 
     // Make sensitive
@@ -587,7 +584,14 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     SDman->AddNewDetector(upScintSD);
     uScint_log->SetSensitiveDetector(upScintSD);
 
-    G4double upScint_pos= quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the original PMT + quartz design on the new stand design.
+
+		G4double upScint_pos;
+		if (fNewStand) {
+			upScint_pos = quartz_z-45*cm; 
+		}
+		else {
+			upScint_pos = quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the original PMT + quartz design on the new stand design.
+		}
 
     G4PVPlacement* uScint_phys;
     uScint_phys 
@@ -601,8 +605,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     G4VPhysicalVolume* det_phys
         = new G4PVPlacement(detrot,G4ThreeVector(),det_log,"detector_phys",world_log,false,0);
 
-    /////////////
 
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
     G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.75*cm);
     G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
 
@@ -616,21 +622,35 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     lScint_log->SetSensitiveDetector(loScintSD);
 
 
-    G4double loScint_pos=upScint_pos+1.006*m; //new setup is 1.02874*m; // measured to be 1.02874 m between the two scintillators in the CAD drawings. Previously was just 1.0 m
+		G4double loScint_pos;
+		if (fNewStand) {
+			loScint_pos = upScint_pos+1.02874*m;
+		}
+		else {
+			loScint_pos = upScint_pos+1.006*m; //new setup is 1.02874*m; // measured to be 1.02874 m between the two scintillators in the CAD drawings. Previously was just 1.0 m
+		}
 
     //(-1*quartz_z)+(41.25*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
                 G4PVPlacement* lScint_phys;
                 lScint_phys 
                 = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,loScint_pos),
                 lScint_log,"lowerScint",world_log,false,0);
-    /////////////
+    
 
+
+		///////////////////////////////////////////////////////////////////////////////////////
     G4Box* Pb_blox = new G4Box("Pb_blox", 10.16*cm,7.62*cm, 10.16*cm);
     // Really 10x5x10 cm half-lengths, expanded to ensure nothing
     //   can hit the scint. w/o the lead.
     G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
-    G4double Pb_pos=loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
 
+		G4double Pb_pos;
+		if (fNewStand) {
+			Pb_pos = loScint_pos-18.554*cm;
+		}
+		else {	
+			Pb_pos = loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
+		}
 		
     G4PVPlacement* Pb_phys;
     Pb_phys 
@@ -638,6 +658,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
                 Pb_log,"Pb",world_log,false,0);
 
 
+		///////////////////////////////////////////////////////////////////////////////////
 
     //	------------- Surfaces --------------
     //
@@ -713,7 +734,6 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     G4LogicalSkinSurface* CathSurface = new
         G4LogicalSkinSurface("CathOpS1", cath_log,CTHOpSurface);
 
-    //
     // Generate & Add Material Properties Table attached to the optical surfaces
     //
 
@@ -731,9 +751,6 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
     myST1->AddProperty("BACKSCATTERCONSTANT",   Ephoton, Backscatter,     num);
 
     OpQuartzSurface->SetMaterialPropertiesTable(myST1);
-
-
-
 
     //always return the physical World
     return world_phys;

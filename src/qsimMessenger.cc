@@ -39,6 +39,10 @@ qsimMessenger::qsimMessenger(){
     seedCmd->SetGuidance("Set random engine seed");
     seedCmd->SetParameterName("seed", false);
 
+		fNewStandCmd = new G4UIcmdWithABool("/qsim/fNewStand",this);
+		fNewStandCmd->SetGuidance("Set fNewStand to true or false");
+		fNewStandCmd->SetParameterName("newstand", false);
+
     fXminCmd = new G4UIcmdWithADoubleAndUnit("/qsim/xmin", this);
     fXminCmd->SetGuidance("Set x range minimum");
     fXminCmd->SetParameterName("xmin", false);
@@ -99,6 +103,12 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	G4int seed = seedCmd->GetNewIntValue(newValue);
 	CLHEP::HepRandom::setTheSeed(seed);
     }
+
+		if (cmd == fNewStandCmd ) {
+	G4bool x = fNewStandCmd->GetNewBoolValue(newValue);
+	fdetcon->fNewStand = x;
+  //std::cout<<"fNewStand set to " << fdetcon->fNewStand << " (0 if false, 1 if true)"<<std::endl;
+		}
 
     if( cmd == fXminCmd ){
 	G4double x = fXminCmd->GetNewDoubleValue(newValue);

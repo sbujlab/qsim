@@ -48,6 +48,8 @@ class qsimMessenger : public G4UImessenger {
 	G4UIcmdWithAnInteger *seedCmd;
 
 	G4UIcmdWithAString   *fileCmd;
+	
+	G4UIcmdWithABool *fNewStandCmd;
 
 	G4UIcmdWithADoubleAndUnit *fXminCmd;
 	G4UIcmdWithADoubleAndUnit *fXmaxCmd;
@@ -55,7 +57,7 @@ class qsimMessenger : public G4UImessenger {
 	G4UIcmdWithADoubleAndUnit *fYmaxCmd;
 	G4UIcmdWithADoubleAndUnit *fEminCmd;
 	G4UIcmdWithADoubleAndUnit *fEmaxCmd;
-	
+
 	G4UIcmdWithADoubleAndUnit *fthetaMinCmd;
 	G4UIcmdWithADoubleAndUnit *fthetaMaxCmd;
 

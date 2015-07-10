@@ -43,7 +43,7 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
 
   fEmin = 10.0*MeV;
   fEmax = 50.0*GeV;
-
+	
 	fthetaMin = 0.0*deg;
 	fthetaMax = 90.0*deg;
 
