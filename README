@@ -69,6 +69,7 @@ These are all visible from the menu on the left.
 
 There are CLI User Commands that allow the user to change the stand design and
 incident particle characteristics to test different configurations and 
-experimental expectations.
+experimental expectations. These commands must be passed before a visualization
+macro is used or the initialization command have been passed.
 
 Also needed are new options for the new cherenkov PMT design.
