@@ -41,14 +41,14 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
 	// 0 is cosmic mode
 	// 1 is beam mode
 	if (fSourceMode==1) {
-		fXmin =  -0.05*cm;
-		fXmax =  0.05*cm;
+		fXmin =  -0.0*cm; // pinpoint at Mainz
+		fXmax =  0.0*cm; // questionable at JLab
 
-		fYmin =  -0.05*cm;
-		fYmax =  0.05*cm;
+		fYmin =  -0.0*cm;
+		fYmax =  0.0*cm;
 
-		fEmin = 1000.0*MeV;
-		fEmax = 1000.0*MeV;
+		fEmin = 250.0*MeV; // = 250 MeV at Mainz
+		fEmax = 250.0*MeV; // = 1.063 Gev for JLab
 	
 		fthetaMin = 0.0*deg;
 		fthetaMax = 0.0*deg;

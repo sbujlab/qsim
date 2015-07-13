@@ -12,12 +12,12 @@
 /qsim/ymin  -0.75 cm
 /qsim/ymax   0.75 cm
 
-/qsim/z     -10.6 cm
+/qsim/z     -52.0 cm
 
 /qsim/emin   850 MeV
 /qsim/emax   850 MeV
 
-/qsim/theta   45 deg
+/qsim/theta   0 deg
 /qsim/phi      0 deg
 
 /gun/particle e-
