@@ -24,7 +24,7 @@
 bool qsimPrimaryGeneratorAction::Thetaspectrum(double Th) {
 	double test = CLHEP::RandFlat::shoot(0.0,1.0);
 
-	if ( (cos(Th)*cos(Th)) > test )
+	if ( fAccBeamOn || ((cos(Th)*cos(Th)) > test) )
 		return true;
 	else
 		return false;
@@ -32,20 +32,38 @@ bool qsimPrimaryGeneratorAction::Thetaspectrum(double Th) {
 
 qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
   G4int n_particle = 1;
+
+	fAccBeamOn = false; // Accelerator beam mode: true fixes incident particle characteristics to simulate a particle beam and bypasses energy and theta spectrum computations
+
   fParticleGun = new G4ParticleGun(n_particle);
   fDefaultEvent = new qsimEvent();
 
-  fXmin =  -5.0*cm;
-  fXmax =  5.*cm;
+	if (fAccBeamOn) {
+		fXmin =  -0.05*cm;
+		fXmax =  0.05*cm;
 
-  fYmin =  -5.*cm;
-  fYmax =  5.*cm;
+		fYmin =  -0.05*cm;
+		fYmax =  0.05*cm;
 
-  fEmin = 10.0*MeV;
-  fEmax = 50.0*GeV;
+		fEmin = 1000.0*MeV;
+		fEmax = 1000.0*MeV;
 	
-	fthetaMin = 0.0*deg;
-	fthetaMax = 90.0*deg;
+		fthetaMin = 0.0*deg;
+		fthetaMax = 0.0*deg;
+	}
+	else {
+		fXmin =  -5.0*cm;
+		fXmax =  5.*cm;
+
+		fYmin =  -5.*cm;
+		fYmax =  5.*cm;
+
+		fEmin = 10.0*MeV;
+		fEmax = 50.0*GeV;
+	
+		fthetaMin = 0.0*deg;
+		fthetaMax = 90.0*deg;
+	}
 
 //  fEmin = 1000.0*MeV;
 //  fEmax = 1000.0*MeV;
@@ -65,8 +83,9 @@ bool qsimPrimaryGeneratorAction::pspectrum(double p) {
 
 
 	// Muon energy spctrum obtained from and fit to PDG data for 0 degree incident angle
-	// good to 25% out to 36 GeV
-	if ( ((pow(p/GeV,-2.7)*(exp(-0.7324*(pow(log(p/GeV),2))+4.7099*log(p/GeV)-1.5)))/0.885967) > test ) 
+	// good to 25% out to 36 GeV.
+	// if the accelerator mode is on then just return true anyway.
+	if ( fAccBeamOn || (((pow(p/GeV,-2.7)*(exp(-0.7324*(pow(log(p/GeV),2))+4.7099*log(p/GeV)-1.5)))/0.885967) > test) ) 
 		return true;
 	else 
 		return false;

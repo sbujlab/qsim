@@ -32,7 +32,7 @@ qsimDetectorConstruction::qsimDetectorConstruction()
 {
 		fNewStand = false; // Default setting is for the setup to reflect to old cosmic stand. True will go to the new design. Messenger has commands to switch between these at command line or at batch mode run time as well.
 		//std::cout<<"New Stand = "<<newStand<<" (0 if false, 1 if true) "<<std::endl;
-
+		fAccBeamStand = false; // Only affects stand components: true deletes the lead block.
 
 		quartz_x = 1.75*cm; // CSC measures in SolidWorks 0.689 x 2.952 x 0.197 cm 
     quartz_y = 7.*cm;  //2.5 
@@ -569,7 +569,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
         = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.25*cm,0.,0.9*cm)),cath_log,"CATH",det_log,false,0);  // Cosmic test position (7.1cm quartz-pmt)
 
 
-
+		// SCINTILLATORS
 		/////////////////////////////////////////////////////////////////////////////////////////
     // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)		
 		G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
@@ -637,7 +637,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
                 lScint_log,"lowerScint",world_log,false,0);
     
 
-
+		// LEAD BLOCK
 		///////////////////////////////////////////////////////////////////////////////////////
     G4Box* Pb_blox = new G4Box("Pb_blox", 10.16*cm,7.62*cm, 10.16*cm);
     // Really 10x5x10 cm half-lengths, expanded to ensure nothing
@@ -652,11 +652,13 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 			Pb_pos = loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
 		}
 		
+		// If fAccBeamStand == true then remove the lead bricks, else leave them
     G4PVPlacement* Pb_phys;
+		if (!fAccBeamStand) { // check number
     Pb_phys 
         = new G4PVPlacement(0,G4ThreeVector(0.0,0.0*cm,Pb_pos),
                 Pb_log,"Pb",world_log,false,0);
-
+		}
 
 		///////////////////////////////////////////////////////////////////////////////////
 

@@ -50,6 +50,8 @@ class qsimMessenger : public G4UImessenger {
 	G4UIcmdWithAString   *fileCmd;
 	
 	G4UIcmdWithABool *fNewStandCmd;
+	G4UIcmdWithABool *fAccBeamStandCmd;
+	G4UIcmdWithABool *fAccBeamOnCmd;
 
 	G4UIcmdWithADoubleAndUnit *fXminCmd;
 	G4UIcmdWithADoubleAndUnit *fXmaxCmd;
@@ -68,26 +70,5 @@ class qsimMessenger : public G4UImessenger {
 };
 
 #endif//qsimMessenger_HH
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

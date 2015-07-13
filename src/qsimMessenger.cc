@@ -39,9 +39,21 @@ qsimMessenger::qsimMessenger(){
     seedCmd->SetGuidance("Set random engine seed");
     seedCmd->SetParameterName("seed", false);
 
+		// new
+
 		fNewStandCmd = new G4UIcmdWithABool("/qsim/fNewStand",this);
 		fNewStandCmd->SetGuidance("Set fNewStand to true or false");
 		fNewStandCmd->SetParameterName("newstand", false);
+
+		fAccBeamStandCmd = new G4UIcmdWithABool("/qsim/fAccBeamStand",this);
+		fAccBeamStandCmd->SetGuidance("Set fAccBeamStand to true or false");
+		fAccBeamStandCmd->SetParameterName("acceleratorbeamstand", false);
+
+		fAccBeamOnCmd = new G4UIcmdWithABool("/qsim/fAccBeamOn",this);
+		fAccBeamOnCmd->SetGuidance("Set fAccBeamOn to true or false");
+		fAccBeamOnCmd->SetParameterName("acceleratorbeamon", false);
+
+		// old
 
     fXminCmd = new G4UIcmdWithADoubleAndUnit("/qsim/xmin", this);
     fXminCmd->SetGuidance("Set x range minimum");
@@ -108,6 +120,16 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	G4bool x = fNewStandCmd->GetNewBoolValue(newValue);
 	fdetcon->fNewStand = x;
   //std::cout<<"fNewStand set to " << fdetcon->fNewStand << " (0 if false, 1 if true)"<<std::endl;
+		}
+		
+		if (cmd == fAccBeamStandCmd ) {
+	G4bool x = fAccBeamOnCmd->GetNewBoolValue(newValue);
+	fdetcon->fAccBeamStand = x;
+		}
+		
+		if (cmd == fAccBeamOnCmd ) {
+	G4bool x = fAccBeamOnCmd->GetNewBoolValue(newValue);
+	fprigen->fAccBeamOn = x;
 		}
 
     if( cmd == fXminCmd ){

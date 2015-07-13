@@ -54,6 +54,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+// How do I change the display size of qsim to be smaller for better viewing on small screens?
+// How do I get changes of qsim detector construction and primary event generators to affect changes if the main function has already called the default values hardcoded inerDetectorConstruction* detector = new qsimDetectorConstruction();
+
 int main(int argc, char** argv){
 
     // Initialize the CLHEP random engine used by
@@ -109,7 +112,7 @@ int main(int argc, char** argv){
     rmmess->SetStepAct((qsimSteppingAction *) stepping_action);
 
     // Initialize Run manager
-    runManager->Initialize();
+		//runManager->Initialize(); // do initialization in all macro files, see remoll examples for assistance. 
 
     G4UIsession* session = 0;
 

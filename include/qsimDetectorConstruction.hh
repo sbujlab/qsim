@@ -16,7 +16,8 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
   public:
     G4VPhysicalVolume* Construct();
 	G4bool fNewStand;
-			
+	G4bool fAccBeamStand;
+
   private:
     G4double quartz_x;
     G4double quartz_y;
