@@ -36,6 +36,9 @@ To run in batch mode, execute with a macro such as:
 
 ./qsim runexample.mac
 
+Ensure that all macros include a /run/initialization command or else they will
+not work. 
+
 ==== Visualization ===============
 
 Visualization macros are found in vis/
@@ -55,13 +58,17 @@ To see the geometry:
 
 ==== CLI User Commands ===========
 
-Using the Geant4 CLI it is possible to pass commands to modify behavior.
+Using the Geant4 CLI it is possible to pass commands to modify behavior
+and utilize the vis.mac macro from the command line.
 These are all visible from the menu on the left.
-Recently added though is a boolean switch between the old and new detector
-constructions, fNewStand, which when set to true utilizes the new stand design.
 
-Also needed are new boolean switches between the old and new cherenkov
-detectors and a switch between cosmic and beam mode (changing large amounts
-of geometry and taking out scintillators and lead and also changing particle gun
-characteristics).
 
+---------------------------------------------------
+
+==== Operational Mode Switches ===
+
+There are CLI User Commands that allow the user to change the stand design and
+incident particle characteristics to test different configurations and 
+experimental expectations.
+
+Also needed are new options for the new cherenkov PMT design.
