@@ -22,10 +22,12 @@ class qsimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     void SetIO( qsimIO *io ){ fIO = io; }
 		bool Thetaspectrum(double );
 		bool pspectrum(double );
-	G4bool fAccBeamOn;
+		//void SourceModeSet();
+		void SourceModeSet(G4int );
 
 	private:
     G4ParticleGun* fParticleGun;
+		G4int fSourceMode;
 
     qsimEvent *fDefaultEvent;
     qsimIO *fIO;

@@ -28,11 +28,24 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+//void qsimDetectorConstruction::StandModeSet() {
+//		fStandMode = 0; // default setting is 0, for the setup to reflect the old cosmic stand.
+//}
+
+void qsimDetectorConstruction::StandModeSet(G4int mode = 0) {
+		fStandMode = mode; 
+		// 0 means old stand
+		// 1 means new stand (PMT model 1)
+		// 2 means new stand (PMT model 3) with no lead (for beamline simulation)
+		// 3 etc. means nothing yet, but should be used for PMT model 3 designs if they are different at all. 
+}
+
 qsimDetectorConstruction::qsimDetectorConstruction()
 {
-		fNewStand = false; // Default setting is for the setup to reflect to old cosmic stand. True will go to the new design. Messenger has commands to switch between these at command line or at batch mode run time as well.
-		//std::cout<<"New Stand = "<<newStand<<" (0 if false, 1 if true) "<<std::endl;
-		fAccBeamStand = false; // Only affects stand components: true deletes the lead block.
+		StandModeSet(); // call the default
+
+		// fNewStand = false; // Default setting is for the setup to reflect to old cosmic stand. True will go to the new design. Messenger has commands to switch between these at command line or at batch mode run time as well.
+		// fAccBeamStand = false; // Only affects stand components: true deletes the lead block.
 
 		quartz_x = 1.75*cm; // CSC measures in SolidWorks 0.689 x 2.952 x 0.197 cm 
     quartz_y = 7.*cm;  //2.5 
@@ -586,11 +599,11 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
 
 		G4double upScint_pos;
-		if (fNewStand) {
+		if (fStandMode==1||fStandMode==2) {
 			upScint_pos = quartz_z-45*cm; 
 		}
 		else {
-			upScint_pos = quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the original PMT + quartz design on the new stand design.
+			upScint_pos = quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the PMT model 1 + quartz design on the new stand design.
 		}
 
     G4PVPlacement* uScint_phys;
@@ -623,7 +636,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
 
 		G4double loScint_pos;
-		if (fNewStand) {
+		if (fStandMode==1||fStandMode==2) {
 			loScint_pos = upScint_pos+1.02874*m;
 		}
 		else {
@@ -639,25 +652,25 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 
 		// LEAD BLOCK
 		///////////////////////////////////////////////////////////////////////////////////////
-    G4Box* Pb_blox = new G4Box("Pb_blox", 10.16*cm,7.62*cm, 10.16*cm);
-    // Really 10x5x10 cm half-lengths, expanded to ensure nothing
-    //   can hit the scint. w/o the lead.
-    G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
+		if (!fStandMode==2) { // check numbers for the beam mode options
+			G4Box* Pb_blox = new G4Box("Pb_blox", 10.16*cm,7.62*cm, 10.16*cm);
+			//   expanded to ensure nothing
+			//   can hit the scint. w/o the lead.
+			G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
 
-		G4double Pb_pos;
-		if (fNewStand) {
-			Pb_pos = loScint_pos-18.554*cm;
-		}
-		else {	
-			Pb_pos = loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
-		}
+			G4double Pb_pos;
+			if (fStandMode==1||fStandMode==2) {
+				Pb_pos = loScint_pos-18.554*cm;
+			}
+			else {	
+				Pb_pos = loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
+			}
 		
-		// If fAccBeamStand == true then remove the lead bricks, else leave them
-    G4PVPlacement* Pb_phys;
-		if (!fAccBeamStand) { // check number
-    Pb_phys 
-        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0*cm,Pb_pos),
-                Pb_log,"Pb",world_log,false,0);
+			// If fAccBeamStand == true then remove the lead bricks, else leave them
+			G4PVPlacement* Pb_phys;
+			Pb_phys 
+				  = new G4PVPlacement(0,G4ThreeVector(0.0,0.0*cm,Pb_pos),
+				          Pb_log,"Pb",world_log,false,0);
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////

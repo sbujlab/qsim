@@ -44,15 +44,13 @@ class qsimMessenger : public G4UImessenger {
 	qsimSteppingAction *fStepAct;
 
 	G4UIdirectory *fRemollDir;
-
-	G4UIcmdWithAnInteger *seedCmd;
-
-	G4UIcmdWithAString   *fileCmd;
 	
-	G4UIcmdWithABool *fNewStandCmd;
-	G4UIcmdWithABool *fAccBeamStandCmd;
-	G4UIcmdWithABool *fAccBeamOnCmd;
-
+	G4UIcmdWithAnInteger *seedCmd;
+	G4UIcmdWithAString   *fileCmd;
+	//
+	G4UIcmdWithAnInteger *fStandModeCmd;
+	G4UIcmdWithAnInteger *fSourceModeCmd;
+	//
 	G4UIcmdWithADoubleAndUnit *fXminCmd;
 	G4UIcmdWithADoubleAndUnit *fXmaxCmd;
 	G4UIcmdWithADoubleAndUnit *fYminCmd;

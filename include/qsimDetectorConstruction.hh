@@ -12,16 +12,17 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
   public:
     qsimDetectorConstruction();
    ~qsimDetectorConstruction();
+		//void StandModeSet();
+		void StandModeSet(G4int );
 
   public:
     G4VPhysicalVolume* Construct();
-	G4bool fNewStand;
-	G4bool fAccBeamStand;
 
   private:
     G4double quartz_x;
     G4double quartz_y;
     G4double quartz_z;
+		G4int fStandMode;
 
 
 	G4double quartz_zPos;

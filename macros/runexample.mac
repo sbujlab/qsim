@@ -1,5 +1,7 @@
 # Example macro for qsim
 
+/run/initialize
+
 /qsim/filename qsim.root
 
 /qsim/seed 50
