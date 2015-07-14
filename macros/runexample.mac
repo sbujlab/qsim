@@ -1,5 +1,16 @@
 # Example macro for qsim
 
+/qsim/fStandMode 0 
+# 0 = PMT v1, old cosmic stand
+# 1 = PMT v1, new cosmic stand
+# 2 = PMT v1, accelerator beam setup.
+# Default is 0, must be modified before initialization
+
+/qsim/fBeamMode 0
+# 0 = Cosmic mode
+# 1 = Accelerator mode (currently set to Mainz characteristics)
+# Default is 0, can be modified after initialization
+
 /run/initialize
 
 /qsim/filename qsim.root
@@ -12,7 +23,7 @@
 /qsim/ymin  -0.75 cm
 /qsim/ymax   0.75 cm
 
-/qsim/z     -52.0 cm
+/qsim/z     -52.6 cm
 
 /qsim/emin   850 MeV
 /qsim/emax   850 MeV
