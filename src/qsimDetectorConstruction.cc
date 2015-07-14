@@ -614,13 +614,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 	                uScint_log,"upperScint",world_log,false,0);
 	
 	
-	    G4RotationMatrix* detrot = new G4RotationMatrix;
-	    detrot->rotateY(45.*deg);
-	
-	    G4VPhysicalVolume* det_phys
-	        = new G4PVPlacement(detrot,G4ThreeVector(),det_log,"detector_phys",world_log,false,0);
-
-
+	   
 	    //////////////////////////////////////////////////////////////////////////////////////
 	    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.75*cm);
 	    G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
@@ -673,7 +667,19 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 				          Pb_log,"Pb",world_log,false,0);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////////
+		// DETECTOR
+		/////////////////////////////////////////////////////////////////////////////////////////
+		//
+		//
+		
+
+		G4RotationMatrix* detrot = new G4RotationMatrix;
+	  detrot->rotateY(45.*deg);
+	
+	  G4VPhysicalVolume* det_phys
+	      = new G4PVPlacement(detrot,G4ThreeVector(),det_log,"detector_phys",world_log,false,0);
+
 
     //	------------- Surfaces --------------
     //
