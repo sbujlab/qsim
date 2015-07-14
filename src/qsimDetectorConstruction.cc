@@ -585,74 +585,74 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 		// SCINTILLATORS
 		/////////////////////////////////////////////////////////////////////////////////////////
     // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)		
-		G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
-    G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
+		if (fBeamMode!=2) {		
+	
+			G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
+	    G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
 
-    // Make sensitive
-    //G4String 
-    DetSDname = "tracker2";
+	    // Make sensitive
+	    //G4String 
+	    DetSDname = "tracker2";
 
-    qsimScintDetector* upScintSD = new qsimScintDetector(DetSDname, 1);
-
-    SDman->AddNewDetector(upScintSD);
-    uScint_log->SetSensitiveDetector(upScintSD);
-
-
-		G4double upScint_pos;
-		if (fStandMode==1||fStandMode==2) {
-			upScint_pos = quartz_z-45*cm; 
-		}
-		else {
-			upScint_pos = quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the PMT model 1 + quartz design on the new stand design.
-		}
-
-    G4PVPlacement* uScint_phys;
-    uScint_phys 
-        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,upScint_pos-1.*cm), // is this 1.*cm supposed to be the height of a scintillator?
-                uScint_log,"upperScint",world_log,false,0);
-
-
-    G4RotationMatrix* detrot = new G4RotationMatrix;
-    detrot->rotateY(45.*deg);
-
-    G4VPhysicalVolume* det_phys
-        = new G4PVPlacement(detrot,G4ThreeVector(),det_log,"detector_phys",world_log,false,0);
-
-
-
-
-    //////////////////////////////////////////////////////////////////////////////////////
-    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.75*cm);
-    G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
-
-    // Make sensitive
-    //G4String 
-    DetSDname = "tracker3";
-
-    qsimScintDetector* loScintSD = new qsimScintDetector(DetSDname, 2);
-
-    SDman->AddNewDetector(loScintSD);
-    lScint_log->SetSensitiveDetector(loScintSD);
+			qsimScintDetector* upScintSD = new qsimScintDetector(DetSDname, 1);
+	
+	    SDman->AddNewDetector(upScintSD);
+	    uScint_log->SetSensitiveDetector(upScintSD);
+	
+	
+			G4double upScint_pos;
+			if (fStandMode==1||fStandMode==2) {
+				upScint_pos = quartz_z-45*cm; 
+			}
+			else {
+				upScint_pos = quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the PMT model 1 + quartz design on the new stand design.
+			}
+	
+	    G4PVPlacement* uScint_phys;
+	    uScint_phys 
+	        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,upScint_pos-1.*cm), // is this 1.*cm supposed to be the height of a scintillator?
+	                uScint_log,"upperScint",world_log,false,0);
+	
+	
+	    G4RotationMatrix* detrot = new G4RotationMatrix;
+	    detrot->rotateY(45.*deg);
+	
+	    G4VPhysicalVolume* det_phys
+	        = new G4PVPlacement(detrot,G4ThreeVector(),det_log,"detector_phys",world_log,false,0);
 
 
-		G4double loScint_pos;
-		if (fStandMode==1||fStandMode==2) {
-			loScint_pos = upScint_pos+1.02874*m;
-		}
-		else {
-			loScint_pos = upScint_pos+1.006*m; //new setup is 1.02874*m; // measured to be 1.02874 m between the two scintillators in the CAD drawings. Previously was just 1.0 m
-		}
+	    //////////////////////////////////////////////////////////////////////////////////////
+	    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.75*cm);
+	    G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
+	
+	    // Make sensitive
+	    //G4String 
+	    DetSDname = "tracker3";
+	
+	    qsimScintDetector* loScintSD = new qsimScintDetector(DetSDname, 2);
+	
+	    SDman->AddNewDetector(loScintSD);
+	    lScint_log->SetSensitiveDetector(loScintSD);
+	
+	
+			G4double loScint_pos;
+			if (fStandMode==1||fStandMode==2) {
+				loScint_pos = upScint_pos+1.02874*m;
+			}
+			else {
+				loScint_pos = upScint_pos+1.006*m; //new setup is 1.02874*m; // measured to be 1.02874 m between the two scintillators in the CAD drawings. Previously was just 1.0 m
+			}
+	
+	    //(-1*quartz_z)+(41.25*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
+	                G4PVPlacement* lScint_phys;
+	                lScint_phys 
+				           = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,loScint_pos),
+			            lScint_log,"lowerScint",world_log,false,0);
+  
 
-    //(-1*quartz_z)+(41.25*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
-                G4PVPlacement* lScint_phys;
-                lScint_phys 
-                = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,loScint_pos),
-                lScint_log,"lowerScint",world_log,false,0);
-    
-
-		// LEAD BLOCK
-		///////////////////////////////////////////////////////////////////////////////////////
-		if (!fStandMode==2) { // check numbers for the beam mode options
+			// LEAD BLOCK
+			///////////////////////////////////////////////////////////////////////////////////////
+	
 			G4Box* Pb_blox = new G4Box("Pb_blox", 10.16*cm,7.62*cm, 10.16*cm);
 			//   expanded to ensure nothing
 			//   can hit the scint. w/o the lead.
