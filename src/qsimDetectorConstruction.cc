@@ -585,7 +585,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 		// SCINTILLATORS
 		/////////////////////////////////////////////////////////////////////////////////////////
     // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)		
-		if (fBeamMode!=2) {		
+		if (fStandMode!=2) {		
 	
 			G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
 	    G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
