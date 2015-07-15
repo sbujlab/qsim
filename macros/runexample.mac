@@ -6,7 +6,7 @@
 # 2 = PMT v1, accelerator beam setup.
 # Default is 0, must be modified before initialization
 
-/qsim/fBeamMode 0
+/qsim/fSourceMode 0
 # 0 = Cosmic mode
 # 1 = Accelerator mode (currently set to Mainz characteristics)
 # Default is 0, can be modified after initialization

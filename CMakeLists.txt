@@ -81,6 +81,7 @@ set(QSIM_SCRIPTS
     macros/gui.mac
     macros/vis.mac
     macros/batchrun.mac
+    macros/runscript.sh
 )
 
 foreach(_script ${QSIM_SCRIPTS})

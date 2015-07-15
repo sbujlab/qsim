@@ -7,7 +7,7 @@
 /gun/particle mu-
 
 /qsim/fStandMode 0
-/qsim/fBeamMode 0
+/qsim/fSourceMode 0
 
 /run/initialize
 
