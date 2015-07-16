@@ -16,7 +16,7 @@ ev.ph		Particle initial azimuthal angle [rad]
 
 hit data
 hit.n		Number of hits for the event
-hit.det		Detector number
+hit.det		Detector number (2 is the PMT)
 hit.vid		Volume ID number (not yet implemented)
 hit.pid		Geant4 particle type
 hit.trid	Geant4 track ID number (1 = first particle created)
@@ -31,7 +31,7 @@ hit.m		Mass of particle [GeV]
 
 scint data
 sci.n		Number of hits for the event
-sci.det		Detector number
+sci.det		Detector number (1 top only, 2 bottom only, 10 for both)
 sci.vid		Volume ID number (not yet implemented)
-sci.edep	Enegy deposited [GeV]
+sci.edep	Energy deposited [GeV]
 

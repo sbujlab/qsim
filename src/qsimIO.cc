@@ -49,7 +49,7 @@ void qsimIO::InitializeTree(){
 
     if( fTree ){ delete fTree; }
 
-    fTree = new TTree("T", "Geant4 Moller Simulation");
+    fTree = new TTree("T", "Geant4 Quartz Detector Simulation");
 
     // Event information
     fTree->Branch("ev.pid",   &fEvPart_PID, "ev.pid/I");

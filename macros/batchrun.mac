@@ -1,6 +1,6 @@
 # Batch mode running for qsim
 
-/qsim/filename qsim_batch_run.root
+/qsim/filename qsim_output.root 
 
 /qsim/seed 50
 
@@ -11,4 +11,4 @@
 
 /run/initialize
 
-/run/beamOn 1000
+/run/beamOn 1000000
