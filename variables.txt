@@ -15,7 +15,8 @@ ev.ph		Particle initial azimuthal angle [rad]
 
 
 hit data
-hit.n		Number of hits for the event
+hit.n		Number of hits for the event, number of electrons emitted 
+				from cathode for event n
 hit.det		Detector number (2 is the PMT)
 hit.vid		Volume ID number (not yet implemented)
 hit.pid		Geant4 particle type
