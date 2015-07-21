@@ -34,10 +34,10 @@
 
 void qsimDetectorConstruction::StandModeSet(G4int mode = 0) {
 		fStandMode = mode; 
-		// 0 means old stand
-		// 1 means new stand (PMT model 1)
-		// 2 means new stand (PMT model 3) with no lead (for beamline simulation)
-		// 3 etc. means nothing yet, but should be used for PMT model 3 designs if they are different at all. 
+		// 0 means old stand (detector design 1)
+		// 1 means new stand (detector design 1)
+		// 2 beamline construction (detector design 1), no scintillators and no lead
+		// 3 etc. means nothing yet, but should be used for detector designs if they are different at all. 
 }
 
 qsimDetectorConstruction::qsimDetectorConstruction()
@@ -601,10 +601,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 	
 	
 			G4double upScint_pos;
-			if (fStandMode==1||fStandMode==2) {
+			if (fStandMode==1) {
 				upScint_pos = quartz_z-45*cm; 
 			}
-			else {
+			else if (fStandMode==0){
 				upScint_pos = quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the PMT model 1 + quartz design on the new stand design.
 			}
 	
@@ -630,10 +630,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 	
 	
 			G4double loScint_pos;
-			if (fStandMode==1||fStandMode==2) {
+			if (fStandMode==1) {
 				loScint_pos = upScint_pos+1.02874*m;
 			}
-			else {
+			else if (fStandMode==0) {
 				loScint_pos = upScint_pos+1.006*m; //new setup is 1.02874*m; // measured to be 1.02874 m between the two scintillators in the CAD drawings. Previously was just 1.0 m
 			}
 	
@@ -653,10 +653,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 			G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
 
 			G4double Pb_pos;
-			if (fStandMode==1||fStandMode==2) {
+			if (fStandMode==1) {
 				Pb_pos = loScint_pos-18.554*cm;
 			}
-			else {	
+			else if (fStandMode==0) {	
 				Pb_pos = loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
 			}
 		

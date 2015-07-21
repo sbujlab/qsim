@@ -112,7 +112,12 @@ int main(int argc, char** argv){
     rmmess->SetStepAct((qsimSteppingAction *) stepping_action);
 
     // Initialize Run manager
-		//runManager->Initialize(); // do initialization in all macro files, see remoll examples for assistance. 
+		////////////////////////////////////////////////////////////////////////////
+		
+		//runManager->Initialize(); 
+
+		// do initialization in all macro files, 
+		//see remoll examples for assistance. 
 
     G4UIsession* session = 0;
 
