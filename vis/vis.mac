@@ -18,7 +18,7 @@
 
 # Add axis (has to be after /vis/scene/create )
 #
-#/vis/scene/add/axes 0 0 0 100 cm
+/vis/scene/add/axes 0 0 0 100 cm
 
 
 #

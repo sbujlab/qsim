@@ -1,41 +1,24 @@
-# Example macro for qsim
+# Example run macro for qsim
 
+# Set run mode
+/qsim/fDetMode 1 
 /qsim/fStandMode 0 
-# 0 = PMT v1, old cosmic stand
-# 1 = PMT v1, new cosmic stand
-# 2 = PMT v1, accelerator beam setup.
-# Default is 0, must be modified before initialization
+/qsim/fSourceMode 2 
 
-/qsim/fSourceMode 0
-# 0 = Cosmic mode
-# 1 = Accelerator mode (currently set to Mainz characteristics)
-# Default is 0, can be modified after initialization
+# Set detector properties
+/qsim/fQuartzPolish 0.975 
+/qsim/fDetAngle 0 deg
+/qsim/fDetPosX 0 cm
+/qsim/fDetPosY 0 cm
 
-/run/initialize
+/run/initialize 
 
-/qsim/filename qsim.root
+/qsim/filename qsim_out.root
+/qsim/seed 50 
 
-/qsim/seed 50
+/qsim/emin   1.063 GeV
+/qsim/emax   1.063 GeV
 
-/qsim/xmin -7.5 cm
-/qsim/xmax  7.5 cm
+/gun/particle e- 
 
-/qsim/ymin  -0.75 cm
-/qsim/ymax   0.75 cm
-
-/qsim/z     -52.6 cm
-
-/qsim/emin   850 MeV
-/qsim/emax   850 MeV
-
-/qsim/theta   0 deg
-/qsim/phi      0 deg
-
-/gun/particle e-
-#/gun/particle mu-
-
-
-/run/beamOn 1
-
-
-
+/run/beamOn 1000

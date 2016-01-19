@@ -19,6 +19,7 @@ class qsimSteppingAction;
 
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
 class G4UIcmdWithABool;
 class G4UIdirectory;
@@ -48,8 +49,15 @@ class qsimMessenger : public G4UImessenger {
 	G4UIcmdWithAnInteger *seedCmd;
 	G4UIcmdWithAString   *fileCmd;
 	//
+	//G4UIcmdWithAnInteger *fStandModeCmd;
+	G4UIcmdWithAnInteger *fDetModeCmd;
 	G4UIcmdWithAnInteger *fStandModeCmd;
 	G4UIcmdWithAnInteger *fSourceModeCmd;
+	G4UIcmdWithADouble *fQuartzPolishCmd;
+	G4UIcmdWithADoubleAndUnit *fDetAngleCmd;
+	// POSSCAN
+	G4UIcmdWithADoubleAndUnit *fDetPosXCmd;	
+	G4UIcmdWithADoubleAndUnit *fDetPosYCmd;	
 	//
 	G4UIcmdWithADoubleAndUnit *fXminCmd;
 	G4UIcmdWithADoubleAndUnit *fXmaxCmd;

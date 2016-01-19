@@ -47,7 +47,7 @@ FIXME:  Add to verbosity responsiveness
   theScintProcess->SetTrackSecondariesFirst(true);
 
   theCerenkovProcess = new G4Cerenkov();
-  theCerenkovProcess->SetMaxNumPhotonsPerStep(300);
+  theCerenkovProcess->SetMaxNumPhotonsPerStep(2000);
   theCerenkovProcess->SetTrackSecondariesFirst(true);
 
   theAbsorptionProcess      = new G4OpAbsorption();

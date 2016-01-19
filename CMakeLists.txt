@@ -72,6 +72,7 @@ target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 #FILE( GLOB QSIM_GEO "geometry/*" )
 
 set(QSIM_SCRIPTS
+    primaryDistribution.root
     macros/vis.mac
     vis/OIX.mac
     vis/Qt.mac
@@ -83,7 +84,7 @@ set(QSIM_SCRIPTS
     macros/batchrun.mac
     macros/runscript.sh
     macros/handler.sh
-		macros/merger.sh
+	macros/merger.sh
 )
 
 foreach(_script ${QSIM_SCRIPTS})

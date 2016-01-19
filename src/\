@@ -1,0 +1,824 @@
+
+#include "qsimDetectorConstruction.hh"
+#include "G4SystemOfUnits.hh"
+
+#include "qsimDetector.hh"
+#include "qsimScintDetector.hh"
+#include "G4SDManager.hh"
+
+#include "G4Material.hh"
+#include "G4MaterialTable.hh"
+#include "G4Element.hh"
+#include "G4ElementTable.hh"
+#include "G4LogicalBorderSurface.hh"
+#include "G4LogicalSkinSurface.hh"
+#include "G4Box.hh"
+#include "G4Trap.hh"
+#include "G4Cons.hh"
+#include "G4Tubs.hh"
+#include "G4Trd.hh"
+#include "G4LogicalVolume.hh"
+#include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
+#include "G4Transform3D.hh"
+#include "G4PVPlacement.hh"
+#include "G4OpticalSurface.hh"
+#include "G4SubtractionSolid.hh"
+#include "G4VisAttributes.hh"
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+//void qsimDetectorConstruction::StandModeSet() {
+//		fStandMode = 0; // default setting is 0, for the setup to reflect the old cosmic stand.
+//}
+
+void qsimDetectorConstruction::StandModeSet(G4int mode = 0) {
+		fStandMode = mode; 
+		// 0 means old stand (detector design 1)
+		// 1 means new stand (detector design 1)
+		// 2 beamline construction (detector design 1), no scintillators and no lead
+		// 3 etc. means nothing yet, but should be used for detector designs if they are different at all. 
+}
+
+qsimDetectorConstruction::qsimDetectorConstruction()
+{
+		StandModeSet(); // call the default
+
+		// fNewStand = false; // Default setting is for the setup to reflect to old cosmic stand. True will go to the new design. Messenger has commands to switch between these at command line or at batch mode run time as well.
+		// fAccBeamStand = false; // Only affects stand components: true deletes the lead block.
+
+		quartz_x = 1.75*cm; // CSC measures in SolidWorks 0.689 x 2.952 x 0.197 cm 
+    quartz_y = 7.*cm;  //2.5 
+    //Half cm
+    quartz_z = 0.3*cm;
+    //One cm
+    //  quartz_z = 0.5*cm;
+
+    quartz_zPos = 0.0*cm; //-.9*cm;//-1.1*cm; //-.9*cm; //-.6*cm;
+
+    cone_rmin1 = 2.1*cm;
+    cone_rmax1 = cone_rmin1+.05*cm;
+    cone_rmin2 = 2.5*cm;  // normally 2.5*cm;
+    cone_rmax2 = cone_rmin2+.05*cm;
+    cone_z = quartz_y+.5*cm;    //3
+    cone_sphi = 0.;
+    cone_fphi = 2*3.1415;
+
+    rin = cone_rmin2;  // normally 2.5*cm;
+    rout = rin+.05*cm;
+    lngth = 1.9*cm;  // PMT dist. = 2*lngth +1cm  (10.4 == 4.5, 6.8 == 2.9)
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+qsimDetectorConstruction::~qsimDetectorConstruction(){;}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4VPhysicalVolume* qsimDetectorConstruction::Construct()
+{
+    //	------------- Materials -------------
+
+    G4double a, z, density;
+    G4int nelements;
+
+    // Air
+    // 
+    G4Element* N = new G4Element("Nitrogen", "N", z=7 , a=14.01*g/mole);
+    G4Element* O = new G4Element("Oxygen"  , "O", z=8 , a=16.00*g/mole);
+
+    G4Material* Air = new G4Material("Air", density=1.29*mg/cm3, nelements=2);
+    Air->AddElement(N, 70.*perCent);
+    Air->AddElement(O, 30.*perCent);
+
+    // Quartz
+    // 
+    G4Element* Si = new G4Element("Silicon", "Si", z=14 , a=28*g/mole);
+
+    G4Material* Quartz = new G4Material("Quartz", density= 2.203*g/cm3, nelements=2);
+    Quartz->AddElement(Si, 1);
+    Quartz->AddElement(O, 2);
+
+    // Mirror
+    // 
+    G4Element* Al = new G4Element("Aluminum", "Al", z=13 , a=27*g/mole);
+
+    G4Element* Pb = new G4Element("Lead", "Pb", z=82 , a=207.2*g/mole);
+
+    G4Material* Alu_Mat = new G4Material("Alu_Mat", 2.7*g/cm3, nelements=1);
+    Alu_Mat->AddElement(Al, 1);
+
+    G4Material* Pb_Mat = new G4Material("Pb_Mat", 11.34*g/cm3, nelements=1);
+    Pb_Mat->AddElement(Pb, 1);
+
+		//G4Material* Pb_Mat=Air; // To remove lead bricks, uncomment.
+
+    G4Material* Mirror = new G4Material("Mirror", density= 2.7*g/cm3, nelements=1);
+    Mirror->AddElement(Al, 1);
+
+
+    // Let us make cathode from a special metal (reflectivity 0, efficiency of photoelectrons 25%)
+    G4Material* CATH = new G4Material("CATH", density= 2.7*g/cm3, nelements=1);
+    CATH->AddElement(Al, 1);
+
+
+    //
+    // ------------ Generate & Add Material Properties Table ------------
+    //
+    const G4int nEntries = 205;
+
+    G4double PhotonEnergy[nEntries] =
+    {  2.4,2.42,2.44,2.46,2.48,2.5,2.52,2.54,2.56,2.58,
+        2.6,2.62,2.64,2.66,2.68,2.7,2.72,2.74,2.76,2.78,
+        2.8,2.82,2.84,2.86,2.88,2.9,2.92,2.94,2.96,2.98,
+        3,3.02,3.04,3.06,3.08,3.1,3.12,3.14,3.16,3.18,
+        3.2,3.22,3.24,3.26,3.28,3.3,3.32,3.34,3.36,3.38,
+        3.4,3.42,3.44,3.46,3.48,3.5,3.52,3.54,3.56,3.58,
+        3.6,3.62,3.64,3.66,3.68,3.7,3.72,3.74,3.76,3.78,
+        3.8,3.82,3.84,3.86,3.88,3.9,3.92,3.94,3.96,3.98,
+        4,4.02,4.04,4.06,4.08,4.1,4.12 ,4.14,4.16,4.18,  //Glass cuts off above 4.135eV, 87 entries
+        4.2,4.22,4.24,4.26,4.28,4.3,4.32,4.34,4.36,4.38,
+        4.4,4.42,4.44,4.46,4.48,4.5,4.52,4.54,4.56,4.58,
+        4.6,4.62,4.64,4.66,4.68,4.7,4.72,4.74,4.76,4.78,
+        4.8,4.82,4.84,4.86,4.88,4.9,4.92,4.94,4.96,4.98, //  Cut off -> 4.96eV ~ 250nm
+        5,5.02,5.04   ,   5.06,5.08,5.1,5.12,5.14,5.16,5.18,   // 5.04eV = 246 nm is the 30% cutoff, 133 entries
+        5.2,5.22,5.24,5.26,5.28,5.3,5.32,5.34,5.36,5.38,
+        5.4,5.42,5.44,5.46,5.48,5.5,5.52,5.54,5.56,5.58,	
+        5.6,5.62,5.64,5.66,5.68,5.7,5.72,5.74,5.76,5.78,
+        5.8,5.82,5.84,5.86,5.88,5.9,5.92,5.94,5.96,5.98,
+        6,6.02,6.04,6.06,6.08,6.1,6.12,6.14,6.16,6.18,
+				6.21,6.29,6.38,6.48,6.57,6.67,6.78,6.87,6.98,
+				7.08,7.20,7.32,7.44,7.56,7.69		};  // 200 nm
+
+
+
+    G4double RefractiveIndex1[nEntries];
+    G4double Absorption1[nEntries];
+    G4double RefractiveIndex2[nEntries];
+    G4double RefractiveIndex3[nEntries];
+    G4double Reflectivity4[nEntries];
+    G4double EfficiencyArray4[nEntries] = 
+		{  11.0,12.0,12.5,13.1,13.5,14.5,15.2,16.0,16.5,17.0, // percentages here
+				17.5,18.0,18.5,19.0,19.2,19.7,20.1,20.7,20.9,21.1,
+				21.6,22.0,22.5,22.7,23.0,23.5,23.7,24.0,24.0,24.2,
+				24.2,24.5,25.0,25.0,25.3,25.5,25.5,25.5,25.5,25.5,
+				25.5,25.5,25.5,25.7,26.1,26.1,26.1,26.1,25.6,25.6,
+				25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,25.6,
+				25.6,25.6,25.6,26.1,26.1,26.1,26.1,26.1,26.1,26.1,
+				25.6,25.0,25.0,25.0,25.0,24.5,24.5,24.5,24.5,24.3,
+				24.0,24.0,24.0,24.0,24.0,24.0,23.5,23.5,23.5,23.5,
+				23.5,23.5,23.5,23.3,23.1,22.8,22.6,22.6,22.6,22.6, // 4.38 eV
+				22.6,22.6,22.3,22.1,22.1,22.1,22.0,21.8,21.7,21.3, //100 entries 4.58 eV
+				21.2,21.0,20.8,20.8,20.8,20.8,20.8,20.8,20.8,20.8, // 4.78 eV
+				20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.2,20.0, // 4.98 eV
+				20.0,20.0,20.0,20.0,20.0,20.0,20.0,19.5,19.5,19.5, // 5.18 eV
+				19.5,19.5,19.5,19.5,19.1,19.1,19.1,19.1,19.1,19.1, // 5.38 eV
+				19.1,19.1,19.1,19.0,18.8,18.8,18.8,18.8,18.8,18.8, // 5.58 eV
+			  18.8,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4, // 5.78 eV
+			  18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4, // 5.98eV
+			  18.4,18.2,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,
+				18.0,17.6,17.6,17.6,17.6,17.2,16.5,16.2,15.9,
+				15.2,14.9,14.3,12.1,10.2,9.6	}; // 6.18 eV	Response obtained from the plot of the quantum efficiency as a function of wavelength and then changed to eV for the Bialkali photocathode (synthetic silica)
+		G4double Efficiency4[nEntries];
+		G4double Reflectivity3[nEntries];
+
+    int i;
+    for (i = 0; i < nEntries; i++) {
+        PhotonEnergy[i] = PhotonEnergy[i]*eV;
+        RefractiveIndex1[i]= 1.455 -(.005836*PhotonEnergy[i]/eV)+(.003374*PhotonEnergy[i]*PhotonEnergy[i]/eV/eV);
+
+        //Aluminum
+        //		Reflectivity3[i] = 0; //.6;
+
+        //Aluminum Real
+        if (PhotonEnergy[i] < 4.135*eV) Reflectivity3[i] = .75;  // regularly .75, .7 below  .56/.53/.46 tunes to 50 PEs
+        else if (PhotonEnergy[i] >= 4.135*eV && PhotonEnergy[i] < 6.203*eV) Reflectivity3[i] = .7;
+        else Reflectivity3[i] = .6;		// .6
+
+        //ALZAK		
+        //		if (PhotonEnergy[i] < 3.26*eV) {
+        //			Reflectivity3[i]=.93; }
+        //		else { Reflectivity3[i] = 0;}
+
+        // No Mirror
+        //		Reflectivity3[i] = 0;
+
+        //		Absorption1[i] = 50.*cm;  //Uniform
+
+        Absorption1[i] = (exp(4.325)*exp(1.191*PhotonEnergy[i]/eV)*exp(-.213*PhotonEnergy[i]*PhotonEnergy[i]/eV/eV)*exp(-.04086*PhotonEnergy[i]*PhotonEnergy[i]*PhotonEnergy[i]/eV/eV/eV))*m;
+
+        if (Absorption1[i] > 25*m) {Absorption1[i] = 25*m;}
+
+        RefractiveIndex2[i]=1;
+        RefractiveIndex3[i]=0;
+        Reflectivity4[i]=0.0;
+        Efficiency4[i] = 0.01*EfficiencyArray4[i];
+
+
+    }
+
+    //QUARTZ
+
+    G4MaterialPropertiesTable* myMPT1 = new G4MaterialPropertiesTable();
+    myMPT1->AddProperty("RINDEX",       PhotonEnergy, RefractiveIndex1,nEntries);
+    myMPT1->AddProperty("ABSLENGTH",    PhotonEnergy, Absorption1,     nEntries);
+
+    Quartz->SetMaterialPropertiesTable(myMPT1);
+
+    //
+    // Air
+    //
+
+    /*  G4double RefractiveIndex2[nEntries] =
+        { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+        1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+        1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+        1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+        1.00, 1.00, 1.00, 1.00 };  */
+
+    G4MaterialPropertiesTable* myMPT2 = new G4MaterialPropertiesTable();
+    myMPT2->AddProperty("RINDEX", PhotonEnergy, RefractiveIndex2, nEntries);
+
+    Air->SetMaterialPropertiesTable(myMPT2);
+
+    //
+    // Mirror (refractive index = 0) 
+    //
+
+
+    /*  G4double RefractiveIndex3[nEntries] =
+        { 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00 };   */
+
+
+
+
+
+    //
+    // CATH
+    //
+
+    /*
+       G4double Reflectivity4[nEntries] =
+       { 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+       0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+       0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+       0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+       0.00, 0.00, 0.00, 0.00 };
+
+       G4double Efficiency4[nEntries] =
+       {0.25,  0.25,  0.25,  0.25, 0.25, 0.25,
+       0.25,  0.25,  0.25,  0.25, 0.25, 0.25,
+       0.25,  0.25,  0.25,  0.25, 0.25, 0.25,
+       0.25,  0.25,  0.25,  0.25, 0.25, 0.25,
+       0.25,  0.25,  0.25,  0.25, 0.25, 0.25,
+       0.25, 0.25 };  */
+
+
+
+
+
+    G4SDManager* SDman = G4SDManager::GetSDMpointer();
+
+    /////////////////////////////////////////////////////////////////////////////
+    //	------------- Volumes --------------
+    double world_x, world_y, world_z;
+    double det_x, det_y, det_z;
+
+    world_x = world_y = world_z = 275*cm;
+    det_x = 15*cm;
+    det_y = 6*cm;
+    det_z = 6*cm;
+
+		//////////////////////////////////////////////////////////////////////////////
+    // The detector // The detector is in fact full of air, as defined above.
+    //
+    G4Box* world_box = new G4Box("World",world_x,world_y,world_z);
+
+    G4LogicalVolume* world_log
+        = new G4LogicalVolume(world_box,Air,"World",0,0,0);
+
+    world_log->SetVisAttributes(G4VisAttributes::Invisible);
+
+    G4VPhysicalVolume* world_phys
+        = new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
+
+
+
+    G4Box* det_box = new G4Box("Detector",det_x,det_y,det_z);
+
+    G4LogicalVolume* det_log
+        = new G4LogicalVolume(det_box,Air,"Detector_log",0,0,0);
+
+    det_log->SetVisAttributes(G4VisAttributes::Invisible);
+
+
+
+    /*
+    // Al plate
+    G4Box* Al_box = new G4Box("Al_box", 20*cm, 20*cm, .0176*cm);
+
+    G4LogicalVolume* Al_log
+    = new G4LogicalVolume(Al_box,Alu_Mat,"Al_log",0,0,0);
+
+    G4VPhysicalVolume* Al_phys = new G4PVPlacement(0, G4ThreeVector(0,0,-9.0*cm), Al_log, "Aluminum",
+    det_log, false, 0);
+    */
+
+
+		/////////////////////////////////////////////////////////////////////////////////////
+    // The quartz
+    //	
+    G4double q_yLB = quartz_y - (quartz_z);
+
+    G4Trap* quartz_box = new G4Trap("Quartz", 2*quartz_x, 2*quartz_z, 2*quartz_y, 2*q_yLB);
+
+    //  G4Box* quartz_box = new G4Box("Quartz",quartz_x,quartz_y,quartz_z);
+
+    G4LogicalVolume* quartz_log
+        = new G4LogicalVolume(quartz_box,Quartz,"Quartz",0,0,0);
+
+    qsimScintDetector* quartzSD = new qsimScintDetector("QuartzSD", 10);
+
+    SDman->AddNewDetector(quartzSD);
+    quartz_log->SetSensitiveDetector(quartzSD);
+
+    G4RotationMatrix* rotQ = new G4RotationMatrix;
+    //	rotQ->rotateZ(0.*rad);
+
+    rotQ->rotateZ(M_PI*rad);
+    rotQ->rotateX(3*M_PI/2.*rad);
+
+    G4VPhysicalVolume* quartz_phys
+        = new G4PVPlacement(rotQ,G4ThreeVector(0,0,quartz_zPos),quartz_log,"Quartz",
+                det_log,false,0);  // normally zero vector
+
+    //////////////////////
+
+    /*	  G4Box* ruler_box = new G4Box("Ruler",1.5*cm,1*cm,1*cm);
+
+          G4LogicalVolume* ruler_log
+          = new G4LogicalVolume(ruler_box,Air,"Ruler",0,0,0);
+
+          G4VPhysicalVolume* ruler_phys
+          = new G4PVPlacement(0,G4ThreeVector(quartz_y+1.4*cm,0.5*cm,0*cm),ruler_log,"Ruler",
+          det_log,false,0);  
+          */	 
+   
+		//////////////////////////////////////////////////////////////////////////////
+		// The small mirror on the quartz
+    //
+
+/*
+    G4Box* mirr_Box = new G4Box("QuMirror", .05*cm, quartz_x, quartz_z*1.4142);
+
+    G4LogicalVolume* mirr_log = new G4LogicalVolume(mirr_Box, Mirror, "QuMirror",0,0,0);
+
+    G4RotationMatrix* rotM = new G4RotationMatrix;
+
+    //rotM->rotateZ(M_PI*rad);
+    rotM->rotateY(-M_PI/4.*rad);
+
+
+    G4VPhysicalVolume* mirr_Phys = new G4PVPlacement(rotM,G4ThreeVector(-1*quartz_y+.05*cm,0,quartz_zPos+.06*cm), mirr_log, "QuMirror",
+            det_log,false, 0);  // normally z= .06
+   
+*/
+	G4Trap *lightguide_big = new G4Trap("lightguide_big",11.21*cm,2.97456*deg,90.0*deg,3.15*cm+0.05*cm,3.25*cm+0.05*cm,3.25*cm+0.05*cm,0.0*deg,0.225*cm+0.05*cm,2.0*cm+0.05*cm,2.0*cm+0.05*cm,0.0*deg);
+	G4Trap *lightguide_small = new G4Trap("lightguide_small",11.22*cm,2.97456*deg,90.0*deg,3.15*cm,3.25*cm,3.25*cm,0.0*deg,0.225*cm,2.0*cm,2.0*cm,0.0*deg);
+	
+		
+	G4VSolid *lightguide_virt = new G4SubtractionSolid("lightguide_virt", lightguide_big, lightguide_small);
+
+
+	G4LogicalVolume *lightguide_log = new G4LogicalVolume(lightguide_virt, Mirror, "LG_log",0,0,0);
+
+
+
+
+
+
+    G4RotationMatrix* rotlg = new G4RotationMatrix;
+    rotlg->rotateY(90.000*deg);
+    rotlg->rotateZ(90.0*deg);	
+
+//    G4VPhysicalVolume* lightguide_phys = new G4PVPlacement(rotlg,G4ThreeVector(0,0,0),lightguide_log,"lightguide_phys", det_log,false,0);  // normally zero vector
+   		
+
+
+
+
+		///////////////////////////////////////////////////////////////////////////////
+		// Trapezoid tube plates
+    // Top
+
+    G4Trd* topPlate = new G4Trd("topPlate", .05*cm, .05*cm, 2.0*cm, 3.25*cm, 11.25*cm);
+
+    G4LogicalVolume* topPlate_log = new G4LogicalVolume(topPlate, Mirror, "TopPlate_log",0,0,0);
+
+    G4RotationMatrix* rotT = new G4RotationMatrix;
+//    rotT->rotateY(-M_PI*.4462*rad);
+    rotT->rotateY(-79.517*deg);
+/*
+    G4VPhysicalVolume* topPlate_phys
+        = new G4PVPlacement(rotT,G4ThreeVector(-1.1*cm,0,1.25*cm+0.9*cm),topPlate_log,"TopPlate_phys", // 0.9*cm was added to bring this volume up along with the quartz crystal to be centered at the origin
+                det_log,false,0);  // normally zero vector
+  */  		
+		////////////////////////////////////////////////////////////////////////////		
+		
+		// Bottom 
+    G4Trd* botPlate = new G4Trd("botPlate", .05*cm, .05*cm, 3.25*cm, 2.0*cm, 11.4*cm);
+
+    G4LogicalVolume* botPlate_log = new G4LogicalVolume(botPlate, Mirror, "botPlate_log",0,0,0);
+
+    G4RotationMatrix* rotB = new G4RotationMatrix;
+//    rotB->rotateY(M_PI*.4794*rad);
+    rotB->rotateY(85.151*deg);
+/*
+    G4VPhysicalVolume* botPlate_phys
+        = new G4PVPlacement(rotB,G4ThreeVector(-1.1*cm,0,0.9*cm-2.05*cm-0.25*cm),botPlate_log,"botPlate_phys",
+                det_log,false,0);  // normally zero vector
+ 
+*/	
+		///////////////////////////////////////////////////////////////////////////
+		
+    G4Trd* RPlate = new G4Trd("RPlate", .225*cm, 3.25*cm, .05*cm, .05*cm, 11.209*cm);
+
+    G4LogicalVolume* RPlate_log = new G4LogicalVolume(RPlate, Mirror, "RPlate_log",0,0,0);
+
+    G4RotationMatrix* rotR = new G4RotationMatrix;
+//    rotR->rotateY(-45*deg);
+    rotR->rotateY(-88.5*deg);
+    rotR->rotateX(-3.2*deg);
+//    rotR->rotateX(-6.36826415*deg);
+//    rotR->rotateX(-4.42648845*deg);	
+//    rotR->rotateY(-42*deg);
+//    rotR->rotateX(90*deg);
+//    rotR->rotateZ(4.42648845*deg-0.5*deg);	
+//    rotR->rotateX(-M_PI*.0127*rad);
+//    rotR->rotateY(-M_PI*.485*rad);
+/*
+    G4VPhysicalVolume* RPlate_phys
+        = new G4PVPlacement(rotR,G4ThreeVector(-1.1*cm,-3.25*cm+0.6215*cm,0.9*cm-.55*cm),RPlate_log,"RPlate_phys",
+                det_log,false,0);  // normally zero vector
+*/
+    
+		///////////////////////////////////////////////////////////////////////////
+		
+		G4Trd* LPlate = new G4Trd("LPlate", .225*cm, 3.25*cm, .05*cm, .05*cm, 11.209*cm);
+
+    G4LogicalVolume* LPlate_log = new G4LogicalVolume(LPlate, Mirror, "LPlate_log",0,0,0);
+
+    G4RotationMatrix* rotL = new G4RotationMatrix;
+    rotL->rotateY(-88.5*deg);
+    rotL->rotateX(3.2*deg);
+//    rotL->rotateZ(-4.42648845*deg+0.5*deg);
+//    rotL->rotateX(M_PI*.0127*rad);
+//    rotL->rotateY(-M_PI*.485*rad);
+/*
+    G4VPhysicalVolume* LPlate_phys
+        = new G4PVPlacement(rotL,G4ThreeVector(-1.1*cm,3.25*cm-0.6215*cm,0.9*cm-.55*cm),LPlate_log,"RPlate_phys",
+                det_log,false,0);  // normally zero vector
+
+*/
+
+		////////////////////////////////////////////////////////////////////////////
+    // The cone mirror
+    //	
+		G4Cons* cmirror_cone = new G4Cons("CMirror",cone_rmin1,cone_rmax1,
+            cone_rmin2,cone_rmax2,cone_z,cone_sphi,cone_fphi);
+
+    G4LogicalVolume* cmirror_log
+        = new G4LogicalVolume(cmirror_cone,Mirror,"CMirror",0,0,0);
+
+    // Rotation
+
+    G4VPhysicalVolume* cmirror_phys;
+
+
+    G4double rtphi = 90.*deg;
+    G4RotationMatrix rm;
+    rm.rotateY(rtphi);
+    G4double tmpx = 0.5*cm;
+
+    //    cmirror_phys
+    //    = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(tmpx,0., 0.)),  
+    //                        cmirror_log,"CMirror",
+    //                        det_log,false,0);
+
+
+    
+		
+		// The tube mirror
+    //////////////////////////////////////////////////////////////////////////////	
+
+    G4double rin = 2.5*cm;
+    G4double rout = 2.55*cm;
+    G4double lngth = 2.3*cm;  // reg. tube
+    //    G4double lngth = 3.5*cm;  // long tube	
+    G4double anini = 0*deg;
+    G4double anspan = 360*deg;
+		
+		G4Cons* mirror_tube = new G4Cons("TMirror",cone_rmin2,cone_rmax2,
+            2.5*cm,2.55*cm,lngth,cone_sphi,cone_fphi);
+
+    G4LogicalVolume* tmirror_log
+        = new G4LogicalVolume(mirror_tube,Mirror,"TMirror",0,0,0);
+
+
+    // Rotation
+    G4VPhysicalVolume* tmirror_phys;
+
+
+    G4double tmp = lngth+cone_z+tmpx;
+
+/*
+    tmirror_phys      // Only for tube at full distance (7.1cm)
+        // = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(11.8*cm,0.,0.)),  // Long tube
+        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(12.4*cm,0.,0.9*cm)),  // Long tube
+                tmirror_log,"TMirror",
+                det_log,false,0);
+*/
+    /*   
+    // Rotation
+
+    G4VPhysicalVolume* cmirror_phys;
+    rm.rotateY(rtphi);
+*/
+		/////////////////////////////////////////////////////////////////////////////////	
+
+    // The photomultiplier
+    //	quartz window
+
+    G4double prin = 0;
+    G4double prout = 2.6*cm;
+    G4double plngth = 1.5*mm;
+
+    G4Tubs* pmt = new G4Tubs("PMT",prin,prout,plngth,anini,anspan);
+
+    G4LogicalVolume* pmt_log
+        = new G4LogicalVolume(pmt,Air,"PMT",0,0,0);
+
+    // Make PMT Sensitive
+
+    G4String DetSDname = "tracker1";
+
+    /*
+    qsimDetector* trackerSD = new qsimDetector(DetSDname, 1);
+
+    SDman->AddNewDetector(trackerSD);
+    pmt_log->SetSensitiveDetector(trackerSD);
+    */
+
+    // Rotation
+
+    G4VPhysicalVolume* pmt_phys;
+
+    //  G4double sep = 0.5*cm;
+    //    G4double ptmp = tmp+lngth+sep;
+
+    pmt_phys
+        //  = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(10.1*cm,0.,0.)),  // Original sim. position
+        //    = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(10.7*cm,0.,0.)),  // Cosmic test sim. position
+    //    = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.1*cm,0.,0.9*cm)),  // Final detector-pmt length position
+        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(7.15*cm,0.,0.0*cm)),  // Final detector-pmt length position
+                pmt_log,"PMT",
+                det_log,false,0);
+
+    
+		///////////////////////////////////////////////////////////////////////////////////////
+		// metal cathode
+
+		G4double cin = 0;
+    G4double cout = 2.6*cm;
+    G4double clngth = 0.1*mm;
+
+		G4Tubs* cath = new G4Tubs("CATH",cin,cout,clngth,anini,anspan);
+
+    G4LogicalVolume* cath_log
+        = new G4LogicalVolume(cath,CATH,"CATH",0,0,0);
+
+    qsimDetector* cathSD = new qsimDetector("cath", 2);
+
+    SDman->AddNewDetector(cathSD);
+    cath_log->SetSensitiveDetector(cathSD);
+
+    G4VisAttributes *cathatt = new G4VisAttributes();
+    cathatt->SetColour(1.0, 1.0, 0.2);
+    cath_log->SetVisAttributes(cathatt);
+
+    // Rotation
+
+    G4VPhysicalVolume* cath_phys;
+
+    G4double ctmp = 10.1*cm+plngth;
+
+    cath_phys
+        //    = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(ctmp,0.,0.)),cath_log,"CATH",det_log,false,0);  // Original sim. position
+        //	  = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(10.85*cm,0.,0.)),cath_log,"CATH",det_log,false,0);  // Cosmic test position (3.7cm quartz-pmt)
+        = new G4PVPlacement(G4Transform3D(rm,G4ThreeVector(14.25*cm,0.,0.9*cm)),cath_log,"CATH",det_log,false,0);  // Cosmic test position (7.1cm quartz-pmt)
+
+
+		// SCINTILLATORS
+		/////////////////////////////////////////////////////////////////////////////////////////
+    // Coincidence volumes **** NOTE: Upper scint is below the quartz (First coincidence w/ e-)		
+		if (fStandMode!=2) {		
+	
+			G4Box* upperScint = new G4Box("upperScint",4.5*cm,4.5*cm,0.75*cm);
+	    G4LogicalVolume* uScint_log = new G4LogicalVolume(upperScint,Air,"upperScint",0,0,0);
+
+	    // Make sensitive
+	    //G4String 
+	    DetSDname = "tracker2";
+
+			qsimScintDetector* upScintSD = new qsimScintDetector(DetSDname, 1);
+	
+	    SDman->AddNewDetector(upScintSD);
+	    uScint_log->SetSensitiveDetector(upScintSD);
+	
+	
+			G4double upScint_pos;
+			if (fStandMode==1) {
+				upScint_pos = quartz_z-45*cm; 
+			}
+			else if (fStandMode==0){
+				upScint_pos = quartz_z-50*cm; //45*cm; // changed to 45 cm from 50 cm as a rough estimate based on CAD measurements of the PMT model 1 + quartz design on the new stand design.
+			}
+	
+	    G4PVPlacement* uScint_phys;
+	    uScint_phys 
+	        = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,upScint_pos-1.*cm), // is this 1.*cm supposed to be the height of a scintillator?
+	                uScint_log,"upperScint",world_log,false,0);
+	
+	
+	   
+	    //////////////////////////////////////////////////////////////////////////////////////
+	    G4Box* lowScint = new G4Box("lowScint",4.5*cm,4.5*cm,0.75*cm);
+	    G4LogicalVolume* lScint_log = new G4LogicalVolume(lowScint,Air,"lowScint",0,0,0);
+	
+	    // Make sensitive
+	    //G4String 
+	    DetSDname = "tracker3";
+	
+	    qsimScintDetector* loScintSD = new qsimScintDetector(DetSDname, 2);
+	
+	    SDman->AddNewDetector(loScintSD);
+	    lScint_log->SetSensitiveDetector(loScintSD);
+	
+	
+			G4double loScint_pos;
+			if (fStandMode==1) {
+				loScint_pos = upScint_pos+1.02874*m;
+			}
+			else if (fStandMode==0) {
+				loScint_pos = upScint_pos+1.006*m; //new setup is 1.02874*m; // measured to be 1.02874 m between the two scintillators in the CAD drawings. Previously was just 1.0 m
+			}
+	
+	    //(-1*quartz_z)+(41.25*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);
+	                G4PVPlacement* lScint_phys;
+	                lScint_phys 
+				           = new G4PVPlacement(0,G4ThreeVector(0.0,0.0,loScint_pos),
+			            lScint_log,"lowerScint",world_log,false,0);
+  
+
+			// LEAD BLOCK
+			///////////////////////////////////////////////////////////////////////////////////////
+	
+			G4Box* Pb_blox = new G4Box("Pb_blox", 10.16*cm,7.62*cm, 10.16*cm);
+			//   expanded to ensure nothing
+			//   can hit the scint. w/o the lead.
+			G4LogicalVolume* Pb_log = new G4LogicalVolume(Pb_blox,Pb_Mat,"Lead",0,0,0);
+
+			G4double Pb_pos;
+			if (fStandMode==1) {
+				Pb_pos = loScint_pos-18.554*cm;
+			}
+			else if (fStandMode==0) {	
+				Pb_pos = loScint_pos-15.9*cm; // new setup is = loScint_pos-18.554*cm; //(-1*quartz_z)+(30.0*cm-(quartz_y*sin(scintAngle)))*sin(scintAngle);  
+			}
+		
+			// If fAccBeamStand == true then remove the lead bricks, else leave them
+			G4PVPlacement* Pb_phys;
+			Pb_phys 
+				  = new G4PVPlacement(0,G4ThreeVector(0.0,0.0*cm,Pb_pos),
+				          Pb_log,"Pb",world_log,false,0);
+		}
+
+		/////////////////////////////////////////////////////////////////////////////////////////
+		// DETECTOR
+		/////////////////////////////////////////////////////////////////////////////////////////
+		//
+		//
+		
+
+		G4RotationMatrix* detrot = new G4RotationMatrix;
+	  detrot->rotateY(45.*deg);
+	
+	  G4VPhysicalVolume* det_phys
+	      = new G4PVPlacement(detrot,G4ThreeVector(),det_log,"detector_phys",world_log,false,0);
+
+
+    //	------------- Surfaces --------------
+    //
+    // Quartz
+    //
+    G4OpticalSurface* OpQuartzSurface = new G4OpticalSurface("QuartzSurface");
+    OpQuartzSurface->SetType(dielectric_dielectric);
+    OpQuartzSurface->SetFinish(ground);
+    OpQuartzSurface->SetModel(unified);
+
+    G4LogicalBorderSurface* QuartzSurface = 
+        new G4LogicalBorderSurface("QuartzSurface",
+                quartz_phys,det_phys,OpQuartzSurface);
+
+    //  if(QuartzSurface->GetVolume1() == quartz_phys) G4cout << "Equal" << G4endl;
+    //  if(QuartzSurface->GetVolume2() == det_phys  ) G4cout << "Equal" << G4endl;
+
+    // Mirrors and cathode
+
+    G4OpticalSurface* MOpSurface = new G4OpticalSurface("MirrorOpSurface");
+    G4OpticalSurface* CTHOpSurface = new G4OpticalSurface("CathodeOpSurface");
+
+    MOpSurface -> SetType(dielectric_metal);
+    MOpSurface -> SetFinish(polishedlumirrorair);
+    MOpSurface -> SetModel(glisur);
+
+    CTHOpSurface -> SetType(dielectric_metal);
+    CTHOpSurface -> SetFinish(polishedlumirrorair);
+    CTHOpSurface -> SetModel(glisur);
+
+    const G4int num = 2;
+    G4double Ephoton[num] = {2.038*eV, 4.144*eV};
+
+    //  G4double polish = 0.8;
+
+    /*  G4double Reflectivity3[nEntries] =
+        { 0.90, 0.90, 0.90, 0.90, 0.90, 0.90, 0.90,
+        0.90, 0.90, 0.90, 0.90, 0.90, 0.90, 0.90,
+        0.90, 0.90, 0.90, 0.90, 0.90, 0.90, 0.90,
+        0.90, 0.90, 0.90, 0.90, 0.90, 0.90, 0.90,
+        0.90, 0.90, 0.90, 0.90 };  */
+
+
+    G4MaterialPropertiesTable* MOpSurfaceProperty = new G4MaterialPropertiesTable();
+    G4MaterialPropertiesTable* COpSurfaceProperty = new G4MaterialPropertiesTable();
+    G4MaterialPropertiesTable* TubeSurfaceProperty = new G4MaterialPropertiesTable();
+
+    MOpSurfaceProperty -> AddProperty("REFLECTIVITY",PhotonEnergy,Reflectivity3,nEntries);
+
+    MOpSurface -> SetMaterialPropertiesTable(MOpSurfaceProperty);
+
+    COpSurfaceProperty -> AddProperty("REFLECTIVITY",PhotonEnergy,Reflectivity4,nEntries);
+    COpSurfaceProperty -> AddProperty("EFFICIENCY",PhotonEnergy,Efficiency4,nEntries);
+
+
+    CTHOpSurface -> SetMaterialPropertiesTable(COpSurfaceProperty);
+
+    G4LogicalSkinSurface* ConeSurface = new
+        G4LogicalSkinSurface("ConeMirrorOpS_1",cmirror_log,MOpSurface);
+    G4LogicalSkinSurface* TubeSurface_1 = new
+        G4LogicalSkinSurface("TubeMirrorOpS_1",tmirror_log,MOpSurface);
+    G4LogicalSkinSurface* lightguideSurface = new
+	G4LogicalSkinSurface("lightguideOps",lightguide_log,MOpSurface);
+
+/*
+    G4LogicalSkinSurface* TopSurface_1 = new
+        G4LogicalSkinSurface("TopMirrorOpS_1", topPlate_log,MOpSurface);
+    G4LogicalSkinSurface* BotSurface_1 = new
+        G4LogicalSkinSurface("BotMirrorOpS_1", botPlate_log,MOpSurface);
+    G4LogicalSkinSurface* SideSurface_1 = new
+        G4LogicalSkinSurface("SideMirrorOpS_1", LPlate_log,MOpSurface);
+    G4LogicalSkinSurface* SideSurface_2 = new
+        G4LogicalSkinSurface("SideMirrorOpS_2", RPlate_log,MOpSurface);
+    G4LogicalSkinSurface* SideSurface_3 = new
+        G4LogicalSkinSurface("SideMirrorOpS_3", mirr_log,MOpSurface);
+*/
+    G4LogicalSkinSurface* CathSurface = new
+        G4LogicalSkinSurface("CathOpS1", cath_log,CTHOpSurface);
+
+    // Generate & Add Material Properties Table attached to the optical surfaces
+    //
+
+    //OpticalQuartzSurface 
+    G4double RefractiveIndex[num] = {1.46, 1.46};
+    G4double SpecularLobe[num]    = {0.3, 0.3};
+    G4double SpecularSpike[num]   = {0.2, 0.2};
+    G4double Backscatter[num]     = {0.2, 0.2};
+
+    G4MaterialPropertiesTable* myST1 = new G4MaterialPropertiesTable();
+
+    myST1->AddProperty("RINDEX",                Ephoton, RefractiveIndex, num);
+    myST1->AddProperty("SPECULARLOBECONSTANT",  Ephoton, SpecularLobe,    num);
+    myST1->AddProperty("SPECULARSPIKECONSTANT", Ephoton, SpecularSpike,   num);
+    myST1->AddProperty("BACKSCATTERCONSTANT",   Ephoton, Backscatter,     num);
+
+    OpQuartzSurface->SetMaterialPropertiesTable(myST1);
+
+    //always return the physical World
+    return world_phys;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

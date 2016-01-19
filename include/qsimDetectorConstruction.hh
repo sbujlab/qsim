@@ -13,17 +13,18 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
     qsimDetectorConstruction();
    ~qsimDetectorConstruction();
 		//void StandModeSet();
+		void DetModeSet(G4int );
 		void StandModeSet(G4int );
-
-  public:
+   public:
     G4VPhysicalVolume* Construct();
 
   private:
     G4double quartz_x;
     G4double quartz_y;
     G4double quartz_z;
-		G4int fStandMode;
-
+	//G4int fStandMode;
+	G4int fDetMode;
+	G4int fStandMode;
 
 	G4double quartz_zPos;
 
@@ -38,6 +39,11 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
 	G4double rin;
 	G4double rout;
 	G4double lngth;
+
+  public:
+	G4double fDetAngle, fQuartzPolish;
+	// POSSCAN
+	G4double fDetPosX, fDetPosY;
 
 
 };
