@@ -30,6 +30,9 @@ class qsimDetectorHit : public G4VHit {
 	G4ThreeVector f3P;
 	// Total momentum, energy, mass
 	G4double fP, fE, fM;
+        //
+        G4double fLambda;
+        G4double fEff;
 	// Origin
 	G4ThreeVector f3V;
 	G4ThreeVector f3D;

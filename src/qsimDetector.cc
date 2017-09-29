@@ -1,6 +1,11 @@
 #include "qsimDetector.hh"
 #include "G4SDManager.hh"
 
+#include <fstream>
+#include <iostream>
+
+static std::ifstream myfile;
+
 qsimDetector::qsimDetector( G4String name, G4int detnum ) : G4VSensitiveDetector(name){
     char colname[255];
 
@@ -52,6 +57,9 @@ G4bool qsimDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 	thishit = new qsimDetectorHit(fDetNo, copyID);
 	fHitColl->insert( thishit );
     }
+    
+    if (track->GetDefinition()->GetPDGEncoding() != 0)
+        badhit = true;
 
     if( !badhit ){
 	// Hit
@@ -62,6 +70,8 @@ G4bool qsimDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 
 	thishit->fP = track->GetMomentum().mag();
 	thishit->fE = track->GetTotalEnergy();
+    
+    thishit->fLambda = 1.239824/track->GetTotalEnergy();
 	thishit->fM = track->GetDefinition()->GetPDGMass();
 
 	thishit->fTrID  = track->GetTrackID();

@@ -120,7 +120,14 @@ qsimMessenger::qsimMessenger(){
     fZCmd = new G4UIcmdWithADoubleAndUnit("/qsim/z", this);
     fZCmd->SetGuidance("Set particle z");
     fZCmd->SetParameterName("z", false);
+    
+    fRingCmd = new G4UIcmdWithAnInteger("/qsim/fRing",this);
+    fRingCmd->SetGuidance("set ring number");
+    fRingCmd->SetParameterName("ring",false);
 
+    fSectorCmd = new G4UIcmdWithAnInteger("/qsim/fSector",this);
+    fSectorCmd->SetGuidance("set sector number");
+    fSectorCmd->SetParameterName("sector",false);
 }
 
 qsimMessenger::~qsimMessenger(){
@@ -227,6 +234,14 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
     if( cmd == fZCmd ){
 	G4double x = fZCmd->GetNewDoubleValue(newValue);
 	fprigen->fZ = x;
+    }
+    if ( cmd == fRingCmd){
+        G4int x = fRingCmd->GetNewIntValue(newValue);
+        fprigen->fRing = x;
+    }
+    if (cmd == fSectorCmd){
+        G4int x = fSectorCmd->GetNewIntValue(newValue);
+        fprigen->fSector = x;
     }
 
 }

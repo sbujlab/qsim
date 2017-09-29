@@ -4,6 +4,9 @@
 
 #include "globals.hh"
 #include "G4VUserDetectorConstruction.hh"
+#include "G4SubtractionSolid.hh"
+#include <iostream>
+#include <fstream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -26,6 +29,8 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
 	G4int fDetMode;
 	G4int fStandMode;
 
+    G4double det_x, det_y, det_z;
+
 	G4double quartz_zPos;
 
     G4double cone_rmin1;
@@ -40,7 +45,13 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
 	G4double rout;
 	G4double lngth;
 
+    std::ifstream myfile;
+    std::ofstream outfile;
+    std::ifstream myfile2;
+
   public:
+    G4int gasType;
+    G4double beam_angle;
 	G4double fDetAngle, fQuartzPolish;
 	// POSSCAN
 	G4double fDetPosX, fDetPosY;

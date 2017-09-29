@@ -17,6 +17,8 @@
 #include <errno.h>
 #include <assert.h>
 
+#include "CLHEP/Random/RandFlat.h"
+#include "CLHEP/Random/RandGauss.h"
 
 qsimIO::qsimIO(){
     fTree = NULL;
@@ -60,7 +62,7 @@ void qsimIO::InitializeTree(){
     fTree->Branch("ev.px",    &fEvPart_Px,  "ev.px/D");
     fTree->Branch("ev.py",    &fEvPart_Py,  "ev.py/D");
     fTree->Branch("ev.pz",    &fEvPart_Pz,  "ev.pz/D");
-
+    fTree->Branch("ev.kine", &fEvPart_kinE, "ev.kine/D");
 
     // DetectorHit
     fTree->Branch("hit.n",    &fNDetHit,     "hit.n/I");
@@ -91,7 +93,9 @@ void qsimIO::InitializeTree(){
     fTree->Branch("hit.p",    &fDetHit_P,   "hit.p[hit.n]/D");
     fTree->Branch("hit.e",    &fDetHit_E,   "hit.e[hit.n]/D");
     fTree->Branch("hit.m",    &fDetHit_M,   "hit.m[hit.n]/D");
-
+    
+    fTree->Branch("hit.lambda", &fDetHit_Lambda, "hit.lambda[hit.n]/D");
+    fTree->Branch("hit.eff", &fDetHit_Eff, "hit.m[hit.n]/D");
 
     // ScintDetectorHit
     fTree->Branch("sci.n",    &fNScintDetHit,     "sci.n/I");
@@ -163,6 +167,8 @@ void qsimIO::SetEventData(qsimEvent *ev){
     fEvPart_Pz = ev->fPartMom[0].z()/__E_UNIT;
 
     fEvPart_P = ev->fPartMom[0].mag()/__E_UNIT;
+    
+    fEvPart_kinE = sqrt(ev->fPartMom[0].mag()*ev->fPartMom[0].mag() + ev->fPartType[0]->GetPDGMass()*ev->fPartType[0]->GetPDGMass() ) - ev->fPartType[0]->GetPDGMass()/__E_UNIT;
 
     return;
 }
@@ -207,6 +213,12 @@ void qsimIO::AddDetectorHit(qsimDetectorHit *hit){
     fDetHit_M[n]  = hit->fM/__E_UNIT;
 
     fNDetHit++;
+
+    fDetHit_Lambda[n] = hit->fLambda/__L_UNIT;
+    fDetHit_Eff[n] = hit->fEff;
+
+    if (CLHEP::RandFlat::shoot(0.0,1.0) <= hit->fEff)
+        fNDetEp++;
 
     return;
 }

@@ -1,9 +1,8 @@
 # Example run macro for qsim
-
 # Set run mode
-/qsim/fDetMode 1 
+/qsim/fDetMode 0 
 /qsim/fStandMode 0 
-/qsim/fSourceMode 2 
+/qsim/fSourceMode 3 //blackening test 
 
 # Set detector properties
 /qsim/fQuartzPolish 0.975 
@@ -13,7 +12,7 @@
 
 /run/initialize 
 
-/qsim/filename qsim_out.root
+/qsim/filename blackeningTest.root
 /qsim/seed 50 
 
 /qsim/emin   1.063 GeV
@@ -21,4 +20,4 @@
 
 /gun/particle e- 
 
-/run/beamOn 1000
+/run/beamOn 1000000

@@ -1,5 +1,8 @@
 #include "G4LossTableManager.hh"
 #include "G4EmSaturation.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4PhysicalConstants.hh"
+
 
 #include "qsimOpticalPhysics.hh"
 
@@ -20,7 +23,7 @@ qsimOpticalPhysics::qsimOpticalPhysics(G4bool toggle)
 qsimOpticalPhysics::~qsimOpticalPhysics() { }
 
 //#include "G4ParticleDefinition.hh"
-//#include "G4ParticleTable.hh"
+#include "G4ParticleTable.hh"
 
 #include "G4OpticalPhoton.hh"
 
@@ -47,7 +50,7 @@ FIXME:  Add to verbosity responsiveness
   theScintProcess->SetTrackSecondariesFirst(true);
 
   theCerenkovProcess = new G4Cerenkov();
-  theCerenkovProcess->SetMaxNumPhotonsPerStep(2000);
+  theCerenkovProcess->SetMaxNumPhotonsPerStep(1000);
   theCerenkovProcess->SetTrackSecondariesFirst(true);
 
   theAbsorptionProcess      = new G4OpAbsorption();

@@ -72,7 +72,9 @@ class qsimMessenger : public G4UImessenger {
 //	G4UIcmdWithADoubleAndUnit *fThetaCmd;
 //	G4UIcmdWithADoubleAndUnit *fPhiCmd;
 	G4UIcmdWithADoubleAndUnit *fZCmd;
-
+    
+    G4UIcmdWithAnInteger *fRingCmd;
+    G4UIcmdWithAnInteger *fSectorCmd;
 };
 
 #endif//qsimMessenger_HH

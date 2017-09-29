@@ -22,6 +22,7 @@ class qsimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     void SetIO( qsimIO *io ){ fIO = io; }
 		bool Thetaspectrum(double );
 		bool pspectrum(double );
+        double RadSpectrum();
 		//void SourceModeSet();
 		void SourceModeSet(G4int );
 
@@ -37,6 +38,7 @@ class qsimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4double fZ;
     G4double fEmin, fEmax;
 		G4double fthetaMin, fthetaMax;
+        G4int fSector, fRing;
 };
 
 #endif

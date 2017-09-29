@@ -1,0 +1,27 @@
+# run macro for blackening data
+
+# Set run mode
+/qsim/fDetMode 0
+/qsim/fStandMode 0
+/qsim/fSourceMode 3 #Generator that samples from remoll
+
+# Set detector properties
+/qsim/fQuartzPolish 0.975
+/qsim/fDetAngle 0 deg
+/qsim/fDetPosX 0 cm
+/qsim/fDetPosY 0 cm
+/qsim/fRing 5
+/qsim/fSector 1
+
+
+/run/initialize
+
+/qsim/filename blackening.root
+/qsim/seed 50
+
+/qsim/emin 1.063 GeV
+/qsim/emax 1.063 GeV
+
+/gun/particle e-
+
+/run/beamOn 1000000

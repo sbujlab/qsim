@@ -63,13 +63,16 @@ class qsimIO {
 	Double_t fEvPart_Py;
 	Double_t fEvPart_Pz;
 	Int_t fEvPart_PID;
-
+        Double_t fEvPart_kinE;
 
 	//  DetectorHit
     public:
 	void AddDetectorHit(qsimDetectorHit *);
     private:
 	Int_t fNDetHit;
+        //
+        Int_t fNDetEp;
+        //
 	Int_t fDetHit_det[__IO_MAXHIT];
 	Int_t fDetHit_id[__IO_MAXHIT];
 
@@ -88,7 +91,11 @@ class qsimIO {
 	Double_t fDetHit_P[__IO_MAXHIT];
 	Double_t fDetHit_E[__IO_MAXHIT];
 	Double_t fDetHit_M[__IO_MAXHIT];
-
+        //
+        Double_t fDetHit_Lambda[__IO_MAXHIT];
+        Double_t fDetHit_Eff[__IO_MAXHIT];
+        //
+        //
 	Double_t fDetHit_Vx[__IO_MAXHIT];
 	Double_t fDetHit_Vy[__IO_MAXHIT];
 	Double_t fDetHit_Vz[__IO_MAXHIT];
