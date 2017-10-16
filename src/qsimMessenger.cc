@@ -29,6 +29,12 @@ qsimMessenger::qsimMessenger(){
     fprigen       = NULL;
     fStepAct      = NULL;
 
+    detfilesCmd = new G4UIcmdWithAString("/qsim/setgeofile",this);
+    detfilesCmd->SetGuidance("Set geometry GDML files");
+    detfilesCmd->SetParameterName("geofilename", false);
+    detfilesCmd->AvailableForStates(G4State_PreInit); // Only have this in pre-init or GDML freaks out
+
+
     fRemollDir = new G4UIdirectory("/qsim/");
     fRemollDir->SetGuidance("UI commands of this code");
 
@@ -135,6 +141,10 @@ qsimMessenger::~qsimMessenger(){
 
 
 void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
+    if( cmd == detfilesCmd ){
+        fdetcon->SetDetectorGeomFile( newValue );
+    }
+        
     if( cmd == fileCmd ){
 	fIO->SetFilename(newValue);
     }

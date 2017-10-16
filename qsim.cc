@@ -105,8 +105,8 @@ int main(int argc, char** argv){
 
     G4UserEventAction* event_action = new qsimEventAction;
     ((qsimEventAction *) event_action)->SetIO(io);
-
     runManager->SetUserAction(event_action);
+
     G4UserSteppingAction* stepping_action = new qsimSteppingAction;
     runManager->SetUserAction(stepping_action);
     rmmess->SetStepAct((qsimSteppingAction *) stepping_action);
