@@ -1,4 +1,4 @@
-
+#include "qsimIO.hh"
 #include "qsimDetectorConstruction.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
@@ -66,9 +66,33 @@ void qsimDetectorConstruction::SetDetectorGeomFile(const G4String& detFileName =
 qsimDetectorConstruction::qsimDetectorConstruction(){
    
     fDetFileName="geometry/qsimMother.gdml";
-    //fIO = NULL;
+    fIO = NULL;
     fGDMLParser = NULL;  
 }
 
+G4VPhysicalVolume* qsimDetectorConstruction::Construct(){
+    G4VPhysicalVolume *worldVolume;
 
+    fIO->GrabGDMLFiles(fDetFileName);
+
+    if (fGDMLParser){
+        delete fGDMLParser;
+    }
+
+    fGDMLParser = new G4GDMLParser();
+    fGDMLParser->Clear();
+    fGDMLParser->SetOverlapCheck(false);
+
+    fGDMLParser->Read(fDetFileName);
+
+    worldVolume = fGDMLParser->GetWorldVolume();
+
+    //========================================
+    // Associate target volumes with beam/target class
+    // This has to match what is declared in the GDML volumes
+    //=========================================
+    
+    return worldVolume;
+    
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

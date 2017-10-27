@@ -11,6 +11,9 @@
 #include "qsimDetectorHit.hh"
 #include "qsimScintDetectorHit.hh"
 #include "qsimEvent.hh"
+#include "qsimRun.hh"
+#include "qsimRunData.hh"
+
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -19,6 +22,11 @@
 
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Random/RandGauss.h"
+
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 
 qsimIO::qsimIO(){
     fTree = NULL;
@@ -241,7 +249,80 @@ void qsimIO::AddScintDetectorHit(qsimScintDetectorHit *hit){
     return;
 }
 
+// GDML implementation functions
 
+void qsimIO::GrabGDMLFiles(G4String fn){
+    //reset list
+    fGDMLFileNames.clear();
+
+    qsimRunData *rundata = qsimRun::GetRun()->GetData();
+    rundata->ClearGDMLFiles();
+
+    xercesc::XMLPlatformUtils::Initialize();
+    SearchGDMLforFiles(fn);
+    xercesc::XMLPlatformUtils::Terminate();
+
+    //store filename
+    unsigned int idx;
+
+    //copy into buffers
+    for(idx = 0; idx < fGDMLFileNames.size(); idx++){
+        G4cout << "Found GDML file " << fGDMLFileNames[idx] << G4endl;
+        rundata->AddGDMLFile(fGDMLFileNames[idx]);
+    }
+    return;
+}
+
+void qsimIO::SearchGDMLforFiles(G4String fn) {
+    // Chase down files to be included by GDML
+    // Mainly look for file tags and perform recursively
+    
+    struct stat thisfile;
+
+    int ret = stat(fn.data(), &thisfile);
+
+    if (ret != 0){
+        G4cerr << "ERROR opening file " << fn << " in " << __PRETTY_FUNCTION__ << ": " << strerror(errno) << G4endl;
+        exit(1);
+    }
+
+    xercesc::XercesDOMParser *xmlParser = new xercesc::XercesDOMParser();
+
+    // make sure the file exists
+
+    fGDMLFileNames.push_back(fn.data());
+
+    xmlParser->parse( fn.data() );
+    xercesc::DOMDocument * xmlDoc = xmlParser->getDocument();
+
+    xercesc::DOMElement* elementRoot = xmlDoc->getDocumentElement();
+
+    TraverseChildren( elementRoot );
+    return;
+}
+
+void qsimIO::TraverseChildren( xercesc::DOMElement *thisel ){
+    
+    xercesc::DOMNodeList* children = thisel->getChildNodes();
+    const XMLSize_t nodeCount = children->getLength();
+
+    for(XMLSize_t xx = 0; xx < nodeCount; ++xx ){
+        xercesc::DOMNode* currentNode = children->item(xx);
+        if( currentNode->getNodeType()){
+        if( currentNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE ){
+            // is element
+            xercesc::DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >( currentNode);
+            if ( xercesc::XMLString::equals(currentElement->getTagName(), xercesc::XMLString::transcode("file"))){
+                SearchGDMLforFiles(G4String(xercesc::XMLString::transcode(currentElement->getAttribute(xercesc::XMLString::transcode("name")))));
+            }
+
+            if( currentElement->getChildNodes()->getLength() > 0){
+                TraverseChildren( currentElement );
+            }
+        }
+        }
+    }
+}
 
 
 

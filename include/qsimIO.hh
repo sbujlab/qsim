@@ -16,6 +16,8 @@ class TTree;
 class qsimDetectorHit;
 class qsimScintDetectorHit;
 
+#include <xercesc/dom/DOMElement.hpp>
+
 #define __IO_MAXHIT 10000
 #define __FILENAMELEN 255
 
@@ -41,12 +43,18 @@ class qsimIO {
 	void WriteRun();
 
 	void InitializeTree();
+    
+    void GrabGDMLFiles( G4String fn );
 
     private:
 	TFile *fFile;
 	TTree *fTree;
 
 	char fFilename[__FILENAMELEN];
+    std::vector<G4String> fGDMLFileNames;
+
+    void SearchGDMLforFiles(G4String );
+    void TraverseChildren( xercesc::DOMElement * );
 
 	//  Interfaces and buffers to the tree
 	//  This is potentially going to get very long...
