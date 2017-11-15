@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -ggdb -O0 -Wall -ggdb  -shared -Wl,-soname,libqsimroot.so -o libqsimroot.so CMakeFiles/qsimroot.dir/src/qsimRunData.cc.o CMakeFiles/qsimroot.dir/src/qsimTextFile.cc.o -L/share/apps/root/lib -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic 
