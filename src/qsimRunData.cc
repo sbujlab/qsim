@@ -1,5 +1,5 @@
 #include "qsimRunData.hh"
-//#include "gitinfo.hh"
+#include "gitinfo.hh"
 
 #include <string.h>
 #include <errno.h>

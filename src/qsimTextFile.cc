@@ -2,16 +2,24 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <sys/stat.h>
 
 qsimTextFile::qsimTextFile(){
+  fFilenameSize = 0;
+    fFilename = NULL;
+
+    fBufferSize = 0;
+    fBuffer = NULL;
+}
+
+qsimTextFile::qsimTextFile(const char *fn){
     fFilenameSize = 0;
     fFilename = NULL;
 
     fBufferSize = 0;
     fBuffer = NULL;
-
     copyFileIn(fn);
 }
 
@@ -42,9 +50,9 @@ qsimTextFile::~qsimTextFile(){
 }
 
 void qsimTextFile::copyFileIn(const char *fn){
-    if( strlen(fn) > __STRLEB ){
-        fprintf(stderr, "%s %d: ERROR filename too long", __PRETTY_FUNCTION__, __LINE__);
-        exit(1);
+    if( strlen(fn) > __STRLEN ){
+      fprintf(stderr, "%s %d: ERROR filename too long", __PRETTY_FUNCTION__, __LINE__);
+      exit(1);
     }
 
     // Get file info
@@ -53,7 +61,7 @@ void qsimTextFile::copyFileIn(const char *fn){
 
     FILE *fd = fopen(fn, "r");
     if( fd != NULL ){
-        fFileNameSize = strlen(fn)+1; // +1 so we pick up \0
+        fFilenameSize = strlen(fn)+1; // +1 so we pick up \0
         fFilename = new char[fFilenameSize];
         strncpy(fFilename, fn, fFilenameSize);
 
@@ -117,7 +125,7 @@ void qsimTextFile::Recreate(const char *fn, bool clobber ){
     int ret = stat(fn, &fdata);
     
     if( ret == 0 && !clobber ){
-    fprintf(stderr, "%s  Will not create file %s - already exists\n" __PRETTY_FUNCTION__, fn);
+      fprintf(stderr, "%s  Will not create file %s - already exists\n", __PRETTY_FUNCTION__, fn);
     return;
     }
       
