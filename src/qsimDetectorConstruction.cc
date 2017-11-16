@@ -46,11 +46,11 @@
 
 #include "G4Threading.hh"
 #include "G4AutoLock.hh"
-namespace { G4Mutex remollDetectorConstructionMutex = G4MUTEX_INITIALIZER; }
+namespace { G4Mutex qsimDetectorConstructionMutex = G4MUTEX_INITIALIZER; }
 
-G4ThreadLocal remollGlobalField* remollDetectorConstruction::fGlobalField = 0;
+G4ThreadLocal qsimGlobalField* qsimDetectorConstruction::fGlobalField = 0;
 
-remollDetectorConstruction::remollDetectorConstruction()
+qsimDetectorConstruction::qsimDetectorConstruction()
 : fGDMLParser(0),
   fMessenger(0),fGeometryMessenger(0),
   fVerboseLevel(0),
@@ -61,10 +61,10 @@ remollDetectorConstruction::remollDetectorConstruction()
   fGDMLParser = new G4GDMLParser();
 
   // Default geometry file
-  fDetFileName = "geometry_sculpt/mollerMother.gdml";
+  fDetFileName = "geometry/qsimMother.gdml";
 
   // Create generic messenger
-  fMessenger = new G4GenericMessenger(this,"/remoll/","Remoll properties");
+  fMessenger = new G4GenericMessenger(this,"/qsim/","qsim properties");
   fMessenger->DeclareProperty(
       "setgeofile",
       fDetFileName,
@@ -72,25 +72,25 @@ remollDetectorConstruction::remollDetectorConstruction()
       .SetStates(G4State_PreInit);
   fMessenger->DeclareMethod(
       "dumpgeometry",
-      &remollDetectorConstruction::DumpGeometry,
+      &qsimDetectorConstruction::DumpGeometry,
       "Dump the geometry tree")
       .SetStates(G4State_Idle)
       .SetDefaultValue("false");
   fMessenger->DeclareMethod(
       "dumpelements",
-      &remollDetectorConstruction::DumpElements,
+      &qsimDetectorConstruction::DumpElements,
       "Dump the elements")
       .SetStates(G4State_Idle);
   fMessenger->DeclareMethod(
       "dumpmaterials",
-      &remollDetectorConstruction::DumpMaterials,
+      &qsimDetectorConstruction::DumpMaterials,
       "Dump the materials")
       .SetStates(G4State_Idle);
 
   // Create geometry messenger
   fGeometryMessenger = new G4GenericMessenger(this,
-      "/remoll/geometry/",
-      "Remoll geometry properties");
+      "/qsim/geometry/",
+      "qsim geometry properties");
   fGeometryMessenger->DeclareProperty(
       "setfile",
       fDetFileName,
@@ -115,31 +115,31 @@ remollDetectorConstruction::remollDetectorConstruction()
           .SetDefaultValue("true");
   fGeometryMessenger->DeclareMethod(
       "dumpelements",
-      &remollDetectorConstruction::DumpElements,
+      &qsimDetectorConstruction::DumpElements,
       "Dump the elements")
       .SetStates(G4State_Idle);
   fGeometryMessenger->DeclareMethod(
       "dumpmaterials",
-      &remollDetectorConstruction::DumpMaterials,
+      &qsimDetectorConstruction::DumpMaterials,
       "Dump the materials")
       .SetStates(G4State_Idle);
   fGeometryMessenger->DeclareMethod(
       "dumpgeometry",
-      &remollDetectorConstruction::DumpGeometry,
+      &qsimDetectorConstruction::DumpGeometry,
       "Dump the geometry tree")
       .SetStates(G4State_Idle)
       .SetDefaultValue("false");
 }
 
-remollDetectorConstruction::~remollDetectorConstruction() {
+qsimDetectorConstruction::~qsimDetectorConstruction() {
     delete fGDMLParser;
     delete fMessenger;
     delete fGeometryMessenger;
 }
 
-G4VPhysicalVolume* remollDetectorConstruction::Construct()
+G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 {
-    remollIO* io = remollIO::GetInstance();
+    qsimIO* io = qsimIO::GetInstance();
     io->GrabGDMLFiles(fDetFileName);
 
     fGDMLParser->Clear();
@@ -170,10 +170,10 @@ G4VPhysicalVolume* remollDetectorConstruction::Construct()
 	G4cerr << "WARNING " << __PRETTY_FUNCTION__ << " line " << __LINE__ <<
 	    ":  target definition structure in GDML not valid" << G4endl;
     } else {
-        // Mutex lock before writing static structures in remollBeamTarget
-        G4AutoLock lock(&remollDetectorConstructionMutex);
-        remollBeamTarget::ResetTargetVolumes();
-	remollBeamTarget::SetMotherVolume(thislog->GetDaughter(vidx));
+        // Mutex lock before writing static structures in qsimBeamTarget
+        G4AutoLock lock(&qsimDetectorConstructionMutex);
+        qsimBeamTarget::ResetTargetVolumes();
+	qsimBeamTarget::SetMotherVolume(thislog->GetDaughter(vidx));
 
 	thislog = thislog->GetDaughter(vidx)->GetLogicalVolume();
 
@@ -202,7 +202,7 @@ G4VPhysicalVolume* remollDetectorConstruction::Construct()
 		G4cerr << "Error " << __PRETTY_FUNCTION__ << " line " << __LINE__ <<
 		    ":  target definition structure in GDML not valid.  Could not find volume " << targvolnames[nidx] << G4endl;
 	    } else {
-		remollBeamTarget::AddTargetVolume(thislog->GetDaughter(vidx));
+		qsimBeamTarget::AddTargetVolume(thislog->GetDaughter(vidx));
 	    }
 
 	    nidx++;
@@ -299,12 +299,12 @@ G4VPhysicalVolume* remollDetectorConstruction::Construct()
   UpdateCopyNo(fWorldVolume,1);
 
   if (fVerboseLevel > 0)
-    G4cout << G4endl << "###### Leaving remollDetectorConstruction::Read() " << G4endl << G4endl;
+    G4cout << G4endl << "###### Leaving qsimDetectorConstruction::Read() " << G4endl << G4endl;
 
   return fWorldVolume;
 }
 
-void remollDetectorConstruction::ConstructSDandField()
+void qsimDetectorConstruction::ConstructSDandField()
 {
   //==========================
   // Sensitive detectors
@@ -366,14 +366,14 @@ void remollDetectorConstruction::ConstructSDandField()
               }
               /////////////////////////////////////////////////////////////
 
-              retval = snprintf(detectorname, __DET_STRLEN,"remoll/det_%d", det_no);
+              retval = snprintf(detectorname, __DET_STRLEN,"qsim/det_%d", det_no);
 
               assert( 0 < retval && retval < __DET_STRLEN ); // Ensure we're writing reasonable strings
 
               thisdet = SDman->FindSensitiveDetector(detectorname,(fVerboseLevel > 0));
 
               if( thisdet == 0 ) {
-                  thisdet = new remollGenericDetector(detectorname, det_no);
+                  thisdet = new qsimGenericDetector(detectorname, det_no);
                   if (fVerboseLevel > 0)
                       G4cout << "  Creating sensitive detector " << det_type
                           << " for volume " << myvol->GetName()
@@ -393,10 +393,10 @@ void remollDetectorConstruction::ConstructSDandField()
   //==========================
 
   if (fGlobalField) delete fGlobalField;
-  fGlobalField = new remollGlobalField();
+  fGlobalField = new qsimGlobalField();
 }
 
-G4int remollDetectorConstruction::UpdateCopyNo(G4VPhysicalVolume* aVolume,G4int index){  
+G4int qsimDetectorConstruction::UpdateCopyNo(G4VPhysicalVolume* aVolume,G4int index){  
 
   //if (aVolume->GetLogicalVolume()->GetNoDaughters()==0 ){
       aVolume->SetCopyNo(index);
@@ -410,17 +410,17 @@ G4int remollDetectorConstruction::UpdateCopyNo(G4VPhysicalVolume* aVolume,G4int 
   return index;
 }
 
-void remollDetectorConstruction::DumpElements() {
+void qsimDetectorConstruction::DumpElements() {
   G4cout << G4endl << "Element table: " << G4endl << G4endl;
   G4cout << *(G4Element::GetElementTable()) << G4endl;
 }
 
-void remollDetectorConstruction::DumpMaterials() {
+void qsimDetectorConstruction::DumpMaterials() {
   G4cout << G4endl << "Material table: " << G4endl << G4endl;
   G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
-void remollDetectorConstruction::DumpGeometricalTree(
+void qsimDetectorConstruction::DumpGeometricalTree(
     G4VPhysicalVolume* aVolume,
     G4int depth,
     G4bool surfchk)
