@@ -1,76 +1,70 @@
+#ifndef __QSIMDETECTORCONSTRUCTION_HH
+#define __QSIMDETECTORCONSTRUCTION_HH
 
-#ifndef qsimDetectorConstruction_h
-#define qsimDetectorConstruction_h 1
-
-#include "qsimIO.hh"
 #include "G4GDMLParser.hh"
-#include "globals.hh"
 #include "G4VUserDetectorConstruction.hh"
-#include "G4SubtractionSolid.hh"
-#include <iostream>
-#include <fstream>
+#include "G4Types.hh"
+
 #include <vector>
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+class G4Tubs;
+class G4LogicalVolume;
+class G4VPhysicalVolume;
+class G4VSensitiveDetector;
+class G4GenericMessenger;
+
+class qsimGlobalField;
 
 class qsimDetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
+
     qsimDetectorConstruction();
-   ~qsimDetectorConstruction();
-		//void StandModeSet();
-		void DetModeSet(G4int );
-		void StandModeSet(G4int );
-        
-   public:
-    G4VPhysicalVolume* Construct();
-    
-    void SetDetectorGeomFile(const G4String&);
-    G4GDMLParser *fGDMLParser;
-    void SetIO( qsimIO *io ){ fIO = io; }
-
-
-   private:
-    G4String            fDetFileName;
-    qsimIO *fIO;
-
-    G4double quartz_x;
-    G4double quartz_y;
-    G4double quartz_z;
-	//G4int fStandMode;
-	G4int fDetMode;
-	G4int fStandMode;
-
-    G4double det_x, det_y, det_z;
-
-	G4double quartz_zPos;
-
-    G4double cone_rmin1;
-    G4double cone_rmax1;
-    G4double cone_rmin2;
-    G4double cone_rmax2;
-    G4double cone_z;
-    G4double cone_sphi;
-    G4double cone_fphi;
-	
-	G4double rin;
-	G4double rout;
-	G4double lngth;
-
-    std::ifstream myfile;
-    std::ofstream outfile;
-    std::ifstream myfile2;
+    virtual ~qsimDetectorConstruction();
 
   public:
-    G4int gasType;
-    G4double beam_angle;
-	G4double fDetAngle, fQuartzPolish;
-	// POSSCAN
-	G4double fDetPosX, fDetPosY;
 
+    G4VPhysicalVolume* Construct();
+    void ConstructSDandField();
+
+    void SetDetectorGeomFile(const G4String& name) { fDetFileName = name; }
+
+  private:
+
+    G4GDMLParser *fGDMLParser;
+
+    G4GenericMessenger* fMessenger;
+    G4GenericMessenger* fGeometryMessenger;
+
+    G4int fVerboseLevel;
+    G4bool fGDMLValidate;
+    G4bool fGDMLOverlapCheck;
+
+    //----------------------
+    // global magnet section
+    //----------------------
+    //
+
+    static G4ThreadLocal qsimGlobalField* fGlobalField;
+
+    G4String fDetFileName;
+
+    G4VPhysicalVolume*      fWorldVolume;
+
+  public:
+
+    void DumpElements();
+    void DumpMaterials();
+    void DumpGeometry(G4bool surfchk = false) {
+      DumpGeometricalTree(0,0,surfchk);
+    }
+    void DumpGeometricalTree(G4VPhysicalVolume* aVolume = 0,
+      G4int depth = 0, G4bool surfchk = false);
+
+  private:
+
+    G4int UpdateCopyNo(G4VPhysicalVolume* aVolume, G4int index = 0);
 
 };
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-#endif /*qsimDetectorConstruction_h*/
+#endif//__QSIMDETECTORCONSTRUCTION_HH
