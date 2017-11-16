@@ -34,7 +34,7 @@ class qsimRunData : public TObject {
   void SetBeamE(double E){ fBeamE = E; }
   void SetSeed(unsigned int seed){ fSeed = seed; }
 
-  void AddMagData(filedata_t d){fMagData.push_back(d);}
+//  void AddMagData(filedata_t d){fMagData.push_back(d);}
   void SetMacroFile(const char *fn){ fMacro = qsimTextFile(fn); }
   void AddGDMLFile(const char *fn);
   void ClearGDMLFiles(){ fGDMLFiles.clear(); }

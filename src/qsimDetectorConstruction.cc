@@ -1,8 +1,8 @@
 #include "qsimDetectorConstruction.hh"
 
 #include "qsimGenericDetector.hh"
-#include "qsimBeamTarget.hh"
-#include "qsimGlobalField.hh"
+
+
 #include "qsimRun.hh"
 #include "qsimRunData.hh"
 #include "qsimIO.hh"
@@ -48,7 +48,7 @@
 #include "G4AutoLock.hh"
 namespace { G4Mutex qsimDetectorConstructionMutex = G4MUTEX_INITIALIZER; }
 
-G4ThreadLocal qsimGlobalField* qsimDetectorConstruction::fGlobalField = 0;
+//G4ThreadLocal qsimGlobalField* qsimDetectorConstruction::fGlobalField = 0;
 
 qsimDetectorConstruction::qsimDetectorConstruction()
 : fGDMLParser(0),
@@ -171,9 +171,9 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 	    ":  target definition structure in GDML not valid" << G4endl;
     } else {
         // Mutex lock before writing static structures in qsimBeamTarget
-        G4AutoLock lock(&qsimDetectorConstructionMutex);
-        qsimBeamTarget::ResetTargetVolumes();
-	qsimBeamTarget::SetMotherVolume(thislog->GetDaughter(vidx));
+//        G4AutoLock lock(&qsimDetectorConstructionMutex);
+//        qsimBeamTarget::ResetTargetVolumes();
+//	      qsimBeamTarget::SetMotherVolume(thislog->GetDaughter(vidx));
 
 	thislog = thislog->GetDaughter(vidx)->GetLogicalVolume();
 
@@ -191,7 +191,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 	////////////////////////////////////////////////////////////////////////////////
 
 	int nidx = 0;
-	while( targvolnames[nidx] != "" ){
+/*	while( targvolnames[nidx] != "" ){
 	    targvolnames[nidx].append("_PV");
 	    vidx = 0;
 	    while( vidx < thislog->GetNoDaughters() ){
@@ -206,7 +206,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct()
 	    }
 
 	    nidx++;
-	}
+	}*/
     }
 
   //==========================
@@ -392,8 +392,8 @@ void qsimDetectorConstruction::ConstructSDandField()
   // Magnetic fields
   //==========================
 
-  if (fGlobalField) delete fGlobalField;
-  fGlobalField = new qsimGlobalField();
+ // if (fGlobalField) delete fGlobalField;
+ // fGlobalField = new qsimGlobalField();
 }
 
 G4int qsimDetectorConstruction::UpdateCopyNo(G4VPhysicalVolume* aVolume,G4int index){  
