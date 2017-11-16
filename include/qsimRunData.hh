@@ -7,8 +7,6 @@
 #include <string>
 
 #include "qsimtypes.hh"
-
-#include "gitinfo.hh"
 #include "qsimTextFile.hh"
 
 /*!
@@ -21,9 +19,9 @@ class TGeoManager;
 
 class qsimRunData : public TObject {
   using TObject::Print;
-  public:
+    public:
   qsimRunData();
-  ~qsimRunData();
+  virtual ~qsimRunData();
 
   unsigned long long int GetNthrown(){ return fNthrown; }
   void SetNthrown(unsigned long long int n){ fNthrown = n; }
@@ -53,7 +51,6 @@ class qsimRunData : public TObject {
   unsigned int  fSeed;
   double fBeamE;
   char fGenName[__RUNSTR_LEN];
-	char fGitInfo[__GITMAXINFO_SIZE];
 
   char fHostName[__RUNSTR_LEN];
   char fRunPath[__RUNSTR_LEN];
