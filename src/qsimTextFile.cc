@@ -6,24 +6,28 @@
 #include <errno.h>
 #include <sys/stat.h>
 
-qsimTextFile::qsimTextFile(){
-  fFilenameSize = 0;
-    fFilename = NULL;
-
-    fBufferSize = 0;
-    fBuffer = NULL;
-}
-
-qsimTextFile::qsimTextFile(const char *fn){
+qsimTextFile::qsimTextFile()
+: TObject() {
     fFilenameSize = 0;
     fFilename = NULL;
 
     fBufferSize = 0;
     fBuffer = NULL;
+}
+
+qsimTextFile::qsimTextFile(const char *fn)
+: TObject() {
+    fFilenameSize = 0;
+    fFilename = NULL;
+
+    fBufferSize = 0;
+    fBuffer = NULL;
+
     copyFileIn(fn);
 }
 
-qsimTextFile::qsimTextFile(const qsimTextFile& r){
+qsimTextFile::qsimTextFile(const qsimTextFile& r)
+: TObject(r) {
     fFilenameSize = r.fFilenameSize;
     fFilename = new char[r.fFilenameSize];
     strncpy(fFilename, r.fFilename, fFilenameSize);
@@ -34,10 +38,14 @@ qsimTextFile::qsimTextFile(const qsimTextFile& r){
 }
 
 const qsimTextFile& qsimTextFile::operator=(const qsimTextFile& r){
+    TObject::operator=(r);
+
+    if (fFilename) { delete[] fFilename; }
     fFilenameSize = r.fFilenameSize;
     fFilename = new char[r.fFilenameSize];
     strncpy(fFilename, r.fFilename, fFilenameSize);
 
+    if (fBuffer) { delete[] fBuffer; }
     fBufferSize = r.fBufferSize;
     fBuffer = new char[r.fBufferSize];
     memcpy(fBuffer, r.fBuffer, fBufferSize);
@@ -47,12 +55,13 @@ const qsimTextFile& qsimTextFile::operator=(const qsimTextFile& r){
 
 qsimTextFile::~qsimTextFile(){
     if( fBuffer ){ delete fBuffer; }
+    if (fBuffer) { delete[] fBuffer; }
 }
 
 void qsimTextFile::copyFileIn(const char *fn){
     if( strlen(fn) > __STRLEN ){
-      fprintf(stderr, "%s %d: ERROR filename too long", __PRETTY_FUNCTION__, __LINE__);
-      exit(1);
+    fprintf(stderr, "%s %d: ERROR filename too long", __PRETTY_FUNCTION__, __LINE__);
+    exit(1);
     }
 
     // Get file info
@@ -61,22 +70,21 @@ void qsimTextFile::copyFileIn(const char *fn){
 
     FILE *fd = fopen(fn, "r");
     if( fd != NULL ){
-        fFilenameSize = strlen(fn)+1; // +1 so we pick up \0
-        fFilename = new char[fFilenameSize];
-        strncpy(fFilename, fn, fFilenameSize);
+    fFilenameSize = strlen(fn)+1; // +1 so we pick up \0
+    fFilename = new char[fFilenameSize];
+    strncpy(fFilename, fn, fFilenameSize);
 
-        fBufferSize = filedata.st_size;
-        fBuffer = new char[filedata.st_size];
-        size_t size = fread(fBuffer, sizeof(char), filedata.st_size, fd);
-        if( (long int) size != filedata.st_size ){
-            fprintf(stderr, "%s line %d: ERROR file %s cannot be fully read (%lld of %lld read)\n",__PRETTY_FUNCTION__, __LINE__, fn,(unsigned long long int)  size,
+    fBufferSize = filedata.st_size;
+    fBuffer = new char[filedata.st_size];
+    size_t size = fread(fBuffer, sizeof(char), filedata.st_size, fd);
+    if( (long int) size != filedata.st_size ){
+        fprintf(stderr, "%s line %d: ERROR file %s cannot be fully read (%lld of %lld read)\n",__PRETTY_FUNCTION__, __LINE__, fn,(unsigned long long int)  size,
                                 (unsigned long long int)  filedata.st_size);
             exit(1);
         }
         } else {
-            fprintf(stderr, "%s line %d: ERROR file %s cannot be opened\n",
-                                __PRETTY_FUNCTION__, __LINE__, fn);
-            exit(1);
+        fprintf(stderr, "%s line %d: ERROR file %s cannot be opened\n", __PRETTY_FUNCTION__, __LINE__, fn);
+        exit(1);
         }
         fclose(fd);
 }
@@ -112,7 +120,6 @@ void qsimTextFile::RecreateInDir(const char *adir, bool clobber ){
                                  
     delete thisdir;
     delete catpath;
-    return;
 }
                                      
 void qsimTextFile::Recreate(const char *fn, bool clobber ){
@@ -125,7 +132,7 @@ void qsimTextFile::Recreate(const char *fn, bool clobber ){
     int ret = stat(fn, &fdata);
     
     if( ret == 0 && !clobber ){
-      fprintf(stderr, "%s  Will not create file %s - already exists\n", __PRETTY_FUNCTION__, fn);
+    fprintf(stderr, "%s  Will not create file %s - already exists\n", __PRETTY_FUNCTION__, fn);
     return;
     }
       
@@ -133,29 +140,29 @@ void qsimTextFile::Recreate(const char *fn, bool clobber ){
     fd = fopen(fn, "w");
     
     if( fd == NULL ){
-        printf("errno = %d\n", errno );
-        printf("%s - %s\n", fn, strerror(errno) );
-        printf("Attempting to write %s to present directory\n", GetBaseFile(fn) );
+    printf("errno = %d\n", errno ); 
+    printf("%s - %s\n", fn, strerror(errno) ); 
+    printf("Attempting to write %s to present directory\n", GetBaseFile(fn) );
     fd = fopen(GetBaseFile(fn), "w");
     }
          
     if( fd == NULL ){
-        printf("Failed %s - %s\n", GetBaseFile(), strerror(errno) );
-        return;
-        }
+    printf("Failed %s - %s\n", GetBaseFile(), strerror(errno) ); 
+    return;
+    }
 
     printf("Recreating %s\n", GetBaseFile(fn));
-           
+
     fwrite(fBuffer, sizeof(char), fBufferSize, fd);
-        
+
     fclose(fd);
     }
               
 void qsimTextFile::Print(){
     if( fBufferSize > 1024 ){
-        printf("Stored file %s (%lld kB)\n", fFilename, fBufferSize/1024);
+    printf("Stored file %s (%lld kB)\n", fFilename, fBufferSize/1024);
     } else {
-        printf("Stored file %s (%lld bytes)\n", fFilename, fBufferSize);
+    printf("Stored file %s (%lld bytes)\n", fFilename, fBufferSize);
     }
     char *tmpbuf = new char[fBufferSize+1];
     memcpy( tmpbuf, fBuffer, fBufferSize );
@@ -164,8 +171,6 @@ void qsimTextFile::Print(){
     printf("%s\n", tmpbuf);
                          
     delete tmpbuf;
-                          
-    return;
 }
 
 const char *qsimTextFile::GetBaseFile(const char *fp){
@@ -175,8 +180,8 @@ const char *qsimTextFile::GetBaseFile(const char *fp){
                                     
     while( fp[idx] != '/' && idx != 0 ) idx--;
         if( fp[idx] == '/' ) idx++;
-                                      
-         return &(fp[idx]);
+    
+    return &(fp[idx]);
 }
 
 ClassImp(qsimTextFile);
