@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <string>
-
+#include "/share/apps/root/include/Rtypes.h"
 #include "qsimtypes.hh"
 #include "qsimTextFile.hh"
 
@@ -60,7 +60,7 @@ class qsimRunData : public TObject {
 
   std::vector<filedata_t> fMagData;
 
-  ClassDef(qsimRunData, 1);
+//  ClassDef(qsimRunData, 1);
 };
 
 #endif// __QSIMRUNDATA_HH

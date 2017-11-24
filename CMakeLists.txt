@@ -10,13 +10,30 @@ project(QSIM)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(ROOT REQUIRED)
 
+# Update header file
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/gitinfo.hh COMMAND ${PROJECT_SOURCE_DIR}/pullgitinfo.py ${PROJECT_SOURCE_DIR} COMMENT "Creating gitinfo.hh" )
 # this is to ensure we find the header we need
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
-#ROOT_GENERATE_DICTIONARY(
-#    qsimDict                         # path to dictionary to generate
-#    LINKDEF "include/qsimLinkDef.h"  # ROOT linkDef file
-#)
+ROOT_GENERATE_DICTIONARY(
+    qsimDict                         # path to dictionary to generate
+    "include/qsimRunData.hh"         # list of classes to process
+    "include/qsimTextFile.hh"
+    LINKDEF "include/qsimLinkDef.h"  # ROOT linkDef file
+)
+
+#----------------------------------------------------------------------------
+# Find Boost libraries, in particular iostreams
+
+if(USE_BOOST)
+    find_package(Boost COMPONENTS iostreams)
+    include_directories(${Boost_INCLUDE_DIRS})
+    link_directories(${Boost_LIBRARY_DIR})
+    ADD_DEFINITIONS(-D__USE_BOOST)
+    if(Boost_IOSTREAMS_FOUND)
+        ADD_DEFINITIONS(-D__USE_BOOST_IOSTREAMS)
+    endif()
+endif()
 
 
 #----------------------------------------------------------------------------
@@ -54,15 +71,21 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${CMAKE_CU
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/qsim*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
+file(GLOB libsources ${PROJECT_SOURCE_DIR}/src/qsimRunData.cc ${PROJECT_SOURCE_DIR}/src/qsimTextFile.cc)
+file(GLOB libheaders ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
 #add_executable(qsim qsim.cc ${sources} ${headers} qsimDict.cxx)
 add_executable(qsim qsim.cc ${sources} ${headers})
 #add_library(qsimroot SHARED ${libsources} ${libheaders} qsimDict.cxx)
-target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+#target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 #target_link_libraries(qsimroot ${ROOT_LIBRARIES})
 
+#add_executable(qsim qsim.cc ${CMAKE_CURRENT_BINARY_DIR}/include/gitinfo.hh ${sources} ${headers} qsimDict.cxx)
+#add_library(qsimroot SHARED ${CMAKE_CURRENT_BINARY_DIR}/include/gitinfo.hh ${libsources} ${libheaders} qsimDict.cxx)
+target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(qsimroot ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build qsim. This is so that we can run the executable directly because it

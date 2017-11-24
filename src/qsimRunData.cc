@@ -90,4 +90,4 @@ void qsimRunData::RecreateGDML( const char *adir, bool clobber )
     }
 }
 
-ClassImp(qsimRunData);
+//ClassImp(qsimRunData);

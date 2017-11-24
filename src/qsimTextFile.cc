@@ -54,13 +54,13 @@ const qsimTextFile& qsimTextFile::operator=(const qsimTextFile& r){
 }
 
 qsimTextFile::~qsimTextFile(){
-    if( fFilename ) { delete[] fFilename; }
+    if(fFilename) { delete[] fFilename; }
     if (fBuffer) { delete[] fBuffer; }
 }
 
 void qsimTextFile::copyFileIn(const char *fn){
     if( strlen(fn) > __STRLEN ){
-    fprintf(stderr, "%s %d: ERROR filename too long", __PRETTY_FUNCTION__, __LINE__);
+    fprintf(stderr, "%s %d: ERROR filename too long", __PRETTY_FUNCTION__, __LINE__ );
     exit(1);
     }
 
@@ -184,5 +184,5 @@ const char *qsimTextFile::GetBaseFile(const char *fp){
     return &(fp[idx]);
 }
 
-ClassImp(qsimTextFile);
+//ClassImp(qsimTextFile);
 

@@ -33,7 +33,7 @@ class qsimTextFile : public TObject {
     
     const char *GetBaseFile(const char *fp = NULL);
 
-    ClassDef(qsimTextFile, 1);
+//    ClassDef(qsimTextFile, 1);
 };
 
 #endif//__QSIMTEXTFILE_HH
