@@ -10,6 +10,11 @@
 class TFile;
 class TTree;
 
+class G4GenericMessenger;
+
+class qsimGenericDetectorHit;
+class qsimGenericDetectorSum;
+class qsimEvent;
 class qsimDetectorHit;
 class qsimScintDetectorHit;
 
@@ -28,7 +33,7 @@ class qsimScintDetectorHit;
 class qsimIO {
     private:
         // Singleton pointer
-        static remollIO* gInstance;
+        static qsimIO* gInstance;
         // Private constructor
         qsimIO();
     
@@ -56,12 +61,13 @@ class qsimIO {
 	TTree *fTree;
 
 	    G4GenericMessenger* fMessenger;
-
-    G4String fFilename;
-
-    std::vector<G4String> fGDMLFileNames;
-    void SearchGDMLforFiles(G4String );
-    void TraverseChildren( xercesc::DOMElement * );
+        
+        G4String fFilename;
+        
+        std::vector<G4String> fGDMLFileNames;
+    
+        void SearchGDMLforFiles(G4String );
+        void TraverseChildren( xercesc::DOMElement * );
 
 	//  Interfaces and buffers to the tree
 	//  This is potentially going to get very long...
@@ -154,7 +160,7 @@ class qsimIO {
 
 	//  GenericDetectorSum
     public:
-	void AddGenericDetectorSum(remollGenericDetectorSum *);
+	void AddGenericDetectorSum(qsimGenericDetectorSum *);
     private:
 	Int_t fNGenDetSum;
 	Int_t fGenDetSum_det[__IO_MAXHIT];
