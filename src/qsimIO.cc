@@ -7,9 +7,12 @@
 #include <TClonesArray.h>
 
 #include "G4ParticleDefinition.hh"
+#include "G4GenericMessenger.hh"
 
 #include "qsimDetectorHit.hh"
 #include "qsimScintDetectorHit.hh"
+#include "qsimGenericDetectorHit.hh"
+#include "qsimGenericDetectorSum.hh"
 #include "qsimEvent.hh"
 #include "qsimRun.hh"
 #include "qsimRunData.hh"
@@ -28,20 +31,34 @@
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
-qsimIO::qsimIO(){
-    fTree = NULL;
-    InitializeTree();
-    // Default filename
-    strcpy(fFilename, "qsimout.root");
+// Singleton
+qsimIO* qsimIO::gInstance = 0;
+qsimIO* qsimIO::GetInstance() {
+  if (gInstance == 0) {
+    gInstance = new qsimIO();
+  }
+  return gInstance;
+}
 
-    fFile = NULL;
+qsimIO::qsimIO()
+: fFile(0),fTree(0),fFilename("qsimout.root")
+{
+    //  Set arrays to 0
+    fNGenDetHit = 0;
+    fNGenDetSum = 0;
+
+    InitializeTree();
+
+    // Create generic messenger
+    fMessenger = new G4GenericMessenger(this,"/qsim/","qsim properties");
+    fMessenger->DeclareProperty("filename",fFilename,"Output filename");
 }
 
 qsimIO::~qsimIO(){
-    if( fTree ){ delete fTree; }
-    fTree = NULL;
-    if( fFile ){ delete fFile; }
-    fFile = NULL;
+    if( fTree ){ delete fTree; 
+    fTree = NULL;}
+    if( fFile ){ delete fFile; 
+    fFile = NULL;}
 }
 
 void qsimIO::SetFilename(G4String fn){
@@ -49,17 +66,25 @@ void qsimIO::SetFilename(G4String fn){
     strcpy(fFilename, fn.data());
 }
 
-void qsimIO::InitializeTree(){
-    if( fFile ){
-	fFile->Close();
-	delete fFile;
+void qsimIO::InitializeTree()
+{
+    if (fFile) {
+        fFile->Close();
+        delete fFile;
+        fFile = NULL;
+        fTree = NULL;
+    }
+
+    if (fTree) {
+        delete fTree;
+        fTree = NULL;
     }
 
     fFile = new TFile(fFilename, "RECREATE");
 
-    if( fTree ){ delete fTree; }
-
     fTree = new TTree("T", "Geant4 Quartz Detector Simulation");
+
+    fTree->SetMaxTreeSize(1900000000); // 1.9GB
 
     // Event information
     fTree->Branch("ev.pid",   &fEvPart_PID, "ev.pid/I");
@@ -121,11 +146,15 @@ void qsimIO::FillTree(){
     }
 
     fTree->Fill();
+    fTree->GetCurrentFile();
 }
 
-void qsimIO::Flush(){
+void qsimIO::Flush()
+{
     //  Set arrays to 0
     fNDetHit = 0;
+    fNGenDetHit = 0;
+    fNGenDetSum = 0;
     fNScintDetHit = 0;
 }
 
@@ -143,6 +172,7 @@ void qsimIO::WriteTree(){
     fFile->cd();
 
     fTree->Write("T", TObject::kOverwrite);
+    qsimRun::GetRunData()->Write("run_data", TObject::kOverwrite);
 
     fTree->ResetBranchAddresses();
     delete fTree;
@@ -251,78 +281,88 @@ void qsimIO::AddScintDetectorHit(qsimScintDetectorHit *hit){
 
 // GDML implementation functions
 
-void qsimIO::GrabGDMLFiles(G4String fn){
-    //reset list
+void qsimIO::GrabGDMLFiles(G4String fn)
+{
+    // Reset list
     fGDMLFileNames.clear();
 
-    qsimRunData *rundata = qsimRun::GetRun()->GetData();
+    qsimRunData *rundata = qsimRun::GetRunData();
     rundata->ClearGDMLFiles();
 
-    xercesc::XMLPlatformUtils::Initialize();
     SearchGDMLforFiles(fn);
-    xercesc::XMLPlatformUtils::Terminate();
 
-    //store filename
-    unsigned int idx;
 
-    //copy into buffers
-    for(idx = 0; idx < fGDMLFileNames.size(); idx++){
+    // Store filename
+
+    // Copy into buffers
+    for(unsigned int idx = 0; idx < fGDMLFileNames.size(); idx++ ){
         G4cout << "Found GDML file " << fGDMLFileNames[idx] << G4endl;
         rundata->AddGDMLFile(fGDMLFileNames[idx]);
     }
-    return;
 }
 
-void qsimIO::SearchGDMLforFiles(G4String fn) {
+void qsimIO::SearchGDMLforFiles(G4String fn) 
+{
     // Chase down files to be included by GDML
     // Mainly look for file tags and perform recursively
     
     struct stat thisfile;
 
     int ret = stat(fn.data(), &thisfile);
-
-    if (ret != 0){
-        G4cerr << "ERROR opening file " << fn << " in " << __PRETTY_FUNCTION__ << ": " << strerror(errno) << G4endl;
+    if( ret != 0 ){
+        G4cerr << "ERROR opening file " << fn <<  " in " << __PRETTY_FUNCTION__ << ": " << strerror(errno) << G4endl;
         exit(1);
     }
 
+    fGDMLFileNames.push_back(fn);
+
+
+    xercesc::XMLPlatformUtils::Initialize();
+
     xercesc::XercesDOMParser *xmlParser = new xercesc::XercesDOMParser();
-
-    // make sure the file exists
-
-    fGDMLFileNames.push_back(fn.data());
-
-    xmlParser->parse( fn.data() );
-    xercesc::DOMDocument * xmlDoc = xmlParser->getDocument();
-
+    xmlParser->parse(fn.data());
+    xercesc::DOMDocument* xmlDoc = xmlParser->getDocument();
     xercesc::DOMElement* elementRoot = xmlDoc->getDocumentElement();
 
     TraverseChildren( elementRoot );
-    return;
+
+    xercesc::XMLPlatformUtils::Terminate();
+
+    delete xmlParser;
 }
 
-void qsimIO::TraverseChildren( xercesc::DOMElement *thisel ){
-    
+void qsimIO::TraverseChildren( xercesc::DOMElement *thisel )
+{
     xercesc::DOMNodeList* children = thisel->getChildNodes();
     const XMLSize_t nodeCount = children->getLength();
 
-    for(XMLSize_t xx = 0; xx < nodeCount; ++xx ){
+    for( XMLSize_t xx = 0; xx < nodeCount; ++xx ){
         xercesc::DOMNode* currentNode = children->item(xx);
-        if( currentNode->getNodeType()){
-        if( currentNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE ){
-            // is element
-            xercesc::DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >( currentNode);
-            if ( xercesc::XMLString::equals(currentElement->getTagName(), xercesc::XMLString::transcode("file"))){
-                SearchGDMLforFiles(G4String(xercesc::XMLString::transcode(currentElement->getAttribute(xercesc::XMLString::transcode("name")))));
-            }
+        if( currentNode->getNodeType() ){   // true is not NULL
 
-            if( currentElement->getChildNodes()->getLength() > 0){
-                TraverseChildren( currentElement );
+            if (currentNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) { // is element
+                xercesc::DOMElement* currentElement
+                  = dynamic_cast< xercesc::DOMElement* >( currentNode );
+                // transcode
+                XMLCh* str_file = xercesc::XMLString::transcode("file");
+                if( xercesc::XMLString::equals(currentElement->getTagName(), str_file)){
+                    // transcode
+                    XMLCh* str_name = xercesc::XMLString::transcode("name");
+                    const XMLCh* attr = currentElement->getAttribute(str_name);
+                    char* str_attr = xercesc::XMLString::transcode(attr);
+                    // search files
+                    SearchGDMLforFiles(G4String(str_attr));
+                    // release
+                    xercesc::XMLString::release(&str_name);
+                    xercesc::XMLString::release(&str_attr);
+                }
+                // release
+                xercesc::XMLString::release(&str_file);
+
+                if( currentElement->getChildNodes()->getLength() > 0 ){
+                    TraverseChildren( currentElement );
+                }
             }
-        }
         }
     }
 }
-
-
-
