@@ -39,7 +39,7 @@ class qsimIO {
     
     public:
         // Public destructor
-	    virtual ~qsimIO();
+  	    virtual ~qsimIO();
         // Static instance getter
         static qsimIO* GetInstance();
 

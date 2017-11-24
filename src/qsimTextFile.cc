@@ -54,7 +54,7 @@ const qsimTextFile& qsimTextFile::operator=(const qsimTextFile& r){
 }
 
 qsimTextFile::~qsimTextFile(){
-    if( fBuffer ){ delete fBuffer; }
+    if( fFilename ) { delete[] fFilename; }
     if (fBuffer) { delete[] fBuffer; }
 }
 
@@ -78,8 +78,8 @@ void qsimTextFile::copyFileIn(const char *fn){
     fBuffer = new char[filedata.st_size];
     size_t size = fread(fBuffer, sizeof(char), filedata.st_size, fd);
     if( (long int) size != filedata.st_size ){
-        fprintf(stderr, "%s line %d: ERROR file %s cannot be fully read (%lld of %lld read)\n",__PRETTY_FUNCTION__, __LINE__, fn,(unsigned long long int)  size,
-                                (unsigned long long int)  filedata.st_size);
+        fprintf(stderr, "%s line %d: ERROR file %s cannot be fully read (%lld of %lld read)\n",
+            __PRETTY_FUNCTION__, __LINE__, fn,(unsigned long long int)  size, (unsigned long long int)  filedata.st_size);
             exit(1);
         }
         } else {
@@ -170,7 +170,7 @@ void qsimTextFile::Print(){
                     
     printf("%s\n", tmpbuf);
                          
-    delete tmpbuf;
+    delete[] tmpbuf;
 }
 
 const char *qsimTextFile::GetBaseFile(const char *fp){
