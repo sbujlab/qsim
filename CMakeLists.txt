@@ -93,8 +93,19 @@ target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${Boost_LIBRARI
 #
 
 #FILE( GLOB QSIM_GEO "geometry/*" )
+#FILE( GLOB QSIM_GEO "geometry_perl/*" )
 
 set(QSIM_SCRIPTS
+    #geometry/*
+    #geometry_perl/*
+    geometry/schema/gdml.xsd
+    geometry/schema/gdml_core.xsd
+    geometry/schema/gdml_define.xsd
+    geometry/schema/gdml_extensions.xsd
+    geometry/schema/gdml_materials.xsd
+    geometry/schema/gdml_parameterised.xsd
+    geometry/schema/gdml_replicas.xsd
+    geometry/schema/gdml_solids.xsd
     primaryDistribution.root
     macros/vis.mac
     vis/OIX.mac
