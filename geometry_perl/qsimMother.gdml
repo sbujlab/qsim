@@ -30,13 +30,13 @@
     <volume name="logicMother">
       <materialref ref="Vacuum"/>
       <solidref ref="boxMother"/>
-
+<!--
       <physvol>
       <file name="/home/cameronc/gitdir/qsim/build/geometry/targetDaughter.gdml"/>
       <positionref ref="targetCenter"/>
       <rotationref ref="identity"/>
       </physvol>
-<!--
+
       <physvol>
       <file name="/home/cameronc/gitdir/qsim/build/geometry/hallDaughter.gdml"/>
       <positionref ref="hallCenter"/>
@@ -48,7 +48,7 @@
       <positionref ref="detectorCenter"/>
       <rotation name="detectorRot" x="0" y="pi/2" z="0"/>
       </physvol>
-
+<!--
       <physvol>
       <file name="/home/cameronc/gitdir/qsim/build/geometry/upstreamDaughter_merged_design1_check3.gdml"/>
       <positionref ref="upstreamCenter"/>
@@ -60,7 +60,7 @@
       <positionref ref="hybridCenter"/>
       <rotationref ref="identity"/>
       </physvol>    
-
+-->
     </volume>
   </structure>
 

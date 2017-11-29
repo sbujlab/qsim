@@ -61,7 +61,7 @@ qsimDetectorConstruction::qsimDetectorConstruction()
   fGDMLParser = new G4GDMLParser();
 
   // Default geometry file
-  fDetFileName = "geometry/qsimMother.gdml";
+  fDetFileName = "geometry_perl/qsimMother.gdml";
 
   // Create generic messenger
   fMessenger = new G4GenericMessenger(this,"/qsim/","qsim properties");
