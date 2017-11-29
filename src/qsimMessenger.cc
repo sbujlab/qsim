@@ -160,7 +160,6 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	G4int x = fStandModeCmd->GetNewIntValue(newValue);
 	fdetcon->StandModeSet(x);
 		}
-*/		
 		if (cmd == fDetModeCmd ) {
 	G4int x = fDetModeCmd->GetNewIntValue(newValue);
 	fdetcon->DetModeSet(x);
@@ -170,12 +169,13 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	G4int x = fStandModeCmd->GetNewIntValue(newValue);
 	fdetcon->StandModeSet(x);
 		}
+*/		
 		
 	if (cmd == fSourceModeCmd ) {
 	G4int x = fSourceModeCmd->GetNewIntValue(newValue);
 	fprigen->SourceModeSet(x);
 		}
-
+/*
 	if (cmd == fQuartzPolishCmd ) {
 		G4double x = fQuartzPolishCmd->GetNewDoubleValue(newValue);
 		fdetcon->fQuartzPolish = x;
@@ -185,9 +185,9 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 		G4double x = fDetAngleCmd->GetNewDoubleValue(newValue);
 		fdetcon->fDetAngle = x;
 	}
-
+*/
 	// POSSCAN
-	
+/*	
 	if (cmd == fDetPosXCmd ) {
 		G4double x = fDetPosXCmd->GetNewDoubleValue(newValue);
 		fdetcon->fDetPosX = x;
@@ -197,7 +197,7 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 		G4double x = fDetPosYCmd->GetNewDoubleValue(newValue);
 		fdetcon->fDetPosY = x;
 	}
-
+*/
     if( cmd == fXminCmd ){
 	G4double x = fXminCmd->GetNewDoubleValue(newValue);
 	fprigen->fXmin = x;

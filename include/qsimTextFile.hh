@@ -12,7 +12,7 @@ class qsimTextFile : public TObject {
     qsimTextFile(const qsimTextFile &);
     const qsimTextFile& operator=(const qsimTextFile &);
     qsimTextFile(const char *);
-    ~qsimTextFile();
+    virtual ~qsimTextFile();
                                                  
     void copyFileIn(const char *);
                                                    
@@ -25,17 +25,15 @@ class qsimTextFile : public TObject {
     void RecreateInDir(const char *path, bool clobber = false);
     
     private:
-        
-    int fFilenameSize;
+    unsigned int fFilenameSize;
     char *fFilename;
     
     unsigned long long int fBufferSize;
     char *fBuffer;
     
     const char *GetBaseFile(const char *fp = NULL);
-        
-    ClassDef(qsimTextFile, 1);
-        
-};
-#endif//__QSIMTEXTFILE_HH
 
+//    ClassDef(qsimTextFile, 1);
+};
+
+#endif//__QSIMTEXTFILE_HH

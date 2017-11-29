@@ -1,19 +1,18 @@
 #include "qsimRun.hh"
+
+#include "G4Event.hh"
+#include "G4HCofThisEvent.hh"
 #include "qsimRunData.hh"
-
-qsimRun *qsimRun::gSingleton = NULL;
-
-qsimRun::qsimRun(){
-    gSingleton = this;
+qsimRunData* qsimRun::fRunData = 0;
+qsimRunData* qsimRun::GetRunData()
+{
+  if (!fRunData) {
     fRunData = new qsimRunData();
     fRunData->Init();
+  }
+  return fRunData;
 }
 
-qsimRun::~qsimRun(){}
+qsimRun::qsimRun(){ }
 
-qsimRun *qsimRun::GetRun(){
-    if( gSingleton == NULL ){
-        gSingleton = new qsimRun();
-    }
-    return gSingleton;
-}
+qsimRun::~qsimRun(){ }

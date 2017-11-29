@@ -4,26 +4,26 @@
 /*
  * All information on the run
  * Data will be sent to output stream
- * Adapted from remollRun.hh
+ * Adapted from qsimRun.hh
  */
 
 #include "qsimRunData.hh"
 
-class qsimRun {
+#include "G4Run.hh"
 
-    private:
-        static qsimRun *gSingleton;
-        qsimRun();
+class qsimRunData;
 
-        qsimRunData *fRunData;
+class qsimRun: public G4Run {
 
-    public:
-        static qsimRun *GetRun();
-        ~qsimRun();
+  public:
+    qsimRun();
+    virtual ~qsimRun();
 
-        qsimRunData *GetData() {
-            return fRunData;
-        }
+  // Static run data access
+  private:
+    static qsimRunData* fRunData;
+  public:
+    static qsimRunData* GetRunData();
 };
 
 #endif//__QSIMRUN_HH

@@ -3,16 +3,18 @@
 
 #include "TROOT.h"
 #include "TObject.h"
-#include "G4Run.hh"
 #include "qsimtypes.hh"
 
 #include "G4String.hh"
 
-#include "qsimEvent.hh"
-
 class TFile;
 class TTree;
 
+class G4GenericMessenger;
+
+class qsimGenericDetectorHit;
+class qsimGenericDetectorSum;
+class qsimEvent;
 class qsimDetectorHit;
 class qsimScintDetectorHit;
 
@@ -29,12 +31,20 @@ class qsimScintDetectorHit;
 #define __ASYMM_SCALE 1e-9 // ppb
 
 class qsimIO {
+    private:
+        // Singleton pointer
+        static qsimIO* gInstance;
+        // Private constructor
+        qsimIO();
+    
     public:
-	 qsimIO();
-	~qsimIO();
+        // Public destructor
+  	    virtual ~qsimIO();
+        // Static instance getter
+        static qsimIO* GetInstance();
 
-	void SetFilename(G4String  fn);
-	G4String GetFilename(){return fFilename;}
+	void SetFilename(const G4String& name) { fFilename = name; }
+	G4String GetFilename() const { return fFilename; }
 
 	void FillTree();
 	void Flush();
@@ -43,24 +53,28 @@ class qsimIO {
 	void WriteRun();
 
 	void InitializeTree();
-    
+
     void GrabGDMLFiles( G4String fn );
 
     private:
 	TFile *fFile;
 	TTree *fTree;
 
-	char fFilename[__FILENAMELEN];
-    std::vector<G4String> fGDMLFileNames;
-
-    void SearchGDMLforFiles(G4String );
-    void TraverseChildren( xercesc::DOMElement * );
+	    G4GenericMessenger* fMessenger;
+        
+        G4String fFilename;
+        
+        std::vector<G4String> fGDMLFileNames;
+    
+        void SearchGDMLforFiles(G4String );
+        void TraverseChildren( xercesc::DOMElement * );
 
 	//  Interfaces and buffers to the tree
 	//  This is potentially going to get very long...
 
 	// Event data
     public:
+    void SetEventSeed(const G4String& seed);
 	void SetEventData(qsimEvent *);
     private:
 	Double_t fEvPart_X;
@@ -111,7 +125,52 @@ class qsimIO {
 	Double_t fDetHit_Vdy[__IO_MAXHIT];
 	Double_t fDetHit_Vdz[__IO_MAXHIT];
 
-	//  ScintDetectorHit
+
+    //  GenericDetectorHit
+    public:
+    void AddGenericDetectorHit(qsimGenericDetectorHit *);
+    private:
+	Int_t fNGenDetHit;
+	Int_t fGenDetHit_det[__IO_MAXHIT];
+	Int_t fGenDetHit_id[__IO_MAXHIT];
+
+	Int_t fGenDetHit_trid[__IO_MAXHIT];
+	Int_t fGenDetHit_pid[__IO_MAXHIT];
+	Int_t fGenDetHit_gen[__IO_MAXHIT];
+	Int_t fGenDetHit_mtrid[__IO_MAXHIT];
+
+	Double_t fGenDetHit_X[__IO_MAXHIT];
+	Double_t fGenDetHit_Y[__IO_MAXHIT];
+	Double_t fGenDetHit_Z[__IO_MAXHIT];
+	Double_t fGenDetHit_R[__IO_MAXHIT];
+	Double_t fGenDetHit_Ph[__IO_MAXHIT];
+
+	Double_t fGenDetHit_Px[__IO_MAXHIT];
+	Double_t fGenDetHit_Py[__IO_MAXHIT];
+	Double_t fGenDetHit_Pz[__IO_MAXHIT];
+	Double_t fGenDetHit_P[__IO_MAXHIT];
+	Double_t fGenDetHit_E[__IO_MAXHIT];
+	Double_t fGenDetHit_M[__IO_MAXHIT];
+
+	Double_t fGenDetHit_Vx[__IO_MAXHIT];
+	Double_t fGenDetHit_Vy[__IO_MAXHIT];
+	Double_t fGenDetHit_Vz[__IO_MAXHIT];
+
+	Int_t fCollCut;
+
+	//  GenericDetectorSum
+    public:
+	void AddGenericDetectorSum(qsimGenericDetectorSum *);
+    private:
+	Int_t fNGenDetSum;
+	Int_t fGenDetSum_det[__IO_MAXHIT];
+	Int_t fGenDetSum_id[__IO_MAXHIT];
+	Double_t fGenDetSum_edep[__IO_MAXHIT];
+
+	
+    
+    
+    //  ScintDetectorHit
     public:
 	void AddScintDetectorHit(qsimScintDetectorHit *);
     private:

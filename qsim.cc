@@ -5,17 +5,24 @@
   riordan@jlab.org
 
   Based on prexsim by Jon Wexler and Luis Mercado
-  and remoll
+  and qsim
 
 */
 
 #include "CLHEP/Random/Random.h"
+#include "/share/apps/root/include/Rtypes.h"
 
 #include "qsimRunAction.hh"
 #include "qsimPrimaryGeneratorAction.hh"
 #include "qsimEventAction.hh"
 #include "qsimSteppingAction.hh"
 #include "qsimOpticalPhysics.hh"
+#include "qsimRun.hh"
+#include "qsimRunData.hh"
+//#include "qsimPhysicsList.hh"
+//#include "qsimActionInitialization.hh"
+#include "qsimDetectorConstruction.hh"
+
 
 #include "qsimDetectorConstruction.hh"
 
@@ -25,6 +32,8 @@
 //  Standard physics list
 #include "G4PhysListFactory.hh"
 #include "G4RunManager.hh"
+#include "G4Types.hh"
+#include "G4UImanager.hh"
 
 #include "G4UnitsTable.hh"
 
@@ -67,7 +76,7 @@ int main(int argc, char** argv){
     CLHEP::HepRandom::createInstance();
     CLHEP::HepRandom::setTheSeed(seed);
 
-    qsimIO *io = new qsimIO();
+///    qsimIO *io = new qsimIO();
 
     //-------------------------------
     // Initialization of Run manager
@@ -76,7 +85,7 @@ int main(int argc, char** argv){
     G4RunManager * runManager = new G4RunManager;
 
     qsimMessenger *rmmess = new qsimMessenger();
-    rmmess->SetIO(io);
+///    rmmess->SetIO(io);
 
     // Detector geometry
     G4VUserDetectorConstruction* detector = new qsimDetectorConstruction();
@@ -95,16 +104,16 @@ int main(int argc, char** argv){
     // UserAction classes
     //-------------------------------
     G4UserRunAction* run_action = new qsimRunAction;
-    ((qsimRunAction *) run_action)->SetIO(io);
+///    ((qsimRunAction *) run_action)->SetIO(io);
     runManager->SetUserAction(run_action);
 
     G4VUserPrimaryGeneratorAction* gen_action = new qsimPrimaryGeneratorAction;
-    ((qsimPrimaryGeneratorAction *) gen_action)->SetIO(io);
+///    ((qsimPrimaryGeneratorAction *) gen_action)->SetIO(io);
     rmmess->SetPriGen((qsimPrimaryGeneratorAction *)gen_action);
     runManager->SetUserAction(gen_action);
 
     G4UserEventAction* event_action = new qsimEventAction;
-    ((qsimEventAction *) event_action)->SetIO(io);
+///    ((qsimEventAction *) event_action)->SetIO(io);
     runManager->SetUserAction(event_action);
 
     G4UserSteppingAction* stepping_action = new qsimSteppingAction;
@@ -117,7 +126,7 @@ int main(int argc, char** argv){
 		//runManager->Initialize(); 
 
 		// do initialization in all macro files, 
-		//see remoll examples for assistance. 
+		//see qsim examples for assistance. 
 
     G4UIsession* session = 0;
 
