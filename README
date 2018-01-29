@@ -1,0 +1,64 @@
+qsim installation and running instructions
+
+Seamus Riordan
+sriordan@physics.umass.edu
+September 26, 2013
+
+Carlos Bula-Villarreal
+bulacarl@isu.edu
+March 6, 2015  
+Many additional features implemented:
+
+PMT quantum efficiency
+theta and phi smearing of cosmic rays
+Cosmic rays energy spectrum
+
+---------------------------------------------------
+Packages to build this:
+
+>=Geant4.9.5
+cmake > 2.6
+root
+
+---------------------------------------------------
+
+Instructions:
+
+To build, create the directory you would like to
+build in, say build
+
+mkdir build
+cd build
+cmake <path to qsim>
+make
+
+
+It just needs to be downloaded and for the example, present in the directory
+you are running in.  Otherwise, specify it in the macro as in the
+exmaple provided in macros/  An example macro will be found in
+
+macros/runexmaple.mac
+
+To run in batch mode, execute with a macro such as:
+
+./qsim runexample.mac
+
+==== Visualization ===============
+
+Visualization macros are found in vis/
+
+To run, execute
+
+./qsim
+
+which should bring up a graphical command interface
+
+To see the geometry:
+
+/control/execute macros/vis.mac
+
+
+---------------------------------------------------
+
+
+
