@@ -1,7 +1,7 @@
 <solids>
 
 <box lunit="mm" name="boxMotherSol" x="2000" y="4000" z="4000"/>
-<cone aunit="rad" deltaphi="2*PI" lunit="mm" name="coneMotherSol" rmax1="999" rmax2="999" rmin1="0" rmin2="0" startphi="0" z="2000"/>
+<cone aunit="rad" deltaphi="2*PI" lunit="mm" name="coneMotherSol" rmax1="499" rmax2="499" rmin1="0" rmin2="0" startphi="0" z="2000"/>
 <subtraction name ="logicMotherSol">
 	<first ref="boxMotherSol"/> 
 	<second ref="coneMotherSol"/> 
