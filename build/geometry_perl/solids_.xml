@@ -1,0 +1,13 @@
+<solids>
+
+<box lunit="mm" name="boxMotherSol_" x="1000" y="4000" z="4000"/>
+<cone aunit="rad" deltaphi="2*pi" lunit="mm" name="coneMotherSol_" rmax1="499" rmax2="499" rmin1="0" rmin2="0" startphi="0" z="20"/>
+<subtraction name ="logicMotherSol_">
+	<first ref="boxMotherSol_"/> 
+	<second ref="coneMotherSol_"/> 
+	<position unit="mm" name="coneMotherPos_" x="0" y="0" z="0"/>
+        <rotation unit="rad" name="coneMotherRot_" x="0" y="pi/2" z="0"/>
+</subtraction>
+
+
+</solids>

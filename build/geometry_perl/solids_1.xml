@@ -1,0 +1,117 @@
+<solids>
+
+<box lunit="mm" name="boxMotherSol_1" x="1000" y="4000" z="4000"/>
+<cone aunit="rad" deltaphi="2*pi" lunit="mm" name="coneMotherSol_1" rmax1="499" rmax2="499" rmin1="0" rmin2="0" startphi="0" z="20"/>
+<subtraction name ="logicMotherSol_1">
+	<first ref="boxMotherSol_1"/> 
+	<second ref="coneMotherSol_1"/> 
+	<position unit="mm" name="coneMotherPos_1" x="0" y="0" z="0"/>
+        <rotation unit="rad" name="coneMotherRot_1" x="0" y="pi/2" z="0"/>
+</subtraction>
+
+<box name="quartzRecSol_1_0" x="50" y="146.2643137" z="40" lunit= "mm" />
+<xtru name = "quartzCutSol_1_0" lunit= "mm" >
+ <twoDimVertex x="25" y="25" />
+ <twoDimVertex x="25" y="-25" />
+ <twoDimVertex x="-25" y="-25" />
+ <section zOrder="1" zPosition="-73.13215685" xOffset="0" yOffset="0" scalingFactor="1" />
+ <section zOrder="2" zPosition="73.13215685" xOffset="0" yOffset="0" scalingFactor="1" />
+</xtru>
+<union name="quartzSol_1_0">
+    <first ref="quartzRecSol_1_0"/>
+    <second ref="quartzCutSol_1_0"/>
+    <position name="quartzCutSolPos_1_0" unit="mm" x="0" y="0" z="45"/>
+    <rotation name="quartzCutSolRot_1_0" unit="rad" x="pi/2" y="0" z="pi"/> 
+</union>
+<trd name = "lgLogicSol_1_0" z="400" y1="148.277646674958" x1="202.061552812809" y2="102.013332974958" x2="102.061552812809" lunit= "mm"/>
+<xtru name = "refLogicSol_1_0" lunit= "mm" >
+ <twoDimVertex x="113.928475015291" y="76.6286369661034" />
+ <twoDimVertex x="-53.0470205236435" y="-40.2888637065602" />
+ <twoDimVertex x="-26.2207745887615" y="-75" />
+ <twoDimVertex x="26.3856406460551" y="-75" />
+ <section zOrder="1" zPosition="-74.13215685" xOffset="0" yOffset="0" scalingFactor="1" />
+ <section zOrder="2" zPosition="74.13215685" xOffset="0" yOffset="0" scalingFactor="1"/>
+</xtru>
+<box name="pmtLogicSol_1_0" x="100" y="100" z="20" lunit= "mm" />
+<union name="quartzLogicSol1_1_0">
+    <first ref="quartzRecSol_1_0"/>
+    <second ref="refLogicSol_1_0"/>
+    <position name="quartzCutPos_1_0" 
+it="mm" x="0" y="0" z="95"/>
+    <rotation name="quartzCutRot_1_0" unit="rad" x="pi/2" y="0" z="0"/> 
+</union>
+<union name="quartzLogicSol2_1_0">
+    <first ref="quartzLogicSol1_1_0"/>
+    <second ref="lgLogicSol_1_0"/>
+   <position name="lgLogicSolPos_1_0" unit="mm" x="-85.0279513206645" y="0" z="276.472765222694"/>
+    <rotation name="lgLogicSolRot_1_0" unit="rad" x="0" y="-0.610865238198015" z="0"/> 
+</union>
+<union name="quartzLogicSol_1_0">
+    <first ref="quartzLogicSol2_1_0"/>
+    <second ref="pmtLogicSol_1_0"/>
+   <position name="lgLogicSolPos_1_0" unit="mm" x="-205.479002954384" y="0" z="448.494694523382"/>
+    <rotation name="lgLogicSolRot_1_0" unit="rad" x="0" y="-0.610865238198015" z="0"/> 
+</union>
+<trd name = "lgSol_1_0" z="400" y1="146.2643137" x1="200" y2="100" x2="100" lunit= "mm"/>
+<subtraction name ="lgSolSkin_1_0">
+	<first ref="lgLogicSol_1_0"/> 
+	<second ref="lgSol_1_0"/> 
+	<position unit="mm" name="quartzCut_1_0" x="0" y="0" z="0"/>
+        <rotation unit="rad" name="quartzCut_1_0" x="0" y="0" z="0"/>
+</subtraction>
+
+<xtru name = "refSol_1_0" lunit= "mm" >
+ <twoDimVertex x="111.602540378444" y="75" />
+ <twoDimVertex x="-52.2278684793545" y="-39.7152872702092" />
+ <twoDimVertex x="-25" y="-75" />
+ <twoDimVertex x="25" y="-75" />
+ <section zOrder="1" zPosition="-73.13215685" xOffset="0" yOffset="0" scalingFactor="1" />
+ <section zOrder="2" zPosition="73.13215685" xOffset="0" yOffset="0" scalingFactor="1"/>
+</xtru>
+<subtraction name ="refSolSkin_1_0">
+	<first ref="refLogicSol_1_0"/> 
+	<second ref="refSol_1_0"/> 
+	<position unit="mm" name="quartzCut_1_0" x="0" y="0" z="0"/>
+        <rotation unit="rad" name="quartzCut_1_0" x="0" y="0" z="0"/>
+</subtraction>
+
+<subtraction name ="refSol1_1_0">
+	<first ref="refSol_1_0"/> 
+	<second ref="quartzCutSol_1_0"/> 
+	<position unit="mm" name="quartzCut_1_0" x="0" y="150*(-0.5)+50*(0.5*tan(abs(0.78539816339744800000)))" z="0"/>
+        <rotation unit="rad" name="quartzCut_1_0" x="0" y="pi" z="0"/>
+</subtraction>
+
+<xtru name = "reflectorSol_1_0" lunit= "mm" >
+ <twoDimVertex x="111.990196151252" y="75.2714394943506" />
+ <twoDimVertex x="111.602540378444" y="75" />
+ <twoDimVertex x="25" y="-75" />
+ <twoDimVertex x="25.2309401076758" y="-75" />
+ <section zOrder="1" zPosition="-73.13215685" xOffset="0" yOffset="0" scalingFactor="1" />
+ <section zOrder="2" zPosition="73.13215685" xOffset="0" yOffset="0" scalingFactor="1"/>
+</xtru>
+<subtraction name ="refSolSkin1_1_0">
+	<first ref="refSolSkin_1_0"/> 
+	<second ref="reflectorSol_1_0"/> 
+	<position name="detectorPos_1_0" unit="mm" x="0" y="0" z="0"/>
+			<rotation name="detectorRot_1_0" unit="rad" x="0" y="0" z="0"/>
+</subtraction>
+
+<cone name = "pmtSol_1_0" rmin1="0" rmax1="45" rmin2="0" rmax2="45" z="20"
+startphi="0" deltaphi="2*pi" aunit="rad" lunit= "mm" />
+<subtraction name ="pmtSkinSol_1_0">
+	<first ref="pmtLogicSol_1_0"/> 
+	<second ref="pmtSol_1_0"/> 
+	<position unit="mm" name="quartzCut_1_0" x="0" y="0" z="0"/>
+        <rotation unit="rad" name="quartzCut_1_0" x="0" y="0" z="0"/>
+</subtraction>
+
+<subtraction name ="lgSol1_1_0">
+	<first ref="lgSol_1_0"/> 
+	<second ref="pmtLogicSol_1_0"/> 
+	<position unit="mm" name="quartzCut_1_0" x="0" y="0" z="190"/>
+        <rotation unit="rad" name="quartzCut_1_0" x="0" y="0" z="0"/>
+</subtraction>
+
+
+</solids>

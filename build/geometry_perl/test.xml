@@ -1,0 +1,30 @@
+<define>
+
+<matrix name="pmtSize" coldim="1" values="2
+1
+4
+2
+2
+3
+2
+"/>
+
+<matrix name="pmtThickness" coldim="1" values="3
+3
+5
+3
+8
+9
+8
+"/>
+
+<matrix name="quartzTiltAngle" coldim="1" values="
+
+
+
+
+
+
+"/>
+
+</define>
