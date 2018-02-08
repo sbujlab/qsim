@@ -6,7 +6,7 @@
   <position name="targetCenter" x="0" y="0" z="0"/>
   <position name="upstreamCenter" x="0" y="0" z="7000."/>
   <position name="hybridCenter" x="0" y="0" z="13366.57"/>
-  <position name="detectorCenter" x="0" y="0" z="28500."/>
+  <position name="detectorCenter" x="0" y="0" z="0."/>
   <rotation name="identity"/>
 </define>
 
@@ -44,7 +44,7 @@
       </physvol>
 -->
       <physvol>
-      <file name="/home/cameronc/gitdir/qsim/build/geometry/detectorNew.gdml"/>
+      <file name="geometry_perl/detector_spaced.gdml"/>
       <positionref ref="detectorCenter"/>
       <rotation name="detectorRot" x="0" y="pi/2" z="0"/>
       </physvol>
