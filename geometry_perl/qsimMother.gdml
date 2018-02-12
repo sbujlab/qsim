@@ -44,7 +44,7 @@
       </physvol>
 -->
       <physvol>
-      <file name="geometry_perl/detector_spaced.gdml"/>
+      <file name="geometry_perl/detector.gdml"/>
       <positionref ref="detectorCenter"/>
       <rotation name="detectorRot" x="0" y="pi/2" z="0"/>
       </physvol>
