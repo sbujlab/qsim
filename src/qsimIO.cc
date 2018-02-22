@@ -60,12 +60,12 @@ qsimIO::~qsimIO(){
     if( fFile ){ delete fFile; 
     fFile = NULL;}
 }
-
-//void qsimIO::SetFilename(G4String fn){
-//    G4cout << "Setting output file to " << fn << G4endl;
-//    strcpy(fFilename, fn.data());
-//}
-
+/*
+void qsimIO::SetFilename(G4String fn){
+    G4cout << "Setting output file to " << fn << G4endl;
+    strcpy(fFilename, fn.data());
+}
+*/
 void qsimIO::InitializeTree()
 {
     if (fFile) {

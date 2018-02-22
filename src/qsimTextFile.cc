@@ -54,7 +54,7 @@ const qsimTextFile& qsimTextFile::operator=(const qsimTextFile& r){
 }
 
 qsimTextFile::~qsimTextFile(){
-    if(fFilename) { delete[] fFilename; }
+    if (fFilename) { delete[] fFilename; }
     if (fBuffer) { delete[] fBuffer; }
 }
 
@@ -183,6 +183,6 @@ const char *qsimTextFile::GetBaseFile(const char *fp){
     
     return &(fp[idx]);
 }
-
-//ClassImp(qsimTextFile);
-
+/*
+ClassImp(qsimTextFile);
+*/

@@ -146,7 +146,10 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
     }
         
     if( cmd == fileCmd ){
-	fIO->SetFilename(newValue);
+
+    std::cout<<"test messenger 2.0"<<std::endl;
+      fIO->SetFilename(newValue);
+    std::cout<<"test messenger 2.1"<<std::endl;
     }
 
     if( cmd == seedCmd ){

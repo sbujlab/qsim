@@ -4,7 +4,6 @@
 #include "TROOT.h"
 #include "TObject.h"
 #include "qsimtypes.hh"
-
 #include "G4String.hh"
 
 class TFile;
@@ -43,7 +42,11 @@ class qsimIO {
         // Static instance getter
         static qsimIO* GetInstance();
 
-	void SetFilename(const G4String& name) { fFilename = name; }
+	void SetFilename(const G4String& name) { 
+    std::cout<<"test IO 1.0"<<std::endl;
+    fFilename = name; 
+    std::cout<<"test IO 1.1"<<std::endl;
+  }
 	G4String GetFilename() const { return fFilename; }
 
 	void FillTree();
