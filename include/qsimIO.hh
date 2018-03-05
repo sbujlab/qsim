@@ -78,17 +78,18 @@ class qsimIO {
 	// Event data
     public:
     void SetEventSeed(const G4String& seed);
-	void SetEventData(qsimEvent *);
+	void SetEventData(const qsimEvent *);
     private:
-	Double_t fEvPart_X;
-	Double_t fEvPart_Y;
-	Double_t fEvPart_Z;
-	Double_t fEvPart_P;
-	Double_t fEvPart_Px;
-	Double_t fEvPart_Py;
-	Double_t fEvPart_Pz;
+    Int_t fNEvPart;
+	Double_t fEvPart_X[__IO_MAXHIT];
+	Double_t fEvPart_Y[__IO_MAXHIT];
+	Double_t fEvPart_Z[__IO_MAXHIT];
+	Double_t fEvPart_P[__IO_MAXHIT];
+	Double_t fEvPart_Px[__IO_MAXHIT];
+	Double_t fEvPart_Py[__IO_MAXHIT];
+	Double_t fEvPart_Pz[__IO_MAXHIT];
 	Int_t fEvPart_PID;
-        Double_t fEvPart_kinE;
+    Double_t fEvPart_kinE[__IO_MAXHIT];
 
 	//  DetectorHit
     public:
@@ -106,10 +107,13 @@ class qsimIO {
 	Int_t fDetHit_gen[__IO_MAXHIT];
 	Int_t fDetHit_mtrid[__IO_MAXHIT];
 
+    
+    Int_t fEvPID[__IO_MAXHIT];
+
 	Double_t fDetHit_X[__IO_MAXHIT];
 	Double_t fDetHit_Y[__IO_MAXHIT];
 	Double_t fDetHit_Z[__IO_MAXHIT];
-
+    
 	Double_t fDetHit_Px[__IO_MAXHIT];
 	Double_t fDetHit_Py[__IO_MAXHIT];
 	Double_t fDetHit_Pz[__IO_MAXHIT];

@@ -57,11 +57,12 @@ include(${Geant4_USE_FILE})
 
 #debugging symbols, complains
 #set(CMAKE_CXX_FLAGS "-g -Wall")
-set(CMAKE_CXX_FLAGS "-ggdb -O0 -Wall -ggdb")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -g -Wno-shadow -Wno-pedantic")
 #----------------------------------------------------------------------------
 # Generate dictionaries as well (so we can write objects to ROOT files
 
-include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/src/)
+#include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/src/)
+include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 
 #----------------------------------------------------------------------------
@@ -76,15 +77,15 @@ file(GLOB libheaders ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-#add_executable(qsim qsim.cc ${sources} ${headers} qsimDict.cxx)
-add_executable(qsim qsim.cc ${sources} ${headers})
-#add_library(qsimroot SHARED ${libsources} ${libheaders} qsimDict.cxx)
-#target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
-#target_link_libraries(qsimroot ${ROOT_LIBRARIES})
+add_executable(qsim qsim.cc ${CMAKE_CURRENT_BINARY_DIR}/include/gitinfo.hh ${sources} ${headers} qsimDict.cxx)
+#add_executable(qsim qsim.cc ${sources} ${headers})
+add_library(qsimroot SHARED ${CMAKE_CURRENT_BINARY_DIR}/include/gitinfo.hh ${libsources} ${libheaders} qsimDict.cxx)
+target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+target_link_libraries(qsimroot ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 
 #add_executable(qsim qsim.cc ${CMAKE_CURRENT_BINARY_DIR}/include/gitinfo.hh ${sources} ${headers} qsimDict.cxx)
 #add_library(qsimroot SHARED ${CMAKE_CURRENT_BINARY_DIR}/include/gitinfo.hh ${libsources} ${libheaders} qsimDict.cxx)
-target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
+#target_link_libraries(qsim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 #target_link_libraries(qsimroot ${ROOT_LIBRARIES} ${Boost_LIBRARIES} )
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
@@ -129,6 +130,7 @@ set(QSIM_SCRIPTS
     macros/runscript.sh
     macros/handler.sh
 	macros/merger.sh
+    rootlogon.C
 )
 
 foreach(_script ${QSIM_SCRIPTS})

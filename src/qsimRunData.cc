@@ -88,6 +88,7 @@ void qsimRunData::RecreateGDML( const char *adir, bool clobber )
     for(unsigned int idx = 0; idx < fGDMLFiles.size(); idx++ ){
 	fGDMLFiles[idx].RecreateInDir(adir, clobber);
     }
+    return;
 }
 
-//ClassImp(qsimRunData);
+ClassImp(qsimRunData)

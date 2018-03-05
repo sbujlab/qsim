@@ -183,6 +183,6 @@ const char *qsimTextFile::GetBaseFile(const char *fp){
     
     return &(fp[idx]);
 }
-/*
-ClassImp(qsimTextFile);
-*/
+/**/
+ClassImp(qsimTextFile)
+/**/

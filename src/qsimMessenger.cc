@@ -140,7 +140,7 @@ qsimMessenger::~qsimMessenger(){
 }
 
 
-void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
+void qsimMessenger::SetNewValue(G4UIcommand* cmd, const G4String& newValue){
     if( cmd == detfilesCmd ){
         fdetcon->SetDetectorGeomFile( newValue );
     }

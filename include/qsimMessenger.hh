@@ -35,7 +35,7 @@ class qsimMessenger : public G4UImessenger {
 	void SetEvAct( qsimEventAction *ev ){ fevact = ev; }
 	void SetStepAct( qsimSteppingAction *st ){ fStepAct = st; }
 
-	void SetNewValue(G4UIcommand* cmd, G4String newValue);
+	void SetNewValue(G4UIcommand* cmd,const G4String& newValue);
 
     private:
 	qsimIO *fIO;
