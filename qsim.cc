@@ -76,7 +76,7 @@ int main(int argc, char** argv){
     CLHEP::HepRandom::createInstance();
     CLHEP::HepRandom::setTheSeed(seed);
 
-///    qsimIO *io = new qsimIO();
+    qsimIO *io = qsimIO::GetInstance();
 
     //-------------------------------
     // Initialization of Run manager
@@ -85,7 +85,7 @@ int main(int argc, char** argv){
     G4RunManager * runManager = new G4RunManager;
 
     qsimMessenger *rmmess = new qsimMessenger();
-///    rmmess->SetIO(io);
+    rmmess->SetIO(io);
 
     // Detector geometry
     G4VUserDetectorConstruction* detector = new qsimDetectorConstruction();
@@ -104,16 +104,16 @@ int main(int argc, char** argv){
     // UserAction classes
     //-------------------------------
     G4UserRunAction* run_action = new qsimRunAction;
-///    ((qsimRunAction *) run_action)->SetIO(io);
+    ((qsimRunAction *) run_action)->SetIO(io);
     runManager->SetUserAction(run_action);
 
     G4VUserPrimaryGeneratorAction* gen_action = new qsimPrimaryGeneratorAction;
-///    ((qsimPrimaryGeneratorAction *) gen_action)->SetIO(io);
+    ((qsimPrimaryGeneratorAction *) gen_action)->SetIO(io);
     rmmess->SetPriGen((qsimPrimaryGeneratorAction *)gen_action);
     runManager->SetUserAction(gen_action);
 
     G4UserEventAction* event_action = new qsimEventAction;
-///    ((qsimEventAction *) event_action)->SetIO(io);
+    ((qsimEventAction *) event_action)->SetIO(io);
     runManager->SetUserAction(event_action);
 
     G4UserSteppingAction* stepping_action = new qsimSteppingAction;

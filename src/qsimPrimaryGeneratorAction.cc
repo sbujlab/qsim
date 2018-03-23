@@ -77,8 +77,8 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
         fEmin = 2.0*GeV;
         fEmax = 11.0*GeV;
 
-        fthetaMin = -2.0*deg;
-        fthetaMax = 2.0*deg;
+        fthetaMin = -3.0*deg;//FIXME Needs justification, what about the angle about the z axis that this points as well, is that phi, or is phi the start position about z?
+        fthetaMax = 3.0*deg;
 
         fRing = 5;
         fSector = 0;
@@ -358,7 +358,7 @@ double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 
        }while (!filled);
     }
     double LGstart[] = {0.730,0.730,0.855,0.930,1.04,1.2};
-    double finRad = (radius - LGstart[fRing] - 0.075)*1000.0; //0.075*m is the offset for the start of the light guide, since the center of the quartz is at (0,0,0).
+    double finRad = (radius /*- LGstart[fRing] - 0.075*/)*1000.0; //0.075*m is the offset for the start of the light guide, since the center of the quartz is at (0,0,0).
     return (-1.0*finRad > 75)? finRad : RadSpectrum();
 }
 

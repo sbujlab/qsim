@@ -87,15 +87,16 @@ void qsimIO::InitializeTree()
     fTree->SetMaxTreeSize(1900000000); // 1.9GB
 
     // Event information
-    fTree->Branch("ev.pid",   &fEvPart_PID, "ev.pid/I");
-    fTree->Branch("ev.vx",    &fEvPart_X,   "ev.vx/D");
-    fTree->Branch("ev.vy",    &fEvPart_Y,   "ev.vy/D");
-    fTree->Branch("ev.vz",    &fEvPart_Z,   "ev.vz/D");
-    fTree->Branch("ev.p",     &fEvPart_P,   "ev.p/D");
-    fTree->Branch("ev.px",    &fEvPart_Px,  "ev.px/D");
-    fTree->Branch("ev.py",    &fEvPart_Py,  "ev.py/D");
-    fTree->Branch("ev.pz",    &fEvPart_Pz,  "ev.pz/D");
-    fTree->Branch("ev.kine", &fEvPart_kinE, "ev.kine/D");
+    fTree->Branch("ev.npart", &fNEvPart  ,   "ev.npart/I");
+    fTree->Branch("ev.pid",   &fEvPart_PID, "ev.pid[ev.npart]/I");
+    fTree->Branch("ev.vx",    &fEvPart_X,   "ev.vx[ev.npart]/D");
+    fTree->Branch("ev.vy",    &fEvPart_Y,   "ev.vy[ev.npart]/D");
+    fTree->Branch("ev.vz",    &fEvPart_Z,   "ev.vz[ev.npart]/D");
+    fTree->Branch("ev.p",     &fEvPart_P,   "ev.p[ev.npart]/D");
+    fTree->Branch("ev.px",    &fEvPart_Px,  "ev.px[ev.npart]/D");
+    fTree->Branch("ev.py",    &fEvPart_Py,  "ev.py[ev.npart]/D");
+    fTree->Branch("ev.pz",    &fEvPart_Pz,  "ev.pz[ev.npart]/D");
+    fTree->Branch("ev.kine", &fEvPart_kinE, "ev.kine[ev.npart]/D");
 
     // DetectorHit
     fTree->Branch("hit.n",    &fNDetHit,     "hit.n/I");
@@ -193,22 +194,48 @@ void qsimIO::WriteTree(){
 
 // Event Data
 
-void qsimIO::SetEventData(qsimEvent *ev){
-    fEvPart_PID = ev->fPartType[0]->GetPDGEncoding();
+void qsimIO::SetEventData(const qsimEvent *ev){
 
-    fEvPart_X = ev->fPartPos[0].x()/__L_UNIT;
-    fEvPart_Y = ev->fPartPos[0].y()/__L_UNIT;
-    fEvPart_Z = ev->fPartPos[0].z()/__L_UNIT;
+    int n = ev->fPartType.size();
+    G4cout << "test: qsimIO::SetEventData n = " << n << G4endl;
+    if( n > __IO_MAXHIT ){
+        G4cerr << "WARNING: " << __PRETTY_FUNCTION__ << " line " << __LINE__ << ":  Buffer size exceeded!" << G4endl;
+        return;
+    }
 
-    fEvPart_Px = ev->fPartMom[0].x()/__E_UNIT;
-    fEvPart_Py = ev->fPartMom[0].y()/__E_UNIT;
-    fEvPart_Pz = ev->fPartMom[0].z()/__E_UNIT;
+    fNEvPart = n;
 
-    fEvPart_P = ev->fPartMom[0].mag()/__E_UNIT;
+//    fEvPart_PID = ev->fPartType[0]->GetPDGEncoding();
+
+
+
+
+
+
+
+
+
+    int idx;
+    for( idx = 0; idx < n; idx++ ){
+        fEvPID[idx] = ev->fPartType[idx]->GetPDGEncoding();
+        
+        fEvPart_X[idx] = ev->fPartPos[idx].x()/__L_UNIT;
+        fEvPart_Y[idx] = ev->fPartPos[idx].y()/__L_UNIT;
+        fEvPart_Z[idx] = ev->fPartPos[idx].z()/__L_UNIT;
+        
+        fEvPart_Px[idx] = ev->fPartMom[idx].x()/__E_UNIT;
+        fEvPart_Py[idx] = ev->fPartMom[idx].y()/__E_UNIT;
+        fEvPart_Pz[idx] = ev->fPartMom[idx].z()/__E_UNIT;
+        
+        
+        
+        fEvPart_P[idx] = ev->fPartMom[idx].mag()/__E_UNIT;
     
-    fEvPart_kinE = sqrt(ev->fPartMom[0].mag()*ev->fPartMom[0].mag() + ev->fPartType[0]->GetPDGMass()*ev->fPartType[0]->GetPDGMass() ) - ev->fPartType[0]->GetPDGMass()/__E_UNIT;
+        fEvPart_kinE[idx] = sqrt(ev->fPartMom[idx].mag()*ev->fPartMom[idx].mag() + ev->fPartType[idx]->GetPDGMass()*ev->fPartType[idx]->GetPDGMass() ) - ev->fPartType[idx]->GetPDGMass()/__E_UNIT;
 
-    return;
+    }
+
+//    return;
 }
 
 // DetectorHit
