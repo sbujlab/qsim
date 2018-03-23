@@ -35,7 +35,7 @@ TH1F *inelDist = new TH1F("inel","inelastic dist",200,0.6,1.2);
 //}
 
 // allow user modifications of private member and functional modifiable definition of primary generator variables
-void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
+void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 1) {
 	fSourceMode = mode;
 	// 0 is cosmic mode
 	// 1 is beam mode
@@ -53,24 +53,33 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
 	
 		fthetaMin = 0.0*deg;
 		fthetaMax = 90.0*deg;
+
+		fPhiMin = 0.0*deg;
+		fPhiMax = 360.0*deg;
 	}
 	else if (fSourceMode==1) {
-		fXmin =  -0.0*cm; // pinpoint at Mainz
-		fXmax =  0.0*cm; // questionable at JLab
+		fXmin =  -450*mm; // pinpoint at Mainz
+		fXmax =  -950*mm; // questionable at JLab
 
-		fYmin =  -0.0*cm;
-		fYmax =  0.0*cm;
+		fYmin =  -200*mm;
+		fYmax =  200*mm;
 
-		fEmin = 855.0*MeV; // = 250 MeV at Mainz
-		fEmax = 855.0*MeV; // = 1.063 Gev for JLab
+		fEmin = 3*GeV;//855.0*MeV; // = 250 MeV at Mainz
+		fEmax = 8*GeV;//855.0*MeV; // = 1.063 Gev for JLab
 	
 		fthetaMin = 0.0*deg;
-		fthetaMax = 0.0*deg;
-	}
+		fthetaMax = 5*deg;//0.0*deg;
+
+		fPhiMin = 0.0;
+		fPhiMax = 360.0;//0.0*deg;
+  }
 	else if (fSourceMode==2){
 		
 		fEmin = 1.063*GeV; 
 		fEmax = 1.063*GeV; 
+
+		fPhiMin = 0.0*deg;
+		fPhiMax = 0.0*deg;
 
 	}
     else if (fSourceMode==3){
@@ -79,6 +88,9 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
 
         fthetaMin = -3.0*deg;//FIXME Needs justification, what about the angle about the z axis that this points as well, is that phi, or is phi the start position about z?
         fthetaMax = 3.0*deg;
+
+    		fPhiMin = 0.0*deg;
+	    	fPhiMax = 360.0*deg;
 
         fRing = 5;
         fSector = 0;
@@ -169,9 +181,9 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 			randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
 			goodTheta = Thetaspectrum(randTheta);
 		}
-		randPhi = CLHEP::RandFlat::shoot( 160,200.0)*deg;
+		randPhi = CLHEP::RandFlat::shoot( fPhiMin,fPhiMax)*deg;
     		pX = sin(randTheta)*cos(randPhi)*p;
-   		pY = sin(randTheta)*sin(randPhi)*p;
+   		  pY = sin(randTheta)*sin(randPhi)*p;
     		pZ = cos(randTheta)*p;
 	}
 
