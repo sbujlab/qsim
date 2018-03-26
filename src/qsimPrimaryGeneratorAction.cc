@@ -196,8 +196,8 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
         //get radial distribution from remoll, radius is along x-axis
         double rad = RadSpectrum();
         zPos = -10*cm;
-        yPos = (rad - (zPos*sin(randTheta)))*sin(randPhi);
-        xPos = (rad - (zPos*sin(randTheta)))*cos(randPhi);
+        yPos = (rad*sin(randPhi) - (zPos*sin(randTheta)))*sin(randPhi)*cm;
+        xPos = (rad*cos(randPhi) - (zPos*sin(randTheta)))*cos(randPhi)*cm;
     }
 
     
