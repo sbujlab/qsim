@@ -35,7 +35,7 @@ TH1F *inelDist = new TH1F("inel","inelastic dist",200,0.6,1.2);
 //}
 
 // allow user modifications of private member and functional modifiable definition of primary generator variables
-void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 1) {
+void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
 	fSourceMode = mode;
 	// 0 is cosmic mode
 	// 1 is beam mode
@@ -208,8 +208,8 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
         //get radial distribution from remoll, radius is along x-axis
         double rad = RadSpectrum();
         zPos = -10*cm;
-        yPos = (rad*sin(randPhi) - (zPos*sin(randTheta)))*sin(randPhi)*cm;
-        xPos = (rad*cos(randPhi) - (zPos*sin(randTheta)))*cos(randPhi)*cm;
+        yPos = (rad - (zPos*sin(randTheta)))*sin(randPhi);
+        xPos = (rad - (zPos*sin(randTheta)))*cos(randPhi);
     }
 
     

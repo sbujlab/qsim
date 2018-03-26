@@ -38,6 +38,7 @@ class qsimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4double fZ;
     G4double fEmin, fEmax;
 		G4double fthetaMin, fthetaMax;
+		G4double fPhiMin, fPhiMax;
         G4int fSector, fRing;
 };
 
