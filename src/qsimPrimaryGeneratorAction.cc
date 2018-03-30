@@ -39,7 +39,7 @@ bool qsimPrimaryGeneratorAction::Thetaspectrum(double Th) {
 //}
 
 // allow user modifications of private member and functional modifiable definition of primary generator variables
-void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
+void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 1) {
 	fSourceMode = mode;
 	// 0 is cosmic mode
 	// 1 is beam mode
@@ -58,14 +58,14 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
 		fthetaMax = 90.0*deg;
 	}
 	else if (fSourceMode==1) {
-		fXmin =  0*mm;//-245.2*mm/2; // pinpoint at Mainz
-		fXmax =  0*mm;//245.2*mm/2; // questionable at JLab
+		fXmin =  0.0*mm;//-245.2*mm/2; // pinpoint at Mainz
+		fXmax =  0.0*mm;//245.2*mm/2; // questionable at JLab
 
 		fYmin =  0.0*mm;//-123.0*mm;
 		fYmax =  0.0*mm;//123.0*mm;
 
-		fEmin = 855.0*MeV; // = 250 MeV at Mainz
-		fEmax = 855.0*MeV; // = 1.063 Gev for JLab
+		fEmin = 3000.0*MeV;// 855.0*MeV; // = 250 MeV at Mainz
+		fEmax = 8000.0*MeV;// 855.0*MeV; // = 1.063 Gev for JLab
 	
 		fthetaMin = 0.0*deg;
 		fthetaMax = 0.0*deg;
