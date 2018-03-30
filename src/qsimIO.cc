@@ -43,10 +43,6 @@ qsimIO* qsimIO::GetInstance() {
 qsimIO::qsimIO()
 : fFile(0),fTree(0),fFilename("qsimout.root")
 {
-    //  Set arrays to 0
-    fNGenDetHit = 0;
-    fNGenDetSum = 0;
-
     InitializeTree();
 
     // Create generic messenger
@@ -84,7 +80,7 @@ void qsimIO::InitializeTree()
 
     fTree = new TTree("T", "Geant4 Quartz Detector Simulation");
 
-    fTree->SetMaxTreeSize(1900000000); // 1.9GB
+//    fTree->SetMaxTreeSize(1900000000); // 1.9GB
 
     // Event information
     fTree->Branch("ev.npart", &fNEvPart  ,   "ev.npart/I");
@@ -154,8 +150,6 @@ void qsimIO::Flush()
 {
     //  Set arrays to 0
     fNDetHit = 0;
-    fNGenDetHit = 0;
-    fNGenDetSum = 0;
     fNScintDetHit = 0;
 }
 
