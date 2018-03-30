@@ -10,7 +10,6 @@
 /qsim/fDetPosX 0 cm
 /qsim/fDetPosY 0 cm
 
-/run/initialize 
 
 /qsim/filename blackeningTest.root
 /qsim/seed 50 
@@ -19,5 +18,7 @@
 /qsim/emax   1.063 GeV
 
 /gun/particle e- 
+
+/run/initialize 
 
 /run/beamOn 10
