@@ -141,6 +141,7 @@ qsimMessenger::~qsimMessenger(){
 
 
 void qsimMessenger::SetNewValue(G4UIcommand* cmd, const G4String& newValue){
+    std::cout << "text" << newValue << std::endl;
     if( cmd == detfilesCmd ){
         fdetcon->SetDetectorGeomFile( newValue );
     }

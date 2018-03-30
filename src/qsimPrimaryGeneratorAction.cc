@@ -35,7 +35,7 @@ TH1F *inelDist = new TH1F("inel","inelastic dist",200,0.6,1.2);
 //}
 
 // allow user modifications of private member and functional modifiable definition of primary generator variables
-void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 1) {
+void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
 	fSourceMode = mode;
 	// 0 is cosmic mode
 	// 1 is beam mode
@@ -208,8 +208,8 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
         //get radial distribution from remoll, radius is along x-axis
         double rad = RadSpectrum();
         zPos = -10*cm;
-        yPos = (rad*sin(randPhi) - (zPos*sin(randTheta)))*sin(randPhi)*cm;
-        xPos = (rad*cos(randPhi) - (zPos*sin(randTheta)))*cos(randPhi)*cm;
+        yPos = (rad - (zPos*sin(randTheta)))*sin(randPhi);
+        xPos = (rad - (zPos*sin(randTheta)))*cos(randPhi);
     }
 
     
@@ -259,7 +259,7 @@ double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 
     double radius;
     double test = CLHEP::RandFlat::shoot(0.0,1.0);
     if (test < 24163.0/1265326.0){//inelastic
-        double gArea[] = {2.60384e6,36188.3,8.65955e5,1.64544e6};
+	double gArea[] = {2.60384e6,36188.3,8.65955e5,1.64544e6};
         double eArea[] = {2.76828e6,264188,7.15987e5,1.85492e6};
         double tH[] = {30e6,5e6,12e6,20e6};
         int tN[] = {2.81725e6,7.2377e4,9.07299e5,1.84075e6};
@@ -307,7 +307,7 @@ double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 
 
     }
     else if (test < 61237.0/1265326.0){//elastic
-        double gArea[] = {7.21689e7,782945,1.3112e7,5.9954e7};
+	double gArea[] = {7.21689e7,782945,1.3112e7,5.9954e7};
         double qArea[] = {1.70795e8,9.09159e6,5.50713e7,1.25122e8};
         double n[] = {800e6,60e6,550e6,600e6};
         double tN[] = {8.08859e7,8.19378e5,1.75234e7,6.79431e7};
@@ -353,7 +353,7 @@ double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 
         }
     }
     else{//moller
-        bool filled = false;
+	bool filled = false;
 
         double n[4],mu[4],sig[4],r,u1,u2;
         n = {3.28542e8,4.98888e7,1.43470e8,1.70085e8};
@@ -371,7 +371,9 @@ double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 
     }
     double LGstart[] = {0.730,0.730,0.855,0.930,1.04,1.2};
     double finRad = (radius /*- LGstart[fRing] - 0.075*/)*1000.0; //0.075*m is the offset for the start of the light guide, since the center of the quartz is at (0,0,0).
-    return (-1.0*finRad > 75)? finRad : RadSpectrum();
+    //if (-1.0*finRad > 75) std::cout <<"finRad" << std::endl; else std::cout <<"recur" << std::endl;
+    //std::cout << finRad << std::endl << -1.0*finRad << std::endl;
+    return  finRad;
 }
 
 
