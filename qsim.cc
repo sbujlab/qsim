@@ -82,15 +82,15 @@ int main(int argc, char** argv){
     // Initialization of Run manager
     //-------------------------------
     G4cout << "RunManager construction starting...." << G4endl;
-    G4RunManager * runManager = new G4RunManager;
+    G4RunManager * runManager = new G4RunManager();
 
-    qsimMessenger *rmmess = new qsimMessenger();
+    qsimMessenger *rmmess = qsimMessenger::GetInstance();
     rmmess->SetIO(io);
 
     // Detector geometry
     G4VUserDetectorConstruction* detector = new qsimDetectorConstruction();
     runManager->SetUserInitialization(detector);
-    rmmess->SetDetCon( ((qsimDetectorConstruction *) detector) );
+    rmmess->SetDetCon( (qsimDetectorConstruction*)detector );
 
     // Physics we want to use
     G4int verbose = 0;
@@ -103,22 +103,22 @@ int main(int argc, char** argv){
     //-------------------------------
     // UserAction classes
     //-------------------------------
-    G4UserRunAction* run_action = new qsimRunAction;
+    G4UserRunAction* run_action = new qsimRunAction();
     ((qsimRunAction *) run_action)->SetIO(io);
     runManager->SetUserAction(run_action);
 
-    G4VUserPrimaryGeneratorAction* gen_action = new qsimPrimaryGeneratorAction;
+    G4VUserPrimaryGeneratorAction* gen_action = new qsimPrimaryGeneratorAction();
     ((qsimPrimaryGeneratorAction *) gen_action)->SetIO(io);
-    rmmess->SetPriGen((qsimPrimaryGeneratorAction *)gen_action);
+    rmmess->SetPriGen((qsimPrimaryGeneratorAction*)gen_action);
     runManager->SetUserAction(gen_action);
 
-    G4UserEventAction* event_action = new qsimEventAction;
+    G4UserEventAction* event_action = new qsimEventAction();
     ((qsimEventAction *) event_action)->SetIO(io);
     runManager->SetUserAction(event_action);
 
-    G4UserSteppingAction* stepping_action = new qsimSteppingAction;
+    G4UserSteppingAction* stepping_action = new qsimSteppingAction();
     runManager->SetUserAction(stepping_action);
-    rmmess->SetStepAct((qsimSteppingAction *) stepping_action);
+    rmmess->SetStepAct((qsimSteppingAction*)stepping_action);
 
     // Initialize Run manager
 		////////////////////////////////////////////////////////////////////////////
@@ -128,8 +128,7 @@ int main(int argc, char** argv){
 		// do initialization in all macro files, 
 		//see qsim examples for assistance. 
 
-    G4UIsession* session = 0;
-
+    G4UIsession* session = 0; 
     //----------------
     // Visualization:
     //----------------

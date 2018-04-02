@@ -19,7 +19,14 @@
 #include "G4VPhysicalVolume.hh"
 
 #include <iostream>
-
+qsimMessenger* qsimMessenger::gInstance = 0;
+qsimMessenger* qsimMessenger::GetInstance()
+{
+   if (gInstance == 0)
+	gInstance = new qsimMessenger();
+   std::cout << "called" << std::endl;
+   return gInstance;
+}
 qsimMessenger::qsimMessenger(){
     /*  Initialize all the things it talks to to NULL */
 
@@ -134,6 +141,7 @@ qsimMessenger::qsimMessenger(){
     fSectorCmd = new G4UIcmdWithAnInteger("/qsim/fSector",this);
     fSectorCmd->SetGuidance("set sector number");
     fSectorCmd->SetParameterName("sector",false);
+	G4cout << "constructed" << G4endl;
 }
 
 qsimMessenger::~qsimMessenger(){
@@ -141,7 +149,8 @@ qsimMessenger::~qsimMessenger(){
 
 
 void qsimMessenger::SetNewValue(G4UIcommand* cmd, const G4String& newValue){
-    std::cout << "text" << newValue << std::endl;
+    G4cout << "text" << newValue << "\n";
+    std::cout << "cmd" << cmd << std::endl;	    
     if( cmd == detfilesCmd ){
         fdetcon->SetDetectorGeomFile( newValue );
     }

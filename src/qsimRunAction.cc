@@ -22,10 +22,10 @@ void qsimRunAction::BeginOfRunAction(const G4Run* aRun)
 {
   G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
   //  timer->Start();
-//  fIO->InitializeTree();
+  fIO->InitializeTree();
 
-    qsimIO* io = qsimIO::GetInstance();
-    io->InitializeTree();
+    //qsimIO* io = qsimIO::GetInstance();
+    //io->InitializeTree();
 
 
 }
@@ -36,6 +36,6 @@ void qsimRunAction::EndOfRunAction(const G4Run* aRun)
   G4cout << "number of event = " << aRun->GetNumberOfEvent() << G4endl;
   //       << " " << *timer << G4endl;
 
-  fIO->WriteTree();
+ fIO->WriteTree();
 }
 
