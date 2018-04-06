@@ -24,7 +24,6 @@ qsimMessenger* qsimMessenger::GetInstance()
 {
    if (gInstance == 0)
 	gInstance = new qsimMessenger();
-   std::cout << "called" << std::endl;
    return gInstance;
 }
 qsimMessenger::qsimMessenger(){
@@ -141,7 +140,6 @@ qsimMessenger::qsimMessenger(){
     fSectorCmd = new G4UIcmdWithAnInteger("/qsim/fSector",this);
     fSectorCmd->SetGuidance("set sector number");
     fSectorCmd->SetParameterName("sector",false);
-	G4cout << "constructed" << G4endl;
 }
 
 qsimMessenger::~qsimMessenger(){
@@ -150,17 +148,14 @@ qsimMessenger::~qsimMessenger(){
 
 void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
     
-    G4cout << "text" << newValue << "\n";
-    std::cout << "cmd" << cmd << std::endl;	    
+    //std::cout << "cmd" << cmd << std::endl;	    
     if( cmd == detfilesCmd ){
         fdetcon->SetDetectorGeomFile( newValue );
     }
         
     if( cmd == fileCmd ){
 
-    std::cout<<"test messenger 2.0"<<std::endl;
       fIO->SetFilename(newValue);
-    std::cout<<"test messenger 2.1"<<std::endl;
     }
 
     if( cmd == seedCmd ){

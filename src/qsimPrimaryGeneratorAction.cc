@@ -83,42 +83,30 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
 
 	}
     else if (fSourceMode==3){
-G4cout<<"echo 3"<<G4endl;
         fEmin = 2.0*GeV;
         fEmax = 11.0*GeV;
-G4cout<<"echo 4"<<G4endl;
 
         fthetaMin = -3.0*deg;//FIXME Needs justification, what about the angle about the z axis that this points as well, is that phi, or is phi the start position about z?
         fthetaMax = 3.0*deg;
-G4cout<<"echo 5"<<G4endl;
 
     		fPhiMin = 0.0*deg;
 	    	fPhiMax = 360.0*deg;
 
-G4cout<<"echo 6"<<G4endl;
         fRing = 5;
-G4cout<<"echo 7"<<G4endl;
         fSector = 0;
-G4cout<<"echo 8"<<G4endl;
     }
 	
 }
 
 qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
-G4cout<<"echo 9"<<G4endl;
   G4int n_particle = 1;
-G4cout<<"echo 10"<<G4endl;
 
 	SourceModeSet(); // Accelerator beam mode, default set to 0, setting the mode to cosmic stand mode.
-G4cout<<"echo 11"<<G4endl;
 	
   fParticleGun = new G4ParticleGun(n_particle);
-G4cout<<"echo 12"<<G4endl;
   fDefaultEvent = new qsimEvent();
-G4cout<<"echo 13"<<G4endl;
 
 	fZ = -0.52*m;
-G4cout<<"echo 14"<<G4endl;
 }
 
 
@@ -129,9 +117,7 @@ qsimPrimaryGeneratorAction::~qsimPrimaryGeneratorAction() {
 
 
 bool qsimPrimaryGeneratorAction::pspectrum(double p) {
-G4cout<<"echo gen 1"<<G4endl;
 	double test = CLHEP::RandFlat::shoot(0.0,1.0) ;
-G4cout<<"echo gen 2"<<G4endl;
 
 
 	// Muon energy spctrum obtained from and fit to PDG data for 0 degree incident angle
@@ -151,43 +137,33 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     // Use default, static single generator
     // Update this just in case things changed
     // from the command user interface
-G4cout<<"echo gen primary 1"<<G4endl;
     fDefaultEvent->Reset();
 
     // Set data //////////////////////////////////
     // Magic happens here
 
 	
-G4cout<<"echo gen primary 2"<<G4endl;
 	double xPos, yPos, zPos;	
 
 	if( fSourceMode == 0 || fSourceMode == 1) {
-G4cout<<"echo gen primary 3"<<G4endl;
 	    xPos = CLHEP::RandFlat::shoot( fXmin, fXmax );
-G4cout<<"echo gen primary 4"<<G4endl;
 	    yPos = CLHEP::RandFlat::shoot( fYmin, fYmax );
 	}
 	
 	zPos = fZ;
-G4cout<<"echo gen primary 5"<<G4endl;
 
 
 // begin changed stuff to generate probability distribution of energies as expected
 		bool good_p = false;
-G4cout<<"echo gen primary 6"<<G4endl;
 		double p3sq, E;
 		double mass = fParticleGun->GetParticleDefinition()->GetPDGMass();
 
-G4cout<<"echo gen primary 7"<<G4endl;
 		while ( good_p == false ) {
-G4cout<<"echo gen primary 8"<<G4endl;
 			E = CLHEP::RandFlat::shoot( fEmin, fEmax );
                         p3sq = E*E - mass*mass;
                         if( p3sq < 0 ) continue;
 
-G4cout<<"echo gen primary 9"<<G4endl;
 			good_p = pspectrum(sqrt(p3sq));
-G4cout<<"echo gen primary 10"<<G4endl;
 		}
 
 
@@ -195,24 +171,17 @@ G4cout<<"echo gen primary 10"<<G4endl;
 	
 	
 	double p = sqrt( E*E - mass*mass );
-G4cout<<"echo gen primary 11"<<G4endl;
 	double pX, pY, pZ;
 	double randTheta, randPhi;
-G4cout<<"echo gen primary 12"<<G4endl;
 	double tanth, tanph;
 	
-G4cout<<"set theta 0"<<G4endl;
 	if (fSourceMode == 0 || fSourceMode == 1 || fSourceMode == 3) {
-G4cout<<"set theta 1"<<G4endl;
 		bool goodTheta = false;
 		while ( goodTheta == false ) {
 			randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
-G4cout<<"set theta 2"<<G4endl;
 			goodTheta = Thetaspectrum(randTheta);
 		}
-G4cout<<"set theta 3"<<G4endl;
 		randPhi = CLHEP::RandFlat::shoot( fPhiMin,fPhiMax)*deg;
-G4cout<<"set theta 4"<<G4endl;
     		pX = sin(randTheta)*cos(randPhi)*p;
    		  pY = sin(randTheta)*sin(randPhi)*p;
     		pZ = cos(randTheta)*p;
@@ -237,24 +206,20 @@ G4cout<<"set theta 4"<<G4endl;
 
     if (fSourceMode == 3){
         //get radial distribution from remoll, radius is along x-axis
-G4cout<<"get rad 1"<<G4endl;
         double rad = RadSpectrum();
         zPos = -10*cm;
         yPos = (rad - (zPos*sin(randTheta)))*sin(randPhi);
         xPos = (rad - (zPos*sin(randTheta)))*cos(randPhi);
-G4cout<<"get rad 2"<<G4endl;
     }
 
     
     assert( E > 0.0 );
     assert( E > mass );
 
-G4cout<<"make particle 1"<<G4endl;
     fDefaultEvent->ProduceNewParticle(
 	    G4ThreeVector(xPos, yPos, zPos),
 	    G4ThreeVector(pX, pY, pZ ),
 	    fParticleGun->GetParticleDefinition()->GetParticleName() );
-G4cout<<"make particle 2"<<G4endl;
 
     /////////////////////////////////////////////////////////////
     // Register and create event
@@ -269,12 +234,9 @@ G4cout<<"make particle 2"<<G4endl;
     fParticleGun->SetParticleEnergy( kinE  );
     fParticleGun->SetParticlePosition( fDefaultEvent->fPartPos[0] );
 
-G4cout<<"make particle 4"<<G4endl;
 
     fIO->SetEventData(fDefaultEvent);
-G4cout<<"make particle 5"<<G4endl;
     fParticleGun->GeneratePrimaryVertex(anEvent);
-G4cout<<"make particle 6"<<G4endl;
 
 }
 
@@ -295,7 +257,6 @@ bool qsimPrimaryGeneratorAction::Thetaspectrum(double Th) {
 double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 3
     //determine whether to use moller, elastic, or inelastic distribution
 
-G4cout<<"generate radius 1"<<G4endl;
     double radius;
     double test = CLHEP::RandFlat::shoot(0.0,1.0);
     if (test < 24163.0/1265326.0){//inelastic
@@ -329,7 +290,6 @@ G4cout<<"generate radius 1"<<G4endl;
                         if (radius < div){
                             inelDist->Fill(radius);
                             filled = true;
-G4cout<<"generate radius 2"<<G4endl;
                         }
                     }
                 }
@@ -358,7 +318,6 @@ G4cout<<"generate radius 2"<<G4endl;
         double tY[] = {2.45583e8,7.98e6,5.62236e7,1.80618e8};
         double tV[] = {9.75e-1,0.83,0.92,0.975};
         
-G4cout<<"generate radius 3"<<G4endl;
         bool filled = false;
         
         double u1,u2;
@@ -408,7 +367,6 @@ G4cout<<"generate radius 3"<<G4endl;
             if (r <= 1) {
                 radius = mu[fSector] + sig[fSector]*(u1*sqrt(-2*log(r)/r));
                 filled = true;
-G4cout<<"generate radius 4"<<G4endl;
             }
        }while (!filled);
     }
