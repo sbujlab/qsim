@@ -148,7 +148,8 @@ qsimMessenger::~qsimMessenger(){
 }
 
 
-void qsimMessenger::SetNewValue(G4UIcommand* cmd, const G4String& newValue){
+void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
+    
     G4cout << "text" << newValue << "\n";
     std::cout << "cmd" << cmd << std::endl;	    
     if( cmd == detfilesCmd ){
