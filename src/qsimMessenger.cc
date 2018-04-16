@@ -134,12 +134,17 @@ qsimMessenger::qsimMessenger(){
     fZCmd->SetParameterName("z", false);
     
     fRingCmd = new G4UIcmdWithAnInteger("/qsim/fRing",this);
-    fRingCmd->SetGuidance("set ring number");
+    fRingCmd->SetGuidance("set ring number (1 through 6)");
     fRingCmd->SetParameterName("ring",false);
 
     fSectorCmd = new G4UIcmdWithAnInteger("/qsim/fSector",this);
-    fSectorCmd->SetGuidance("set sector number");
+    fSectorCmd->SetGuidance("set sector number (0, 1, 2)");
     fSectorCmd->SetParameterName("sector",false);
+
+    fBoffsetRCmd = new G4UIcmdWithABool("/qsim/fBoffsetR",this);
+    fBoffsetRCmd->SetGuidance("Offset R to z axis (true or false)");
+    fBoffsetRCmd->SetParameterName("BoffsetR",false);
+
 }
 
 qsimMessenger::~qsimMessenger(){
@@ -251,8 +256,8 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 //	fprigen->fPhi = x;
 //    }
     if( cmd == fZCmd ){
-	G4double x = fZCmd->GetNewDoubleValue(newValue);
-	fprigen->fZ = x;
+        G4double x = fZCmd->GetNewDoubleValue(newValue);
+        fprigen->fZ = x;
     }
     if ( cmd == fRingCmd){
         G4int x = fRingCmd->GetNewIntValue(newValue);
@@ -262,5 +267,8 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
         G4int x = fSectorCmd->GetNewIntValue(newValue);
         fprigen->fSector = x;
     }
-
+    if (cmd == fBoffsetRCmd){
+        G4bool x = fBoffsetRCmd->GetNewBoolValue(newValue);
+        fprigen->fBoffsetR = x;
+    }
 }

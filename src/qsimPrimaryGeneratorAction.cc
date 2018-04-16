@@ -67,11 +67,11 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
 		fEmin = 3*GeV;//855.0*MeV; // = 250 MeV at Mainz
 		fEmax = 8*GeV;//855.0*MeV; // = 1.063 Gev for JLab
 	
-		fthetaMin = 0.0*deg;
-		fthetaMax = 5*deg;//0.0*deg;
+		fthetaMin = -5.0*deg;
+		fthetaMax = 5.0*deg;//0.0*deg;
 
-		fPhiMin = 0.0;
-		fPhiMax = 360.0;//0.0*deg;
+		fPhiMin = 0.0*deg;
+		fPhiMax = 360.0*deg;//0.0*deg;
   }
 	else if (fSourceMode==2){
 		
@@ -86,14 +86,18 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
         fEmin = 2.0*GeV;
         fEmax = 11.0*GeV;
 
-        fthetaMin = -3.0*deg;//FIXME Needs justification, what about the angle about the z axis that this points as well, is that phi, or is phi the start position about z?
-        fthetaMax = 3.0*deg;
+        fthetaMin = -0*deg;//FIXME Needs justification, what about the angle about the z axis that this points as well, is that phi, or is phi the start position about z?
+        fthetaMax = 2.5*deg;
 
     		fPhiMin = 0.0*deg;
 	    	fPhiMax = 360.0*deg;
 
+    		fDeltaPhiMin = -2.0*deg;
+	    	fDeltaPhiMax = 2.0*deg;
+        
         fRing = 5;
-        fSector = 0;
+        fSector = 0; //FIXME what are the sector options? What do they refer to?
+        fBoffsetR = false;
     }
 	
 }
@@ -172,7 +176,7 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	
 	double p = sqrt( E*E - mass*mass );
 	double pX, pY, pZ;
-	double randTheta, randPhi;
+	double randTheta, randDeltaPhi, randPhi;
 	double tanth, tanph;
 	
 	if (fSourceMode == 0 || fSourceMode == 1 || fSourceMode == 3) {
@@ -181,62 +185,68 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 			randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
 			goodTheta = Thetaspectrum(randTheta);
 		}
-		randPhi = CLHEP::RandFlat::shoot( fPhiMin,fPhiMax)*deg;
-    		pX = sin(randTheta)*cos(randPhi)*p;
-   		  pY = sin(randTheta)*sin(randPhi)*p;
-    		pZ = cos(randTheta)*p;
+		randPhi = CLHEP::RandFlat::shoot(fPhiMin,fPhiMax);
+		randDeltaPhi = CLHEP::RandFlat::shoot(fDeltaPhiMin,fDeltaPhiMax); // FIXME define min/max angle spread in phi direction
+    pX = cos(randPhi)*sin(randTheta)*p + sin(randPhi)*sin(randDeltaPhi)*p;
+   	pY = sin(randPhi)*sin(randTheta)*p - cos(randPhi)*sin(randDeltaPhi)*p;
+    pZ = cos(randDeltaPhi)*cos(randTheta)*p;
 	}
 
-	if (fSourceMode == 2) {
-		int chosenEvent;
-		TFile *primaryFile = new TFile("primaryDistribution.root");
-		TTree *T = (TTree*)primaryFile->Get("T");
-		chosenEvent = rand() % T->GetEntries();
-		T->GetEntry(chosenEvent);		
-		xPos = T->GetLeaf("x")->GetValue()*m;
-		yPos = T->GetLeaf("y")->GetValue()*m;
-		tanth = T->GetLeaf("theta")->GetValue();		
-		tanph = T->GetLeaf("phi")->GetValue();		
-		primaryFile->Close();
-		pZ = sqrt(p/(1. + tanth*tanth + tanph*tanph));
-		pX = pZ*tanth;
-		pY = pZ*tanph;	
-			
-	}
+  if (fSourceMode == 2) {
+    int chosenEvent;
+    TFile *primaryFile = new TFile("primaryDistribution.root");
+    TTree *T = (TTree*)primaryFile->Get("T");
+    chosenEvent = rand() % T->GetEntries();
+    T->GetEntry(chosenEvent);		
+    xPos = T->GetLeaf("x")->GetValue()*m;
+    yPos = T->GetLeaf("y")->GetValue()*m;
+    tanth = T->GetLeaf("theta")->GetValue();		
+    tanph = T->GetLeaf("phi")->GetValue();		
+    primaryFile->Close();
+    pZ = sqrt(p/(1. + tanth*tanth + tanph*tanph));
+    pX = pZ*tanth;
+    pY = pZ*tanph;  
+  }
 
-    if (fSourceMode == 3){
-        //get radial distribution from remoll, radius is along x-axis
-        double rad = RadSpectrum();
-        zPos = -10*cm;
-        yPos = (rad - (zPos*sin(randTheta)))*sin(randPhi);
-        xPos = (rad - (zPos*sin(randTheta)))*cos(randPhi);
-    }
+  if (fSourceMode == 3){
+    //get radial distribution from remoll, radius is along x-axis
+    double radialOffset[6][3] = {{710,710,710},
+                                 {755,755,755},
+                                 {817.5,817.5,817.5},
+                                 {892.5,892.5,892.5},
+                                 {1017.5,987.5,1030},
+                                 {1150,1150,1150}};
+    double rad = RadSpectrum() - (fBoffsetR)?radialOffset[fRing][fSector] : 0;
+    zPos = -500; //FIXME arbitrary z offset for Moller distribution propagation - affects air showering noise
+    double xHitPos = rad*cos(randPhi);
+    double yHitPos = rad*sin(randPhi);
+    xPos = xHitPos - (-1*zPos)*sin(randTheta)*cos(randPhi) - (-1*zPos)*sin(randPhi)*sin(randDeltaPhi);
+    yPos = yHitPos - (-1*zPos)*sin(randTheta)*sin(randPhi) + (-1*zPos)*cos(randPhi)*sin(randDeltaPhi);
+  }
 
-    
-    assert( E > 0.0 );
-    assert( E > mass );
+  
+  assert( E > 0.0 );
+  assert( E > mass );
 
-    fDefaultEvent->ProduceNewParticle(
-	    G4ThreeVector(xPos, yPos, zPos),
-	    G4ThreeVector(pX, pY, pZ ),
-	    fParticleGun->GetParticleDefinition()->GetParticleName() );
+  fDefaultEvent->ProduceNewParticle(
+    G4ThreeVector(xPos, yPos, zPos),
+    G4ThreeVector(pX, pY, pZ ),
+    fParticleGun->GetParticleDefinition()->GetParticleName() );
 
-    /////////////////////////////////////////////////////////////
-    // Register and create event
-    //
-    
-    double kinE = sqrt(fDefaultEvent->fPartMom[0].mag()*fDefaultEvent->fPartMom[0].mag()
-	    + fDefaultEvent->fPartType[0]->GetPDGMass()*fDefaultEvent->fPartType[0]->GetPDGMass() )
-	-  fDefaultEvent->fPartType[0]->GetPDGMass();
+  /////////////////////////////////////////////////////////////
+  // Register and create event
+  //
+  
+  double kinE = sqrt(fDefaultEvent->fPartMom[0].mag()*fDefaultEvent->fPartMom[0].mag() + fDefaultEvent->fPartType[0]->GetPDGMass()*fDefaultEvent->fPartType[0]->GetPDGMass() ) - fDefaultEvent->fPartType[0]->GetPDGMass();
 
-    fParticleGun->SetParticleDefinition(fDefaultEvent->fPartType[0]);
-    fParticleGun->SetParticleMomentumDirection(fDefaultEvent->fPartMom[0].unit());
-    fParticleGun->SetParticleEnergy( kinE  );
-    fParticleGun->SetParticlePosition( fDefaultEvent->fPartPos[0] );
+  fParticleGun->SetParticleDefinition(fDefaultEvent->fPartType[0]);
+  fParticleGun->SetParticleMomentumDirection(fDefaultEvent->fPartMom[0].unit());
+  fParticleGun->SetParticleEnergy( kinE  );
+  fParticleGun->SetParticlePosition( fDefaultEvent->fPartPos[0] );
 
 
-    fIO->SetEventData(fDefaultEvent);
-    fParticleGun->GeneratePrimaryVertex(anEvent);
+  fIO->SetEventData(fDefaultEvent);
+  fParticleGun->GeneratePrimaryVertex(anEvent);
 
 }
 
@@ -246,12 +256,12 @@ G4ParticleGun* qsimPrimaryGeneratorAction::GetParticleGun() {
 
 
 bool qsimPrimaryGeneratorAction::Thetaspectrum(double Th) {
-	double test = CLHEP::RandFlat::shoot(0.0,1.0);
-
-	if ( fSourceMode != 0 || ((cos(Th)*cos(Th)) > test) )
+	if ( fSourceMode != 0 )
 		return true;
-	else
-		return false;
+  else if ( fSourceMode == 0 && ((cos(Th)*cos(Th)) > CLHEP::RandFlat::shoot(0.0,1.0)) ) 
+		return true;
+  else
+    return false;
 }
 //Generating radius from theta
 double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 3
@@ -260,7 +270,7 @@ double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 
     double radius;
     double test = CLHEP::RandFlat::shoot(0.0,1.0);
     if (test < 24163.0/1265326.0){//inelastic
-	double gArea[] = {2.60384e6,36188.3,8.65955e5,1.64544e6};
+	      double gArea[] = {2.60384e6,36188.3,8.65955e5,1.64544e6};
         double eArea[] = {2.76828e6,264188,7.15987e5,1.85492e6};
         double tH[] = {30e6,5e6,12e6,20e6};
         int tN[] = {2.81725e6,7.2377e4,9.07299e5,1.84075e6};
@@ -272,39 +282,39 @@ double qsimPrimaryGeneratorAction::RadSpectrum(){   //Only used for fSourceMode 
 
     
         double div = (fSector == 1)? 0.75 :(fSector == 2)? 0.79 : 0.8;
-            double u =  CLHEP::RandFlat::shoot(0.0,1.0);
-            bool filled = false;
+        double u =  CLHEP::RandFlat::shoot(0.0,1.0);
+        bool filled = false;
 
-            if (u < gArea[fSector]/(gArea[fSector] + eArea[fSector])){
-                while (!filled){
-                    double u1 = 2* CLHEP::RandFlat::shoot(0.0,1.0)-1;
-                    double u2 = 2* CLHEP::RandFlat::shoot(0.0,1.0)-1;
+        if (u < gArea[fSector]/(gArea[fSector] + eArea[fSector])){
+            while (!filled){
+                double u1 = 2* CLHEP::RandFlat::shoot(0.0,1.0)-1;
+                double u2 = 2* CLHEP::RandFlat::shoot(0.0,1.0)-1;
             
-                    double r = u1*u1 + u2*u2;
+                double r = u1*u1 + u2*u2;
 
-                    if (r <= 1 && r > 1e-6){
+                if (r <= 1 && r > 1e-6){
 
-                        double z1 = u1*sqrt(-2*log(r)/r);
-                        radius = mu[fSector]+sig[fSector]*z1; 
+                    double z1 = u1*sqrt(-2*log(r)/r);
+                    radius = mu[fSector]+sig[fSector]*z1; 
             
-                        if (radius < div){
-                            inelDist->Fill(radius);
-                            filled = true;
-                        }
-                    }
-                }
-            }
-            else{
-                do{
-                    radius = CLHEP::RandFlat::shoot(div,1.2);
-                    double u2 = CLHEP::RandFlat::shoot(0.0,1.0);
-
-                    if ( tH[fSector]*u2 < n[fSector]*TMath::Power(radius,(-1*exp[fSector]))+v[fSector]){
+                    if (radius < div){
                         inelDist->Fill(radius);
                         filled = true;
                     }
-                }while (!filled);
+                }
             }
+        }
+        else{
+            do{
+                radius = CLHEP::RandFlat::shoot(div,1.2);
+                double u2 = CLHEP::RandFlat::shoot(0.0,1.0);
+
+                if ( tH[fSector]*u2 < n[fSector]*TMath::Power(radius,(-1*exp[fSector]))+v[fSector]){
+                    inelDist->Fill(radius);
+                    filled = true;
+                }
+            }while (!filled);
+        }
 
     }
     else if (test < 61237.0/1265326.0){//elastic

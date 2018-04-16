@@ -52,7 +52,7 @@ class qsimMessenger : public G4UImessenger {
 	//
 	//G4UIcmdWithAnInteger *fStandModeCmd;
 	G4UIcmdWithAString   *detfilesCmd; // NEW
-    G4UIcmdWithAnInteger *fDetModeCmd;
+  G4UIcmdWithAnInteger *fDetModeCmd;
 	G4UIcmdWithAnInteger *fStandModeCmd;
 	G4UIcmdWithAnInteger *fSourceModeCmd;
 	G4UIcmdWithADouble *fQuartzPolishCmd;
@@ -73,10 +73,11 @@ class qsimMessenger : public G4UImessenger {
 
 //	G4UIcmdWithADoubleAndUnit *fThetaCmd;
 //	G4UIcmdWithADoubleAndUnit *fPhiCmd;
-	G4UIcmdWithADoubleAndUnit *fZCmd;
+  G4UIcmdWithADoubleAndUnit *fZCmd;
     
-    G4UIcmdWithAnInteger *fRingCmd;
-    G4UIcmdWithAnInteger *fSectorCmd;
+  G4UIcmdWithAnInteger *fRingCmd;
+  G4UIcmdWithAnInteger *fSectorCmd;
+  G4UIcmdWithABool *fBoffsetRCmd;
 };
 
 #endif//qsimMessenger_HH
