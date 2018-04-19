@@ -216,9 +216,9 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                                  {892.5,892.5,892.5},
                                  {1017.5,987.5,1030},
                                  {1150,1150,1150}};
-    double rad = RadSpectrum() - (fBoffsetR)?radialOffset[fRing][fSector] : 0;
+    double rad = RadSpectrum();
     zPos = -500; //FIXME arbitrary z offset for Moller distribution propagation - affects air showering noise
-    double xHitPos = rad*cos(randPhi);
+    double xHitPos = rad*cos(randPhi) - (fBoffsetR)?radialOffset[fRing][fSector] : 0; // Putting the offset here means that the detector and distribution will still make circles, just where the edge of the circle now passes the origin
     double yHitPos = rad*sin(randPhi);
     xPos = xHitPos - (-1*zPos)*sin(randTheta)*cos(randPhi) - (-1*zPos)*sin(randPhi)*sin(randDeltaPhi);
     yPos = yHitPos - (-1*zPos)*sin(randTheta)*sin(randPhi) + (-1*zPos)*cos(randPhi)*sin(randDeltaPhi);
