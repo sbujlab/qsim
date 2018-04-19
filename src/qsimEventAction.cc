@@ -49,8 +49,7 @@ void qsimEventAction::EndOfEventAction(const G4Event* evt ) {
 	  if( qsimDetectorHitsCollection *thiscast = 
 		  dynamic_cast<qsimDetectorHitsCollection *>(thiscol)){
 	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
-		  fIO->AddDetectorHit(
-			  (qsimDetectorHit *) thiscast->GetHit(hidx) );
+		  fIO->AddDetectorHit((qsimDetectorHit *) thiscast->GetHit(hidx) );
 	      }
 	  }
 	  

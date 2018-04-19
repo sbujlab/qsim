@@ -191,7 +191,6 @@ void qsimIO::WriteTree(){
 void qsimIO::SetEventData(const qsimEvent *ev){
 
     int n = ev->fPartType.size();
-    G4cout << "test: qsimIO::SetEventData n = " << n << G4endl;
     if( n > __IO_MAXHIT ){
         G4cerr << "WARNING: " << __PRETTY_FUNCTION__ << " line " << __LINE__ << ":  Buffer size exceeded!" << G4endl;
         return;
@@ -200,11 +199,6 @@ void qsimIO::SetEventData(const qsimEvent *ev){
     fNEvPart = n;
 
 //    fEvPart_PID = ev->fPartType[0]->GetPDGEncoding();
-
-
-
-
-
 
 
 
@@ -245,7 +239,7 @@ void qsimIO::AddDetectorHit(qsimDetectorHit *hit){
 
     fDetHit_det[n]  = hit->fDetID;
     fDetHit_id[n]   = hit->fCopyID;
-
+    G4cout<<"ECHO Hits are being written"<<G4endl;
     fDetHit_trid[n] = hit->fTrID;
     fDetHit_mtrid[n]= hit->fmTrID;
     fDetHit_pid[n]  = hit->fPID;

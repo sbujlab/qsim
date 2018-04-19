@@ -90,13 +90,13 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
         fthetaMax = 2.5*deg;
 
     		fPhiMin = 0.0*deg;
-	    	fPhiMax = 360.0*deg;
+	    	fPhiMax = 360.0*deg;//360.0*deg;
 
     		fDeltaPhiMin = -2.0*deg;
 	    	fDeltaPhiMax = 2.0*deg;
         
         fRing = 5;
-        fSector = 0; //FIXME what are the sector options? What do they refer to?
+        fSector = 1; //FIXME what are the sector options? What do they refer to?
         fBoffsetR = false;
     }
 	
@@ -209,6 +209,11 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
   }
 
   if (fSourceMode == 3){
+		randPhi = CLHEP::RandFlat::shoot(fPhiMin,fPhiMax);
+		randDeltaPhi = CLHEP::RandFlat::shoot(fDeltaPhiMin,fDeltaPhiMax); // FIXME define min/max angle spread in phi direction
+    pX = cos(randPhi)*sin(randTheta)*p + sin(randPhi)*sin(randDeltaPhi)*p;
+   	pY = sin(randPhi)*sin(randTheta)*p - cos(randPhi)*sin(randDeltaPhi)*p;
+    pZ = cos(randDeltaPhi)*cos(randTheta)*p;
     //get radial distribution from remoll, radius is along x-axis
     double radialOffset[6][3] = {{710,710,710},
                                  {755,755,755},
@@ -218,7 +223,7 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                                  {1150,1150,1150}};
     double rad = RadSpectrum();
     zPos = -500; //FIXME arbitrary z offset for Moller distribution propagation - affects air showering noise
-    double xHitPos = rad*cos(randPhi) - (fBoffsetR)?radialOffset[fRing][fSector] : 0; // Putting the offset here means that the detector and distribution will still make circles, just where the edge of the circle now passes the origin
+    double xHitPos = rad*cos(randPhi);// - (fBoffsetR)?radialOffset[fRing][fSector] : 0; // Putting the offset here means that the detector and distribution will still make circles, just where the edge of the circle now passes the origin
     double yHitPos = rad*sin(randPhi);
     xPos = xHitPos - (-1*zPos)*sin(randTheta)*cos(randPhi) - (-1*zPos)*sin(randPhi)*sin(randDeltaPhi);
     yPos = yHitPos - (-1*zPos)*sin(randTheta)*sin(randPhi) + (-1*zPos)*cos(randPhi)*sin(randDeltaPhi);
