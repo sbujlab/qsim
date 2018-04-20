@@ -42,11 +42,11 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
 	// 2 is PREX mode
     // 3 is remoll distribution mode
 	if (fSourceMode==0){
-		fXmin =  /*-5.0*/-0.0*cm;
-		fXmax =  /*5.*/0.0*cm;
+		fXmin =  -5.0*cm;
+		fXmax =  5.0*cm;
 
-		fYmin =  /*-5.*/-0.0*cm;
-		fYmax =  /*5.*/0.0*cm;
+		fYmin =  -5.0*cm;
+		fYmax =  5.0*cm;
 
 		fEmin = 10.0*MeV;
 		fEmax = 50.0*GeV;
@@ -58,17 +58,17 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
 		fPhiMax = 360.0*deg;
 	}
 	else if (fSourceMode==1) {
-		fXmin =  -450*mm; // pinpoint at Mainz
-		fXmax =  -950*mm; // questionable at JLab
+		fXmin =  -0.0*mm; // pinpoint at Mainz
+		fXmax =  -0.0*mm; // questionable at JLab
 
-		fYmin =  -200*mm;
-		fYmax =  200*mm;
+		fYmin =  -0.0*mm;
+		fYmax =  0.0*mm;
 
-		fEmin = 3*GeV;//855.0*MeV; // = 250 MeV at Mainz
-		fEmax = 8*GeV;//855.0*MeV; // = 1.063 Gev for JLab
+		fEmin = 855.0*GeV;//855.0*MeV; // = 250 MeV at Mainz
+		fEmax = 855.0*GeV;//855.0*MeV; // = 1.063 Gev for JLab
 	
-		fthetaMin = -5.0*deg;
-		fthetaMax = 5.0*deg;//0.0*deg;
+		fthetaMin = -0.0*deg;
+		fthetaMax = 0.0*deg;//0.0*deg;
 
 		fPhiMin = 0.0*deg;
 		fPhiMax = 360.0*deg;//0.0*deg;
@@ -78,8 +78,8 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 3) {
 		fEmin = 1.063*GeV; 
 		fEmax = 1.063*GeV; 
 
-		fPhiMin = 0.0*deg;
-		fPhiMax = 0.0*deg;
+		//fPhiMin = 0.0*deg;
+		//fPhiMax = 0.0*deg;
 
 	}
     else if (fSourceMode==3){
@@ -179,17 +179,16 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	double randTheta, randDeltaPhi, randPhi;
 	double tanth, tanph;
 	
-	if (fSourceMode == 0 || fSourceMode == 1 || fSourceMode == 3) {
+	if (fSourceMode == 0 || fSourceMode == 1) {
 		bool goodTheta = false;
 		while ( goodTheta == false ) {
 			randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
 			goodTheta = Thetaspectrum(randTheta);
 		}
 		randPhi = CLHEP::RandFlat::shoot(fPhiMin,fPhiMax);
-		randDeltaPhi = CLHEP::RandFlat::shoot(fDeltaPhiMin,fDeltaPhiMax); // FIXME define min/max angle spread in phi direction
-    pX = cos(randPhi)*sin(randTheta)*p + sin(randPhi)*sin(randDeltaPhi)*p;
-   	pY = sin(randPhi)*sin(randTheta)*p - cos(randPhi)*sin(randDeltaPhi)*p;
-    pZ = cos(randDeltaPhi)*cos(randTheta)*p;
+    pX = cos(randPhi)*sin(randTheta)*p;
+   	pY = sin(randPhi)*sin(randTheta)*p;
+    pZ = cos(randTheta)*p;
 	}
 
   if (fSourceMode == 2) {
@@ -209,6 +208,11 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
   }
 
   if (fSourceMode == 3){
+		bool goodTheta = false;
+		while ( goodTheta == false ) {
+			randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
+			goodTheta = Thetaspectrum(randTheta);
+		}
 		randPhi = CLHEP::RandFlat::shoot(fPhiMin,fPhiMax);
 		randDeltaPhi = CLHEP::RandFlat::shoot(fDeltaPhiMin,fDeltaPhiMax); // FIXME define min/max angle spread in phi direction
     pX = cos(randPhi)*sin(randTheta)*p + sin(randPhi)*sin(randDeltaPhi)*p;
@@ -223,7 +227,7 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                                  {1150,1150,1150}};
     double rad = RadSpectrum();
     zPos = -500; //FIXME arbitrary z offset for Moller distribution propagation - affects air showering noise
-    double xHitPos = rad*cos(randPhi);// - (fBoffsetR)?radialOffset[fRing][fSector] : 0; // Putting the offset here means that the detector and distribution will still make circles, just where the edge of the circle now passes the origin
+    double xHitPos = (rad*cos(randPhi) - 1*((fBoffsetR)?radialOffset[fRing][fSector] : 0)); // Putting the offset here means that the detector and distribution will still make circles, just where the edge of the circle now passes the origin
     double yHitPos = rad*sin(randPhi);
     xPos = xHitPos - (-1*zPos)*sin(randTheta)*cos(randPhi) - (-1*zPos)*sin(randPhi)*sin(randDeltaPhi);
     yPos = yHitPos - (-1*zPos)*sin(randTheta)*sin(randPhi) + (-1*zPos)*cos(randPhi)*sin(randDeltaPhi);
