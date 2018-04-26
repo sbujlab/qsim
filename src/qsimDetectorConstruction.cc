@@ -89,6 +89,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4double a, z, density;
     G4int nelements;
+    G4Material* Vacuum = new G4Material("Vacuum", z=7.,density=14.007*g/mol, 0.000000g/cm3);
     
     // Air
     G4Element* N = new G4Element("Nitrogen", "N", z=7 , a=14.01*g/mole);
@@ -312,7 +313,8 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     
     
-    
+   // FIXME This ^^ detector could be a pre-existing implementation of the monitoring detector we just added below
+   // but it is not included in the list of sensitive detectors, so it effectively doesn't exist (maybe also it is just the air volume around our showermax?) 
     
     
     
@@ -322,7 +324,34 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
    
     // First, create solids and logical volumes
     
+//========== Upstream Monitoring Vacuum Detector ==========//   
+    G4Box* monitor_box = new G4Box("VirtualDetector", 100*cm, 100*cm, 1*cm);
     
+    G4LogicalVolume* monitor_log
+    = new G4LogicalVolume(monitor_box,Vacuum,"Vacuum",0,0,0);
+   
+
+
+    
+    qsimDetector* monitorSD = new qsimDetector("monitor", 99);
+    
+    SDman->AddNewDetector(monitorSD);
+    monitor_log->SetSensitiveDetector(monitorSD);
+    
+    G4VisAttributes *monitoratt = new G4VisAttributes();
+    monitoratt->SetColour(1.0, 1.0, 0.6);
+    monitor_log->SetVisAttributes(monitoratt);
+ 
+    G4RotationMatrix* rotM = new G4RotationMatrix;
+    
+    rotM->rotateX(0*M_PI/2.*rad);
+    rotM->rotateZ(0.*deg);
+
+    G4VPhysicalVolume* monitor_phys
+    = new G4PVPlacement(rotM,G4ThreeVector(0,0,-75*cm),monitor_log,"Vacuum", monitor_log,false,0);
+   
+
+
 //========== Quartz Volumes ==========//
     G4double q_yLB = quartz_y - (quartz_z);
     
