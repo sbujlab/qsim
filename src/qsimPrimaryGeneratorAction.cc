@@ -58,17 +58,17 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 1) {
 		fthetaMax = 90.0*deg;
 	}
 	else if (fSourceMode==1) {
-		fXmin =  0.0*mm;//-245.2*mm/2; // pinpoint at Mainz
-		fXmax =  0.0*mm;//245.2*mm/2; // questionable at JLab
+//		fXmin =  0.0*mm;//-245.2*mm/2; // pinpoint at Mainz
+//		fXmax =  0.0*mm;//245.2*mm/2; // questionable at JLab
 
-		fYmin =  0.0*mm;//-123.0*mm;
-		fYmax =  0.0*mm;//123.0*mm;
+//		fYmin =  0.0*mm;//-123.0*mm;
+//		fYmax =  0.0*mm;//123.0*mm;
 
-		fEmin = 3000.0*MeV;// 855.0*MeV; // = 250 MeV at Mainz
-		fEmax = 8000.0*MeV;// 855.0*MeV; // = 1.063 Gev for JLab
+//		fEmin = 3000.0*MeV;// 855.0*MeV; // = 250 MeV at Mainz
+//		fEmax = 8000.0*MeV;// 855.0*MeV; // = 1.063 Gev for JLab
 	
-		fthetaMin = 0.0*deg;
-		fthetaMax = 0.0*deg;
+//		fthetaMin = 0.0*deg;
+//		fthetaMax = 0.0*deg;
 	}
 	else if (fSourceMode==2){
 		
@@ -132,7 +132,6 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	    xPos = CLHEP::RandFlat::shoot( fXmin, fXmax );
 	    yPos = CLHEP::RandFlat::shoot( fYmin, fYmax );
 	}
-	
 	zPos = fZ;
 
 
@@ -168,7 +167,7 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 		randPhi = CLHEP::RandFlat::shoot( 0.0,360.0)*deg ;
     
     		pX = sin(randTheta)*cos(randPhi)*p;
-   		pY = sin(randTheta)*sin(randPhi)*p;
+    		pY = sin(randTheta)*sin(randPhi)*p;
     		pZ = cos(randTheta)*p;
 	}
 
