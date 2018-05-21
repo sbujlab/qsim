@@ -28,25 +28,19 @@
 // This is Dustin's config 1A (3-30-2018)
 
 void qsimDetectorConstruction::DetModeSet(G4int detMode = 3) {
-    
     fDetMode = detMode;
     // 0 is PREX-I design
     // 1 is PREX-II prototype (so-called "design 3")
-        // 2 lumi
-        // 3 showerMax
-    
+    // 2 lumi
+    // 3 showerMax
 }
 
 void qsimDetectorConstruction::QModeSet(G4int qMode = 2) {
-    
     fQMode = qMode;
-    
 }
 
 void qsimDetectorConstruction::StandModeSet(G4int standMode = 0) {
-    
     fStandMode = standMode;
-    
 }
 
 
@@ -60,20 +54,16 @@ qsimDetectorConstruction::qsimDetectorConstruction() {
     fDetAngle = 0.*deg;
     fDetPosX = 0.*cm;
     fDetPosY = 0.*cm;
-      
    
 //========== Quartz Dimensions ==========//
 
-        quartz_x = 246*mm/2; // replaces lines 90-93
-        quartz_y = 115*mm/2; // 117.5 (open) ---> 152.5 (close)
-        //Change quartz thickness here.
-        quartz_z = 10*mm/2; // REPLACE END
+    quartz_x = 246*mm/2; // replaces lines 90-93
+    quartz_y = 115*mm/2; // 117.5 (open) ---> 152.5 (close)
+    //Change quartz thickness here.
+    quartz_z = 10*mm/2; // REPLACE END
 
 //========== Quartz Dimensions ==========//
-
 }
-
-
 
 
 
@@ -89,7 +79,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4double a, z, density;
     G4int nelements;
-    G4Material* Vacuum = new G4Material("Vacuum", z=7.,density=14.007*g/mol, 0.000000g/cm3);
+    G4Material* Vacuum = new G4Material("Vacuum", z=7., density=14.007*g/mole, 0.000000*g/cm3);
     
     // Air
     G4Element* N = new G4Element("Nitrogen", "N", z=7 , a=14.01*g/mole);
@@ -141,17 +131,17 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
         3.4,3.42,3.44,3.46,3.48,3.5,3.52,3.54,3.56,3.58,
         3.6,3.62,3.64,3.66,3.68,3.7,3.72,3.74,3.76,3.78,
         3.8,3.82,3.84,3.86,3.88,3.9,3.92,3.94,3.96,3.98,
-        4.0,4.02,4.04,4.06,4.08,4.1,4.12,4.14,4.16,4.18,         //Glass cuts off above 4.135eV, 87 entries
+        4.0,4.02,4.04,4.06,4.08,4.1,4.12,4.14,4.16,4.18,        //Glass cuts off above 4.135eV, 87 entries
         4.2,4.22,4.24,4.26,4.28,4.3,4.32,4.34,4.36,4.38,
         4.4,4.42,4.44,4.46,4.48,4.5,4.52,4.54,4.56,4.58,
         4.6,4.62,4.64,4.66,4.68,4.7,4.72,4.74,4.76,4.78,
         4.8,4.82,4.84,4.86,4.88,4.9,4.92,4.94,4.96,4.98,        // Cut off -> 4.96eV ~ 250nm
-        5,5.02,5.04,5.06,5.08,5.1,5.12,5.14,5.16,5.18,    // 5.04eV = 246 nm is the 30% cutoff, 133 entries
+        5,  5.02,5.04,5.06,5.08,5.1,5.12,5.14,5.16,5.18,	// 5.04eV = 246 nm is the 30% cutoff, 133 entries
         5.2,5.22,5.24,5.26,5.28,5.3,5.32,5.34,5.36,5.38,
         5.4,5.42,5.44,5.46,5.48,5.5,5.52,5.54,5.56,5.58,
         5.6,5.62,5.64,5.66,5.68,5.7,5.72,5.74,5.76,5.78,
         5.8,5.82,5.84,5.86,5.88,5.9,5.92,5.94,5.96,5.98,
-        6,6.02,6.04,6.06,6.08,6.1,6.12,6.14,6.16,6.18,
+        6,  6.02,6.04,6.06,6.08,6.1,6.12,6.14,6.16,6.18,
         6.21,6.29,6.38,6.48,6.57,6.67,6.78,6.87,6.98,
         7.08,7.20,7.32,7.44,7.56,7.69
     };
@@ -181,29 +171,29 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
         18.4,18.2,18.0,18.0,18.0,18.0,18.0,18.0,18.0,18.0,
         18.0,17.6,17.6,17.6,17.6,17.2,16.5,16.2,15.9,
         15.2,14.9,14.3,12.1,10.2,9.6
-    };                                                      // 6.18 eV
+    };                                              // 6.18 eV
 
     /*G4double EfficiencyArrayPercent[nEntries] = 
     {24.9629, 24.7014, 24.7014, 24.7014, 24.4454, 
      24.1893, 24.4454, 24.7014, 24.7014, 24.7014,
-      24.4454, 24.1893, 24.1893, 24.1893, 23.9386,
-     23.9386, 23.6879, 23.6879, 23.6879, 23.4423,//20
+     24.4454, 24.1893, 24.1893, 24.1893, 23.9386,
+     23.9386, 23.6879, 23.6879, 23.6879, 23.4423,   //20
      23.4423, 23.1968, 23.1968, 23.1968, 22.9564,
      22.9564, 22.7159, 22.4805, 22.4805, 22.245,
      22.245,  22.0144, 22.0144, 21.7839, 21.7839, 
-     21.7839, 21.5581, 21.5581, 21.3323, 21.3323,//40
+     21.7839, 21.5581, 21.5581, 21.3323, 21.3323,   //40
      21.3323, 21.1112, 21.1112, 20.89,   20.89,
      20.89,   20.6735, 20.6735, 20.457,  20.457,
      20.457,  20.457,  20.457,  20.2449, 20.2449,
-      20.0329, 20.0329, 20.0329, 20.0329, 19.6176, //80
+     20.0329, 20.0329, 20.0329, 20.0329, 19.6176,   //80
      19.6176, 19.6176, 19.6176, 19.6176, 19.4143,
      19.4143, 19.2109, 19.2109, 19.2109, 19.2109, 
      19.0118, 19.0118, 19.0118, 18.8127, 18.8127, 
-      18.8127, 18.8127, 18.8127, 18.4227, 18.4227,//100 
-      18.4227, 18.4227, 18.4227, 18.2317, 18.2317,
+     18.8127, 18.8127, 18.8127, 18.4227, 18.4227,   //100 
+     18.4227, 18.4227, 18.4227, 18.2317, 18.2317,
      18.0408, 18.0408, 18.0408, 18.0408, 18.0408, 
      18.0408, 17.8538, 17.8538, 17.8538, 17.6668, 
-     17.6668, 17.6668, 17.4836, 17.4836, 17.4836,//120
+     17.6668, 17.6668, 17.4836, 17.4836, 17.4836,   //120
      17.3005, 17.3005, 17.3005, 16.9419, 16.9419,
      16.9419, 16.7663, 16.7663, 16.7663, 16.7663,
      16.4187, 16.4187, 16.4187, 16.2467, 16.2467, 
@@ -265,17 +255,6 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     ////////////////////////////////////////////
     // Defining geometry
     ////////////////////////////////////////////
@@ -295,31 +274,23 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4Box* world_box = new G4Box("World",world_x,world_y,world_z);
     
-    G4LogicalVolume* world_log
-    = new G4LogicalVolume(world_box,Air,"World",0,0,0);
+    G4LogicalVolume* world_log = new G4LogicalVolume(world_box,Air,"World",0,0,0);
     
     world_log->SetVisAttributes(G4VisAttributes::Invisible);
     
-    G4VPhysicalVolume* world_phys
-    = new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
+    G4VPhysicalVolume* world_phys = new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
     
     G4Box* det_box = new G4Box("Detector",det_x,det_y,det_z);
     
-    G4LogicalVolume* det_log
-    = new G4LogicalVolume(det_box,Air,"Detector_log",0,0,0);
+    G4LogicalVolume* det_log = new G4LogicalVolume(det_box,Air,"Detector_log",0,0,0);
     
     det_log->SetVisAttributes(G4VisAttributes::Invisible);
-    
-    
     
     
    // FIXME This ^^ detector could be a pre-existing implementation of the monitoring detector we just added below
    // but it is not included in the list of sensitive detectors, so it effectively doesn't exist (maybe also it is just the air volume around our showermax?) 
     
     
-    
-    
-   
    
    
     // First, create solids and logical volumes
@@ -327,12 +298,8 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
 //========== Upstream Monitoring Vacuum Detector ==========//   
     G4Box* monitor_box = new G4Box("VirtualDetector", 100*cm, 100*cm, 1*cm);
     
-    G4LogicalVolume* monitor_log
-    = new G4LogicalVolume(monitor_box,Vacuum,"Vacuum",0,0,0);
+    G4LogicalVolume* monitor_log = new G4LogicalVolume(monitor_box,Vacuum,"Vacuum",0,0,0);
    
-
-
-    
     qsimDetector* monitorSD = new qsimDetector("monitor", 99);
     
     SDman->AddNewDetector(monitorSD);
@@ -347,9 +314,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     rotM->rotateX(0*M_PI/2.*rad);
     rotM->rotateZ(0.*deg);
 
-    G4VPhysicalVolume* monitor_phys
-    = new G4PVPlacement(rotM,G4ThreeVector(0,0,-75*cm),monitor_log,"Vacuum", monitor_log,false,0);
-   
+    G4VPhysicalVolume* monitor_phys = new G4PVPlacement(rotM,G4ThreeVector(0,0,-75*cm),monitor_log,"Vacuum", world_log,false,0);
 
 
 //========== Quartz Volumes ==========//
@@ -357,8 +322,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4Trap* quartz_box = new G4Trap("Quartz", 2*quartz_x, 2*quartz_z, 2*quartz_y, 2*q_yLB);
     
-    G4LogicalVolume* quartz_log
-    = new G4LogicalVolume(quartz_box,Quartz,"Quartz",0,0,0);
+    G4LogicalVolume* quartz_log = new G4LogicalVolume(quartz_box,Quartz,"Quartz",0,0,0);
     
     qsimScintDetector* quartzSD = new qsimScintDetector("QuartzSD", 10);
     
@@ -373,21 +337,12 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
         rotQ->rotateZ(M_PI*rad);
     }
 
-    G4VPhysicalVolume* quartz_phys
-    = new G4PVPlacement(rotQ,G4ThreeVector(0,0,quartz_zPos),quartz_log,"Quartz", det_log,false,0);
-    
-    
-    
-    
-    
-    
-    
-    
+    G4VPhysicalVolume* quartz_phys = new G4PVPlacement(rotQ,G4ThreeVector(0,0,quartz_zPos),quartz_log,"Quartz", det_log,false,0);
     
     
     
  //========== TUNGSTEN Volumes ==========//
-         Wthickness = 8*mm/2-0.01*mm/2; // REPLACES LINE 374 (this is new)
+    Wthickness = 8*mm/2-0.01*mm/2; // REPLACES LINE 374 (this is new)
 
     G4Box* tungsten_box = new G4Box("tungsten_box",quartz_y-quartz_z,quartz_x,Wthickness);
 
@@ -396,17 +351,8 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     G4VisAttributes *tungsten_boxx = new G4VisAttributes();
     tungsten_boxx->SetColour(0.2, 0.2, 0.2);
     tungsten_box_log->SetVisAttributes(tungsten_boxx);
-
     
     
-    
-
-
-
-
-
-
-
 
 //========== Quartz and Tungsten Placement ==========//
 
@@ -414,88 +360,77 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     rotTung->rotateX(0.*rad);
 
-         G4VPhysicalVolume* tungsten_box_phys_1 // Replaces lines 390-400
-         = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-quartz_z-8*mm/2),tungsten_box_log,"tungsten", det_log,false,0); 
+    G4VPhysicalVolume* tungsten_box_phys_1 // Replaces lines 390-400
+    = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-quartz_z-8*mm/2),tungsten_box_log,"tungsten", det_log,false,0); 
 
-         G4VPhysicalVolume* tungsten_box_phys_2
-         = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-3*quartz_z-3*8*mm/2),tungsten_box_log,"tungsten", det_log,false,0); 
+    G4VPhysicalVolume* tungsten_box_phys_2
+    = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-3*quartz_z-3*8*mm/2),tungsten_box_log,"tungsten", det_log,false,0); 
 
-         G4VPhysicalVolume* tungsten_box_phys_3
-         = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-5*quartz_z-5*8*mm/2),tungsten_box_log,"tungsten", det_log,false,0);
+    G4VPhysicalVolume* tungsten_box_phys_3
+    = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-5*quartz_z-5*8*mm/2),tungsten_box_log,"tungsten", det_log,false,0);
 
-         G4VPhysicalVolume* tungsten_box_phys_4
-         = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-7*quartz_z-7*8*mm/2-0.5*mm),tungsten_box_log,"tungsten", det_log,false,0); 
+    G4VPhysicalVolume* tungsten_box_phys_4
+    = new G4PVPlacement(rotTung,G4ThreeVector(-10*mm/4,0,quartz_zPos-7*quartz_z-7*8*mm/2-0.5*mm),tungsten_box_log,"tungsten", det_log,false,0); 
 
     G4RotationMatrix* rotQ_c1 = new G4RotationMatrix;
     rotQ_c1->rotateX(M_PI/2.*rad);
     rotQ_c1->rotateZ(0.*deg);
     rotQ_c1->rotateX(180.*deg);        
 
-         G4VPhysicalVolume* quartz_phys_c1 
-         = new G4PVPlacement(rotQ_c1,G4ThreeVector(0,0,quartz_zPos-2*quartz_z-8*mm),quartz_log,"Quartz", det_log,false,0);
+    G4VPhysicalVolume* quartz_phys_c1 
+    = new G4PVPlacement(rotQ_c1,G4ThreeVector(0,0,quartz_zPos-2*quartz_z-8*mm),quartz_log,"Quartz", det_log,false,0);
 
-         G4RotationMatrix* rotQ_c2 = new G4RotationMatrix;
-         rotQ_c2->rotateX(M_PI/2.*rad);
-         rotQ_c2->rotateZ(0.*deg);
-  
-         G4VPhysicalVolume* quartz_phys_c2
-         = new G4PVPlacement(rotQ_c2,G4ThreeVector(0,0,quartz_zPos-4*quartz_z-2*8*mm),quartz_log,"Quartz", det_log,false,0);
+    G4RotationMatrix* rotQ_c2 = new G4RotationMatrix;
+    rotQ_c2->rotateX(M_PI/2.*rad);
+    rotQ_c2->rotateZ(0.*deg);
 
-         G4RotationMatrix* rotQ_c3 = new G4RotationMatrix;
-         rotQ_c3->rotateX(M_PI/2.*rad);
-         rotQ_c3->rotateZ(0.*deg);
-         rotQ_c3->rotateX(180.*deg);
+    G4VPhysicalVolume* quartz_phys_c2
+    = new G4PVPlacement(rotQ_c2,G4ThreeVector(0,0,quartz_zPos-4*quartz_z-2*8*mm),quartz_log,"Quartz", det_log,false,0);
 
-         G4VPhysicalVolume* quartz_phys_c3
-         = new G4PVPlacement(rotQ_c3,G4ThreeVector(0,0,quartz_zPos-6*quartz_z-3*8*mm),quartz_log,"Quartz", det_log,false,0); 
-//======================================================================================================================================================================
+    G4RotationMatrix* rotQ_c3 = new G4RotationMatrix;
+    rotQ_c3->rotateX(M_PI/2.*rad);
+    rotQ_c3->rotateZ(0.*deg);
+    rotQ_c3->rotateX(180.*deg);
 
-
-
-
-
-
-
-
-
-
-
+    G4VPhysicalVolume* quartz_phys_c3
+    = new G4PVPlacement(rotQ_c3,G4ThreeVector(0,0,quartz_zPos-6*quartz_z-3*8*mm),quartz_log,"Quartz", det_log,false,0); 
+//================================================================================================================================================
 
 
 
 //========== Light Guide ==========//
   
-        G4Trap* mirror_box_1 = new G4Trap("mirror_box_1",113.17*mm/2,64*mm/2,0.5*mm/2,0.5*mm/2,88.58*mm/2); 
+    G4Trap* mirror_box_1 = new G4Trap("mirror_box_1",113.17*mm/2,64*mm/2,0.5*mm/2,0.5*mm/2,88.58*mm/2); 
 
-        G4LogicalVolume* mirror_box_1_log = new G4LogicalVolume(mirror_box_1,Mirror,"mirror_box_1_log",0,0,0);
+    G4LogicalVolume* mirror_box_1_log = new G4LogicalVolume(mirror_box_1,Mirror,"mirror_box_1_log",0,0,0);
 
-        G4VisAttributes *mirror_boxx_1 = new G4VisAttributes();
-        mirror_boxx_1->SetForceWireframe(true);
-        mirror_box_1_log->SetVisAttributes(mirror_boxx_1);
+    G4VisAttributes *mirror_boxx_1 = new G4VisAttributes();
+    mirror_boxx_1->SetForceWireframe(true);
+    mirror_box_1_log->SetVisAttributes(mirror_boxx_1);
 
-        G4Trap* mirror_box_2 = new G4Trap("mirror_box_2",70*mm/2,113.17*mm/2,0.5*mm/2,0.5*mm/2,184.33*mm/2);
+    G4Trap* mirror_box_2 = new G4Trap("mirror_box_2",70*mm/2,113.17*mm/2,0.5*mm/2,0.5*mm/2,184.33*mm/2);
 
-        G4LogicalVolume* mirror_box_2_log = new G4LogicalVolume(mirror_box_2,Mirror,"mirror_box_1_1_log",0,0,0);
+    G4LogicalVolume* mirror_box_2_log = new G4LogicalVolume(mirror_box_2,Mirror,"mirror_box_1_1_log",0,0,0);
 
-        G4VisAttributes *mirror_boxx_2 = new G4VisAttributes();
-        mirror_boxx_2->SetForceWireframe(true);
-        mirror_box_2_log->SetVisAttributes(mirror_boxx_2);
+    G4VisAttributes *mirror_boxx_2 = new G4VisAttributes();
+    mirror_boxx_2->SetForceWireframe(true);
+    mirror_box_2_log->SetVisAttributes(mirror_boxx_2);
 
-        G4Trap* mirror_box_4 = new G4Trap("mirror_box_4",246*mm/2,246*mm/2,0.5*mm/2,0.5*mm/2,91.93*mm/2);
+    G4Trap* mirror_box_4 = new G4Trap("mirror_box_4",246*mm/2,246*mm/2,0.5*mm/2,0.5*mm/2,91.93*mm/2);
 
-         G4LogicalVolume* mirror_box_4_log = new G4LogicalVolume(mirror_box_4,Mirror,"mirror_box_4_log",0,0,0);
+     G4LogicalVolume* mirror_box_4_log = new G4LogicalVolume(mirror_box_4,Mirror,"mirror_box_4_log",0,0,0);
 
-        G4VisAttributes *mirror_boxx_4 = new G4VisAttributes();
-        mirror_boxx_4->SetForceWireframe(true);
-        mirror_box_4_log->SetVisAttributes(mirror_boxx_4);
+    G4VisAttributes *mirror_boxx_4 = new G4VisAttributes();
+    mirror_boxx_4->SetForceWireframe(true);
+    mirror_box_4_log->SetVisAttributes(mirror_boxx_4);
 
-        G4Trap* mirror_box_6 = new G4Trap("mirror_box_6",68*mm/2,246*mm/2,0.5*mm/2,0.5*mm/2,162.85*mm/2);
+    G4Trap* mirror_box_6 = new G4Trap("mirror_box_6",68*mm/2,246*mm/2,0.5*mm/2,0.5*mm/2,162.85*mm/2);
 
-        G4LogicalVolume* mirror_box_6_log = new G4LogicalVolume(mirror_box_6,Mirror,"mirror_box_6_log",0,0,0);
+    G4LogicalVolume* mirror_box_6_log = new G4LogicalVolume(mirror_box_6,Mirror,"mirror_box_6_log",0,0,0);
 
-        G4VisAttributes *mirror_boxx_6 = new G4VisAttributes();
-        mirror_boxx_6->SetForceWireframe(true);
-        mirror_box_6_log->SetVisAttributes(mirror_boxx_6); 
+    G4VisAttributes *mirror_boxx_6 = new G4VisAttributes();
+    mirror_boxx_6->SetForceWireframe(true);
+    mirror_box_6_log->SetVisAttributes(mirror_boxx_6); 
         
                 
 // Stuff that doesn't need tweaking 
@@ -503,8 +438,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4Trap* mirror_box_3 = new G4Trap("mirror_box_3",94.42*mm/2,70.15/2*mm,0.5*mm/2,0.5*mm/2,59.24*mm/2);
 
-    G4LogicalVolume* mirror_box_3_log
-    = new G4LogicalVolume(mirror_box_3,Mirror,"mirror_box_3_log",0,0,0);
+    G4LogicalVolume* mirror_box_3_log = new G4LogicalVolume(mirror_box_3,Mirror,"mirror_box_3_log",0,0,0);
 
     G4VisAttributes *mirror_boxx_3 = new G4VisAttributes();
     mirror_boxx_3->SetForceWireframe(true);
@@ -512,60 +446,40 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
 
     G4Trap* mirror_box_5 = new G4Trap("mirror_box_5",131.31*mm/2,168.84*mm/2,0.5*mm/2,0.5*mm/2,67.48*mm/2);
 
-    G4LogicalVolume* mirror_box_5_log
-    = new G4LogicalVolume(mirror_box_5,Mirror,"mirror_box_4_log",0,0,0);
+    G4LogicalVolume* mirror_box_5_log = new G4LogicalVolume(mirror_box_5,Mirror,"mirror_box_4_log",0,0,0);
 
     G4VisAttributes *mirror_boxx_5 = new G4VisAttributes();
     mirror_boxx_5->SetForceWireframe(true);
     mirror_box_5_log->SetVisAttributes(mirror_boxx_5);
     
     
-    
-    
-    
-
-
-
-
-
-
 
 //========== SUITCASE MIRROR DIMENSIONS ==========//
 
-        G4Box* mirror_box_7 = new G4Box("mirror_box_5",115*mm/2,0.5*mm/2,64*mm/2+1.0*mm); 
+    G4Box* mirror_box_7 = new G4Box("mirror_box_5",115*mm/2,0.5*mm/2,64*mm/2+1.0*mm); 
 
-        G4LogicalVolume* mirror_box_7_log
-        = new G4LogicalVolume(mirror_box_7,Mirror,"mirror_box_7_log",0,0,0);
+    G4LogicalVolume* mirror_box_7_log = new G4LogicalVolume(mirror_box_7,Mirror,"mirror_box_7_log",0,0,0);
 
-        G4VisAttributes *mirror_boxx_7 = new G4VisAttributes();
-        mirror_boxx_7->SetForceWireframe(true);
-        mirror_box_7_log->SetVisAttributes(mirror_boxx_7);
+    G4VisAttributes *mirror_boxx_7 = new G4VisAttributes();
+    mirror_boxx_7->SetForceWireframe(true);
+    mirror_box_7_log->SetVisAttributes(mirror_boxx_7);
 
-        G4Box* mirror_box_8 = new G4Box("mirror_box_8",115*mm/2,246*mm/2,0.5*mm/2); 
+    G4Box* mirror_box_8 = new G4Box("mirror_box_8",115*mm/2,246*mm/2,0.5*mm/2); 
 
-        G4LogicalVolume* mirror_box_8_log
-        = new G4LogicalVolume(mirror_box_8,Mirror,"mirror_box_8_log",0,0,0);
+    G4LogicalVolume* mirror_box_8_log = new G4LogicalVolume(mirror_box_8,Mirror,"mirror_box_8_log",0,0,0);
 
-        G4VisAttributes *mirror_boxx_8 = new G4VisAttributes();
-        mirror_boxx_8->SetForceWireframe(true);
-        mirror_box_8_log->SetVisAttributes(mirror_boxx_8);
+    G4VisAttributes *mirror_boxx_8 = new G4VisAttributes();
+    mirror_boxx_8->SetForceWireframe(true);
+    mirror_box_8_log->SetVisAttributes(mirror_boxx_8);
 
-        G4Box* mirror_box_9 = new G4Box("mirror_box_6",0.5*mm/2,246*mm/2,64*mm/2); 
+    G4Box* mirror_box_9 = new G4Box("mirror_box_6",0.5*mm/2,246*mm/2,64*mm/2); 
         
-    G4LogicalVolume* mirror_box_9_log
-    = new G4LogicalVolume(mirror_box_9,Mirror,"mirror_box_9_log",0,0,0);
+    G4LogicalVolume* mirror_box_9_log = new G4LogicalVolume(mirror_box_9,Mirror,"mirror_box_9_log",0,0,0);
 
     G4VisAttributes *mirror_boxx_9 = new G4VisAttributes();
     mirror_boxx_9->SetForceWireframe(true);
     mirror_box_9_log->SetVisAttributes(mirror_boxx_9);
-//========================================================================================================================================================
-    
-    
-    
-    
-    
-    
-    
+//================================================================================================================================================
     
     
     
@@ -580,8 +494,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4Tubs* pmt = new G4Tubs("PMT",prin,prout,plngth,anini,anspan);
     
-    G4LogicalVolume* pmt_log
-    = new G4LogicalVolume(pmt,Air,"PMT",0,0,0);
+    G4LogicalVolume* pmt_log = new G4LogicalVolume(pmt,Air,"PMT",0,0,0);
 
     G4String DetSDname = "tracker1";
     
@@ -591,8 +504,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4Tubs* cath = new G4Tubs("CATH",cin,cout,clngth,anini,anspan);
     
-    G4LogicalVolume* cath_log
-    = new G4LogicalVolume(cath,CATH,"CATH",0,0,0);
+    G4LogicalVolume* cath_log = new G4LogicalVolume(cath,CATH,"CATH",0,0,0);
     
     qsimDetector* cathSD = new qsimDetector("cath", 2);
     
@@ -605,215 +517,169 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     //========== ShowerMax Translations ==========//
     
-     G4RotationMatrix* detrot = new G4RotationMatrix;
+    G4RotationMatrix* detrot = new G4RotationMatrix;
     G4RotationMatrix* rot_pmt = new G4RotationMatrix;
 
+    G4RotationMatrix* rotM_1 = new G4RotationMatrix; 
+    rotM_1->rotateY(90*deg);
+    rotM_1->rotateX(0*deg); 
 
-        G4RotationMatrix* rotM_1 = new G4RotationMatrix; 
-        rotM_1->rotateY(90*deg);
-        rotM_1->rotateX(0*deg); 
+    G4ThreeVector zTrans_1(104.29*mm,123*mm,-27*mm);
 
-        G4ThreeVector zTrans_1(104.29*mm,123*mm,-27*mm);
-
-        G4VPhysicalVolume* mirror_box_1_phys
-        = new G4PVPlacement(rotM_1,zTrans_1,mirror_box_1_log,"mirror_box_1_phys",det_log,false,0);
+    G4VPhysicalVolume* mirror_box_1_phys = new G4PVPlacement(rotM_1,zTrans_1,mirror_box_1_log,"mirror_box_1_phys",det_log,false,0);
 
 
+    G4RotationMatrix* rotM_1_1 = new G4RotationMatrix;
+    rotM_1_1->rotateY(90*deg);
+    rotM_1_1->rotateX(0*deg); 
 
-        G4RotationMatrix* rotM_1_1 = new G4RotationMatrix;
-        rotM_1_1->rotateY(90*deg);
-        rotM_1_1->rotateX(0*deg); 
+    G4ThreeVector zTrans_1_1(104.29*mm,-123*mm,-27*mm);
 
-        G4ThreeVector zTrans_1_1(104.29*mm,-123*mm,-27*mm);
-
-        G4VPhysicalVolume* mirror_box_1_1_phys
-        = new G4PVPlacement(rotM_1_1,zTrans_1_1,mirror_box_1_log,"mirror_box_1_1_phys",det_log,false,0);
+    G4VPhysicalVolume* mirror_box_1_1_phys = new G4PVPlacement(rotM_1_1,zTrans_1_1,mirror_box_1_log,"mirror_box_1_1_phys",det_log,false,0);
 
 
-        G4RotationMatrix* rotM_2 = new G4RotationMatrix;
-        rotM_2->rotateY(90*deg);
-        rotM_2->rotateX(28.87*deg); 
+    G4RotationMatrix* rotM_2 = new G4RotationMatrix;
+    rotM_2->rotateY(90*deg);
+    rotM_2->rotateX(28.87*deg); 
 
-        G4ThreeVector zTrans_2(229.29*mm,78.5*mm,-27*mm);
+    G4ThreeVector zTrans_2(229.29*mm,78.5*mm,-27*mm);
 
-        G4VPhysicalVolume* mirror_box_2_phys
-        = new G4PVPlacement(rotM_2,zTrans_2,mirror_box_2_log,"mirror_box_2_phys",det_log,false,0);
-
-
-        G4RotationMatrix* rotM_2_1 = new G4RotationMatrix;
-        rotM_2_1->rotateY(90*deg);
-        rotM_2_1->rotateX(-28.87*deg); 
-
-        G4ThreeVector zTrans_2_1(229.29*mm,-78.5*mm,-27*mm);
-
-        G4VPhysicalVolume* mirror_box_2_1_phys
-        = new G4PVPlacement(rotM_2_1,zTrans_2_1,mirror_box_2_log,"mirror_box_2_1_phys",det_log,false,0);
+    G4VPhysicalVolume* mirror_box_2_phys = new G4PVPlacement(rotM_2,zTrans_2,mirror_box_2_log,"mirror_box_2_phys",det_log,false,0);
 
 
-        G4RotationMatrix* rotM_4 = new G4RotationMatrix;
-        rotM_4->rotateZ(90*deg);
-        rotM_4->rotateX(-105.51*deg); 
+    G4RotationMatrix* rotM_2_1 = new G4RotationMatrix;
+    rotM_2_1->rotateY(90*deg);
+    rotM_2_1->rotateX(-28.87*deg); 
 
-        G4ThreeVector zTrans_4(104.29*mm,0*mm,17.29*mm);
+    G4ThreeVector zTrans_2_1(229.29*mm,-78.5*mm,-27*mm);
 
-        G4VPhysicalVolume* mirror_box_4_phys
-        = new G4PVPlacement(rotM_4,zTrans_4,mirror_box_4_log,"mirror_box_4_phys",det_log,false,0);
-
-
-        G4RotationMatrix* rotM_4_1 = new G4RotationMatrix;
-        rotM_4_1->rotateZ(90*deg);
-        rotM_4_1->rotateX(-74.49*deg); 
-
-        G4ThreeVector zTrans_4_1(104.29*mm,0*mm,-71.29*mm);
-
-        G4VPhysicalVolume* mirror_box_4_1_phys
-        = new G4PVPlacement(rotM_4_1,zTrans_4_1,mirror_box_4_log,"mirror_box_4_1_phys",det_log,false,0);
+    G4VPhysicalVolume* mirror_box_2_1_phys = new G4PVPlacement(rotM_2_1,zTrans_2_1,mirror_box_2_log,"mirror_box_2_1_phys",det_log,false,0);
 
 
-        G4RotationMatrix* rotM_6 = new G4RotationMatrix;
-        rotM_6->rotateZ(90*deg);
-        rotM_6->rotateX(-82.38*deg); 
+    G4RotationMatrix* rotM_4 = new G4RotationMatrix;
+    rotM_4->rotateZ(90*deg);
+    rotM_4->rotateX(-105.51*deg); 
 
-        G4ThreeVector zTrans_6(229.29*mm,0*mm,18.79*mm);
+    G4ThreeVector zTrans_4(104.29*mm,0*mm,17.29*mm);
 
-        G4VPhysicalVolume* mirror_box_6_phys
-        = new G4PVPlacement(rotM_6,zTrans_6,mirror_box_6_log,"mirror_box_6_phys",det_log,false,0);
-
-
-        G4RotationMatrix* rotM_6_1 = new G4RotationMatrix;
-        rotM_6_1->rotateZ(90*deg);
-        rotM_6_1->rotateX(-97.62*deg); 
-
-        G4ThreeVector zTrans_6_1(229.29*mm,0*mm,-72.79*mm);
-
-        G4VPhysicalVolume* mirror_box_6_1_phys
-        = new G4PVPlacement(rotM_6_1,zTrans_6_1,mirror_box_6_log,"mirror_box_6_1_phys",det_log,false,0); 
+    G4VPhysicalVolume* mirror_box_4_phys = new G4PVPlacement(rotM_4,zTrans_4,mirror_box_4_log,"mirror_box_4_phys",det_log,false,0);
 
 
+    G4RotationMatrix* rotM_4_1 = new G4RotationMatrix;
+    rotM_4_1->rotateZ(90*deg);
+    rotM_4_1->rotateX(-74.49*deg); 
 
+    G4ThreeVector zTrans_4_1(104.29*mm,0*mm,-71.29*mm);
+
+    G4VPhysicalVolume* mirror_box_4_1_phys = new G4PVPlacement(rotM_4_1,zTrans_4_1,mirror_box_4_log,"mirror_box_4_1_phys",det_log,false,0);
+
+
+    G4RotationMatrix* rotM_6 = new G4RotationMatrix;
+    rotM_6->rotateZ(90*deg);
+    rotM_6->rotateX(-82.38*deg); 
+
+    G4ThreeVector zTrans_6(229.29*mm,0*mm,18.79*mm);
+
+    G4VPhysicalVolume* mirror_box_6_phys = new G4PVPlacement(rotM_6,zTrans_6,mirror_box_6_log,"mirror_box_6_phys",det_log,false,0);
+
+
+    G4RotationMatrix* rotM_6_1 = new G4RotationMatrix;
+    rotM_6_1->rotateZ(90*deg);
+    rotM_6_1->rotateX(-97.62*deg); 
+
+    G4ThreeVector zTrans_6_1(229.29*mm,0*mm,-72.79*mm);
+
+    G4VPhysicalVolume* mirror_box_6_1_phys = new G4PVPlacement(rotM_6_1,zTrans_6_1,mirror_box_6_log,"mirror_box_6_1_phys",det_log,false,0); 
 
  
 
 // Stuff that doesn't need tweaked
         
         
-        G4ThreeVector zTrans_3((289.77/*+17.5*/)*mm,49.79*mm,-27.75*mm);
+    G4ThreeVector zTrans_3((289.77/*+17.5*/)*mm,49.79*mm,-27.75*mm);
 
-        G4RotationMatrix* rotM_3 = new G4RotationMatrix;
-        rotM_3->rotateY(90*deg);
-        rotM_3->rotateX(32.38*deg+180*deg);
+    G4RotationMatrix* rotM_3 = new G4RotationMatrix;
+    rotM_3->rotateY(90*deg);
+    rotM_3->rotateX(32.38*deg+180*deg);
+
+
+    G4ThreeVector zTrans_3_1((289.77/*+17.5*/)*mm,-49.79*mm,-27.75*mm);
+
+    G4RotationMatrix* rotM_3_1 = new G4RotationMatrix;
+    rotM_3_1->rotateY(90*deg);
+    rotM_3_1->rotateX(-32.38*deg+180*deg);
+
+
+
+    G4ThreeVector zTrans_5((231.96/*+17.5*/)*mm,0.0*mm,-82.91*mm);
+
+    G4RotationMatrix* rotM_5 = new G4RotationMatrix;
+    rotM_5->rotateZ(90*deg);
+    rotM_5->rotateX(-90*deg-13.63*deg);
 
     
-        G4ThreeVector zTrans_3_1((289.77/*+17.5*/)*mm,-49.79*mm,-27.75*mm);
+    G4ThreeVector zTrans_5_1((231.96/*+17.5*/)*mm,0.0*mm,27.41*mm);
 
-        G4RotationMatrix* rotM_3_1 = new G4RotationMatrix;
-        rotM_3_1->rotateY(90*deg);
-        rotM_3_1->rotateX(-32.38*deg+180*deg);
-
- 
- 
-        G4ThreeVector zTrans_5((231.96/*+17.5*/)*mm,0.0*mm,-82.91*mm);
-
-        G4RotationMatrix* rotM_5 = new G4RotationMatrix;
-        rotM_5->rotateZ(90*deg);
-        rotM_5->rotateX(-90*deg-13.63*deg);
-
-        
-        G4ThreeVector zTrans_5_1((231.96/*+17.5*/)*mm,0.0*mm,27.41*mm);
-
-        G4RotationMatrix* rotM_5_1 = new G4RotationMatrix;
-        rotM_5_1->rotateZ(90*deg);
-        rotM_5_1->rotateX(-90*deg+13.63*deg);
+    G4RotationMatrix* rotM_5_1 = new G4RotationMatrix;
+    rotM_5_1->rotateZ(90*deg);
+    rotM_5_1->rotateX(-90*deg+13.63*deg);
 
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        //========== SUITCASE MIRROR TRANSLATIONS ==========//
-        
-        G4ThreeVector zTrans_7(5*mm/2,123*mm+0.5*mm/2+0.01*mm,-27*mm); 
+    //========== SUITCASE MIRROR TRANSLATIONS ==========//
+    
+    G4ThreeVector zTrans_7(5*mm/2,123*mm+0.5*mm/2+0.01*mm,-27*mm); 
 
-         G4RotationMatrix* rotM_7 = new G4RotationMatrix;
-         rotM_7->rotateY(0.0*deg);
-         rotM_7->rotateZ(0.0*deg);
+    G4RotationMatrix* rotM_7 = new G4RotationMatrix;
+    rotM_7->rotateY(0.0*deg);
+    rotM_7->rotateZ(0.0*deg);
 
-         G4VPhysicalVolume* mirror_box_7_phys
-         = new G4PVPlacement(rotM_7,zTrans_7,mirror_box_7_log,"mirror_box_7_phys",
-                          det_log,false,0);
+    G4VPhysicalVolume* mirror_box_7_phys = new G4PVPlacement(rotM_7,zTrans_7,mirror_box_7_log,"mirror_box_7_phys", det_log,false,0);
 
 
-        G4ThreeVector zTrans_7_1(5*mm/2,-123*mm-0.5*mm/2-0.01*mm,-27*mm);
+    G4ThreeVector zTrans_7_1(5*mm/2,-123*mm-0.5*mm/2-0.01*mm,-27*mm);
 
-         G4RotationMatrix* rotM_7_1 = new G4RotationMatrix;
-         rotM_7_1->rotateY(0.0*deg);
-         rotM_7_1->rotateZ(0.0*deg);
+    G4RotationMatrix* rotM_7_1 = new G4RotationMatrix;
+    rotM_7_1->rotateY(0.0*deg);
+    rotM_7_1->rotateZ(0.0*deg);
 
-         G4VPhysicalVolume* mirror_box_7_1_phys
-         = new G4PVPlacement(rotM_7_1,zTrans_7_1,mirror_box_7_log,"mirror_box_7_1_phys",
-                          det_log,false,0);
+    G4VPhysicalVolume* mirror_box_7_1_phys = new G4PVPlacement(rotM_7_1,zTrans_7_1,mirror_box_7_log,"mirror_box_7_1_phys", det_log,false,0);
 
-        G4ThreeVector zTrans_8(5*mm/2,0.0*mm,10*mm/2+0.5*mm/2+0.01*mm);
+    G4ThreeVector zTrans_8(5*mm/2,0.0*mm,10*mm/2+0.5*mm/2+0.01*mm);
 
-         G4RotationMatrix* rotM_8 = new G4RotationMatrix;
-         rotM_8->rotateY(0.0*deg);
-         rotM_8->rotateZ(0.0*deg);
+    G4RotationMatrix* rotM_8 = new G4RotationMatrix;
+    rotM_8->rotateY(0.0*deg);
+    rotM_8->rotateZ(0.0*deg);
 
-         G4VPhysicalVolume* mirror_box_8_phys
-         = new G4PVPlacement(rotM_8,zTrans_8,mirror_box_8_log,"mirror_box_8_phys",
-                          det_log,false,0);
+    G4VPhysicalVolume* mirror_box_8_phys = new G4PVPlacement(rotM_8,zTrans_8,mirror_box_8_log,"mirror_box_8_phys", det_log,false,0);
 
-        G4ThreeVector zTrans_8_1(5*mm/2,0.0*mm,-7*10*mm/2-3*8*mm-0.5*mm/2-0.01*mm);
+    G4ThreeVector zTrans_8_1(5*mm/2,0.0*mm,-7*10*mm/2-3*8*mm-0.5*mm/2-0.01*mm);
 
-         G4RotationMatrix* rotM_8_1 = new G4RotationMatrix;
-         rotM_8_1->rotateY(0.0*deg);
-         rotM_8_1->rotateZ(0.0*deg);
+    G4RotationMatrix* rotM_8_1 = new G4RotationMatrix;
+    rotM_8_1->rotateY(0.0*deg);
+    rotM_8_1->rotateZ(0.0*deg);
 
-         G4VPhysicalVolume* mirror_box_8_1_phys
-         = new G4PVPlacement(rotM_8_1,zTrans_8_1,mirror_box_8_log,"mirror_box_8_1_phys",
-                          det_log,false,0);
+    G4VPhysicalVolume* mirror_box_8_1_phys = new G4PVPlacement(rotM_8_1,zTrans_8_1,mirror_box_8_log,"mirror_box_8_1_phys", det_log,false,0);
 
-        G4ThreeVector zTrans_9(-55*mm-0.5*mm/2-0.01*mm,0.0*mm,-27*mm); 
-        G4RotationMatrix* rotM_9 = new G4RotationMatrix;
-        rotM_9->rotateY(0.0*deg);
-        rotM_9->rotateZ(0.0*deg);
+    G4ThreeVector zTrans_9(-55*mm-0.5*mm/2-0.01*mm,0.0*mm,-27*mm); 
+    G4RotationMatrix* rotM_9 = new G4RotationMatrix;
+    rotM_9->rotateY(0.0*deg);
+    rotM_9->rotateZ(0.0*deg);
 
-        G4VPhysicalVolume* mirror_box_9_phys
-        = new G4PVPlacement(rotM_9,zTrans_9,mirror_box_9_log,"mirror_box_9_phys",
-                        det_log,false,0);
-
-
+    G4VPhysicalVolume* mirror_box_9_phys = new G4PVPlacement(rotM_9,zTrans_9,mirror_box_9_log,"mirror_box_9_phys", det_log,false,0);
 
 
 
 //========== PMT Placement ==========//
     rot_pmt -> rotateY(M_PI/2.*rad);
-        G4VPhysicalVolume* pmt_phys = new G4PVPlacement(rot_pmt,G4ThreeVector(310*mm+plngth,0.0*mm,-27*mm),pmt_log,"PMT",det_log,false,0); // Replaces lines 1046-1047 
-        G4VPhysicalVolume* cath_phys = new G4PVPlacement(rot_pmt,G4ThreeVector(310*mm+2*plngth,0.0*mm,-27*mm),cath_log,"CATH",det_log,false,0); 
+    G4VPhysicalVolume* pmt_phys = new G4PVPlacement(rot_pmt,G4ThreeVector(310*mm+plngth,0.0*mm,-27*mm),pmt_log,"PMT",det_log,false,0); // Replaces lines 1046-1047 
+    G4VPhysicalVolume* cath_phys = new G4PVPlacement(rot_pmt,G4ThreeVector(310*mm+2*plngth,0.0*mm,-27*mm),cath_log,"CATH",det_log,false,0); 
 
 //========== PMT Placement ==========//
 
-    G4VPhysicalVolume* det_phys
-    = new G4PVPlacement(detrot,G4ThreeVector(fDetPosX,fDetPosY,0.*cm),det_log,"detector_phys",world_log,false,0);
+    G4VPhysicalVolume* det_phys = new G4PVPlacement(detrot,G4ThreeVector(fDetPosX,fDetPosY,0.*cm),det_log,"detector_phys",world_log,false,0);
     
     
     // Surfaces
@@ -825,8 +691,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     OpQuartzSurface->SetModel(glisur);
     OpQuartzSurface->SetPolish(fQuartzPolish);
     
-    G4LogicalBorderSurface* QuartzSurface =
-    new G4LogicalBorderSurface("QuartzSurface",quartz_phys,det_phys,OpQuartzSurface);
+    G4LogicalBorderSurface* QuartzSurface = new G4LogicalBorderSurface("QuartzSurface",quartz_phys,det_phys,OpQuartzSurface);
 
     // mirrors and cathode
     G4OpticalSurface* MOpSurface = new G4OpticalSurface("MirrorOpSurface");
@@ -859,38 +724,26 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     
 
+    G4LogicalSkinSurface* MSurface_1 = new G4LogicalSkinSurface("MirrorOpS_1",mirror_box_1_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_1 = new
-    G4LogicalSkinSurface("MirrorOpS_1",mirror_box_1_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_2 = new G4LogicalSkinSurface("MirrorOpS_2",mirror_box_2_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_2 = new
-    G4LogicalSkinSurface("MirrorOpS_2",mirror_box_2_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_3 = new G4LogicalSkinSurface("MirrorOpS_3",mirror_box_3_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_3 = new
-    G4LogicalSkinSurface("MirrorOpS_3",mirror_box_3_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_4 = new G4LogicalSkinSurface("MirrorOpS_4",mirror_box_4_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_4 = new
-    G4LogicalSkinSurface("MirrorOpS_4",mirror_box_4_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_5 = new G4LogicalSkinSurface("MirrorOpS_5",mirror_box_5_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_5 = new
-    G4LogicalSkinSurface("MirrorOpS_5",mirror_box_5_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_6 = new G4LogicalSkinSurface("MirrorOpS_6",mirror_box_6_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_6 = new
-    G4LogicalSkinSurface("MirrorOpS_6",mirror_box_6_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_7 = new G4LogicalSkinSurface("MirrorOpS_7",mirror_box_7_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_7 = new
-    G4LogicalSkinSurface("MirrorOpS_7",mirror_box_7_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_8 = new G4LogicalSkinSurface("MirrorOpS_8",mirror_box_8_log,MOpSurface);
 
-        G4LogicalSkinSurface* MSurface_8 = new
-    G4LogicalSkinSurface("MirrorOpS_8",mirror_box_8_log,MOpSurface);
-
-        G4LogicalSkinSurface* MSurface_9 = new
-    G4LogicalSkinSurface("MirrorOpS_9",mirror_box_9_log,MOpSurface);
+    G4LogicalSkinSurface* MSurface_9 = new G4LogicalSkinSurface("MirrorOpS_9",mirror_box_9_log,MOpSurface);
     
 
-    
-    G4LogicalSkinSurface* CathSurface = new
-    G4LogicalSkinSurface("CathOpS1", cath_log,CTHOpSurface);
+    G4LogicalSkinSurface* CathSurface = new G4LogicalSkinSurface("CathOpS1", cath_log,CTHOpSurface);
     
     // Generate & Add Material Properties Table attached to the optical surfaces
     
@@ -914,5 +767,3 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-

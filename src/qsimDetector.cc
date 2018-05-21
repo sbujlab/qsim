@@ -14,14 +14,12 @@ qsimDetector::qsimDetector( G4String name, G4int detnum ) : G4VSensitiveDetector
 
     sprintf(colname, "genhit_%s_%d", name.data(), detnum);
     collectionName.insert(G4String(colname));
-
 }
 
 qsimDetector::~qsimDetector(){
 }
 
 void qsimDetector::Initialize(G4HCofThisEvent *){
-
     fHitColl = new qsimDetectorHitsCollection( SensitiveDetectorName, collectionName[0] );
 }
 
@@ -30,7 +28,6 @@ void qsimDetector::Initialize(G4HCofThisEvent *){
 G4bool qsimDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
     G4bool badedep = false;
     G4bool badhit  = false;
-
 
     // Get touchable volume info
     G4TouchableHistory *hist = 
