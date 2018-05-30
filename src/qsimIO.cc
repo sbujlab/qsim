@@ -9,6 +9,7 @@
 #include "G4ParticleDefinition.hh"
 
 #include "qsimDetectorHit.hh"
+#include "qsimMonitorDetectorHit.hh"
 #include "qsimScintDetectorHit.hh"
 #include "qsimEvent.hh"
 
@@ -92,6 +93,29 @@ void qsimIO::InitializeTree(){
     fTree->Branch("hit.e",    &fDetHit_E,   "hit.e[hit.n]/D");
     fTree->Branch("hit.m",    &fDetHit_M,   "hit.m[hit.n]/D");
 
+    // Monitor hit
+    fTree->Branch("mon.n",	&fNMonDetHit,	    "mon.n/I");
+    fTree->Branch("mon.pid",	&fMonDetHit_pid,    "mon.pid/I");
+
+    fTree->Branch("mon.x",	&fDetHit_X,	    "mon.x/D");
+    fTree->Branch("mon.y",    	&fDetHit_Y,   	    "mon.y/D");
+    fTree->Branch("mon.z",    	&fDetHit_Z,   	    "mon.z/D");
+
+    fTree->Branch("mon.px",   	&fMonDetHit_Px,	    "mon.px/D");
+    fTree->Branch("mon.py",   	&fMonDetHit_Py,	    "mon.py/D");
+    fTree->Branch("mon.pz",   	&fMonDetHit_Pz,	    "mon.pz/D");
+
+    fTree->Branch("mon.vx",	&fDetHit_Vx,	    "mon.vx/D");
+    fTree->Branch("mon.vy",   	&fDetHit_Vy,   	    "mon.vy/D");
+    fTree->Branch("mon.vz",   	&fDetHit_Vz,   	    "mon.vz/D");
+
+    fTree->Branch("mon.vdx",	&fDetHit_Vdx,	    "mon.vdx/D");
+    fTree->Branch("mon.vdy",   	&fDetHit_Vdy,       "mon.vdy/D");
+    fTree->Branch("mon.vdz",   	&fDetHit_Vdz,       "mon.vdz/D");
+
+    fTree->Branch("mon.p",	&fMonDetHit_P,	    "mon.p/D");
+    fTree->Branch("mon.e",	&fMonDetHit_E,	    "mon.e/D");
+    fTree->Branch("mon.m",	&fMonDetHit_M,	    "mon.m/D");
 
     // ScintDetectorHit
     fTree->Branch("sci.n",    &fNScintDetHit,     "sci.n/I");
@@ -114,6 +138,7 @@ void qsimIO::FillTree(){
 void qsimIO::Flush(){
     //  Set arrays to 0
     fNDetHit = 0;
+    fNMonDetHit = 0;
     fNScintDetHit = 0;
 }
 
@@ -211,7 +236,42 @@ void qsimIO::AddDetectorHit(qsimDetectorHit *hit){
     return;
 }
 
+// Monitor Detector Hit
+void qsimIO::AddMonitorDetectorHit(qsimMonitorDetectorHit *hit){
+    int n = fNMonDetHit;
+    if ( n >= __IO_MAXHIT){
+	return;
+    }
 
+    fMonDetHit_pid[n]	= hit->fPID;
+
+    fMonDetHit_X[n]	= hit->f3X.x()/__L_UNIT;
+    fMonDetHit_Y[n]  	= hit->f3X.y()/__L_UNIT;
+    fMonDetHit_Z[n]  	= hit->f3X.z()/__L_UNIT;
+
+    fMonDetHit_Vx[n]	= hit->f3V.x()/__L_UNIT;
+    fMonDetHit_Vy[n]  	= hit->f3V.y()/__L_UNIT;
+    fMonDetHit_Vz[n]  	= hit->f3V.z()/__L_UNIT;
+
+    fMonDetHit_Vdx[n]	= hit->f3D.x();
+    fMonDetHit_Vdy[n]  	= hit->f3D.y();
+    fMonDetHit_Vdz[n]  	= hit->f3D.z();
+
+    fMonDetHit_Px[n]	= hit->f3P.x()/__E_UNIT;
+    fMonDetHit_Py[n]	= hit->f3P.y()/__E_UNIT;
+    fMonDetHit_Pz[n]	= hit->f3P.z()/__E_UNIT;
+
+    fMonDetHit_P[n]	= hit->fP/__E_UNIT;
+    fMonDetHit_E[n]	= hit->fE/__E_UNIT;
+    fMonDetHit_M[n]	= hit->fM/__E_UNIT;
+
+    fNMonDetHit++;
+
+    return;
+}
+
+
+// Sciint Detector Hit
 void qsimIO::AddScintDetectorHit(qsimScintDetectorHit *hit){
     int n = fNScintDetHit;
     if( n >= __IO_MAXHIT ){

@@ -45,6 +45,15 @@ void qsimEventAction::EndOfEventAction(const G4Event* evt ) {
       if(thiscol){ // This is NULL if nothing is stored
 	  // Dyanmic cast to test types, process however see fit and feed to IO
 	  
+	  ////  Monitor Detector Hits ///////////////////////////////////
+	  if( qsimDetectorHitsCollection *thiscast = 
+		  dynamic_cast<qsimDetectorHitsCollection *>(thiscol)){
+	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
+		  fIO->AddMonitorDetectorHit(
+			  (qsimMonitorDetectorHit *) thiscast->GetHit(hidx) );
+	      }
+	  }
+
 	  ////  Detector Hits ///////////////////////////////////
 	  if( qsimDetectorHitsCollection *thiscast = 
 		  dynamic_cast<qsimDetectorHitsCollection *>(thiscol)){

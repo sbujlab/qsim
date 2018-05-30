@@ -15,7 +15,7 @@ class G4ParticleDefinition;
 
 class qsimEvent {
     public:
-	 qsimEvent();
+	qsimEvent();
 	~qsimEvent();
 
 	void ProduceNewParticle( G4ThreeVector, G4ThreeVector, G4String );

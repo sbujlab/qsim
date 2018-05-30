@@ -80,16 +80,3 @@ void qsimEvent::Print(){
 	}
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

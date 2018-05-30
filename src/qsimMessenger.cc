@@ -40,45 +40,45 @@ qsimMessenger::qsimMessenger(){
     seedCmd->SetGuidance("Set random engine seed");
     seedCmd->SetParameterName("seed", false);
 
-		// new
+    // new
 
-		//fStandModeCmd = new G4UIcmdWithAnInteger("/qsim/fStandMode",this);
-		//fStandModeCmd->SetGuidance("Set fStandMode to an option");
-		//fStandModeCmd->SetParameterName("standmode", false);
-		
-		fDetModeCmd = new G4UIcmdWithAnInteger("/qsim/fDetMode",this);
-		fDetModeCmd->SetGuidance("Set fDetMode to an option");
-		fDetModeCmd->SetParameterName("detmode", false);
+    //fStandModeCmd = new G4UIcmdWithAnInteger("/qsim/fStandMode",this);
+    //fStandModeCmd->SetGuidance("Set fStandMode to an option");
+    //fStandModeCmd->SetParameterName("standmode", false);
+    
+    fDetModeCmd = new G4UIcmdWithAnInteger("/qsim/fDetMode",this);
+    fDetModeCmd->SetGuidance("Set fDetMode to an option");
+    fDetModeCmd->SetParameterName("detmode", false);
 
-		fQModeCmd = new G4UIcmdWithAnInteger("/qsim/fQMode",this);
-		fQModeCmd->SetGuidance("Set fQMode to an option");
-		fQModeCmd->SetParameterName("qmode", false);
-		
-		fStandModeCmd = new G4UIcmdWithAnInteger("/qsim/fStandMode",this);
-		fStandModeCmd->SetGuidance("Set fStandMode to an option");
-		fStandModeCmd->SetParameterName("standmode", false);
+    fQModeCmd = new G4UIcmdWithAnInteger("/qsim/fQMode",this);
+    fQModeCmd->SetGuidance("Set fQMode to an option");
+    fQModeCmd->SetParameterName("qmode", false);
+    
+    fStandModeCmd = new G4UIcmdWithAnInteger("/qsim/fStandMode",this);
+    fStandModeCmd->SetGuidance("Set fStandMode to an option");
+    fStandModeCmd->SetParameterName("standmode", false);
 
-		fSourceModeCmd = new G4UIcmdWithAnInteger("/qsim/fSourceMode",this);
-		fSourceModeCmd->SetGuidance("Set fSourceMode to an option");
-		fSourceModeCmd->SetParameterName("sourcemode", false);
+    fSourceModeCmd = new G4UIcmdWithAnInteger("/qsim/fSourceMode",this);
+    fSourceModeCmd->SetGuidance("Set fSourceMode to an option");
+    fSourceModeCmd->SetParameterName("sourcemode", false);
 
-		fQuartzPolishCmd = new G4UIcmdWithADouble("/qsim/fQuartzPolish",this);
-		fQuartzPolishCmd->SetGuidance("Set fQuartzPolish to a value");
-		fQuartzPolishCmd->SetParameterName("quartzpolish",false);
-		
-		fDetAngleCmd = new G4UIcmdWithADoubleAndUnit("/qsim/fDetAngle",this);
-		fDetAngleCmd->SetGuidance("Set fDetAngle to a value");
-		fDetAngleCmd->SetParameterName("detangle",false);
+    fQuartzPolishCmd = new G4UIcmdWithADouble("/qsim/fQuartzPolish",this);
+    fQuartzPolishCmd->SetGuidance("Set fQuartzPolish to a value");
+    fQuartzPolishCmd->SetParameterName("quartzpolish",false);
+    
+    fDetAngleCmd = new G4UIcmdWithADoubleAndUnit("/qsim/fDetAngle",this);
+    fDetAngleCmd->SetGuidance("Set fDetAngle to a value");
+    fDetAngleCmd->SetParameterName("detangle",false);
 
-		// POSSCAN
-		fDetPosXCmd = new G4UIcmdWithADoubleAndUnit("/qsim/fDetPosX",this);
-		fDetPosXCmd->SetGuidance("Set fDetPosX to a value");
-		fDetPosXCmd->SetParameterName("detxpos",false);
-		
-		fDetPosYCmd = new G4UIcmdWithADoubleAndUnit("/qsim/fDetPosY",this);
-		fDetPosYCmd->SetGuidance("Set fDetPosY to a value");
-		fDetPosYCmd->SetParameterName("detypos",false);
-		// old
+    // POSSCAN
+    fDetPosXCmd = new G4UIcmdWithADoubleAndUnit("/qsim/fDetPosX",this);
+    fDetPosXCmd->SetGuidance("Set fDetPosX to a value");
+    fDetPosXCmd->SetParameterName("detxpos",false);
+    
+    fDetPosYCmd = new G4UIcmdWithADoubleAndUnit("/qsim/fDetPosY",this);
+    fDetPosYCmd->SetGuidance("Set fDetPosY to a value");
+    fDetPosYCmd->SetParameterName("detypos",false);
+    // old
 
     fXminCmd = new G4UIcmdWithADoubleAndUnit("/qsim/xmin", this);
     fXminCmd->SetGuidance("Set x range minimum");
@@ -104,7 +104,7 @@ qsimMessenger::qsimMessenger(){
     fEmaxCmd->SetGuidance("Set Energy range maximum");
     fEmaxCmd->SetParameterName("emax", false);
 //
-		fthetaMinCmd = new G4UIcmdWithADoubleAndUnit("/qsim/thetamin", this);
+    fthetaMinCmd = new G4UIcmdWithADoubleAndUnit("/qsim/thetamin", this);
     fthetaMinCmd->SetGuidance("Set theta range minimum");
     fthetaMinCmd->SetParameterName("thetamin", false);
 
@@ -143,52 +143,52 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 
 /*
 
-		if (cmd == fStandModeCmd ) {
+    if (cmd == fStandModeCmd ) {
 	G4int x = fStandModeCmd->GetNewIntValue(newValue);
 	fdetcon->StandModeSet(x);
-		}
+    }
 */		
-		if (cmd == fDetModeCmd ) {
+    if (cmd == fDetModeCmd ) {
 	G4int x = fDetModeCmd->GetNewIntValue(newValue);
 	fdetcon->DetModeSet(x);
-		}
+    }
 
-		if (cmd == fQModeCmd ) {
+    if (cmd == fQModeCmd ) {
 	G4int x = fQModeCmd->GetNewIntValue(newValue);
 	fdetcon->QModeSet(x);
-		}
-		
-	if (cmd == fStandModeCmd ) {
+    }
+	    
+    if (cmd == fStandModeCmd ) {
 	G4int x = fStandModeCmd->GetNewIntValue(newValue);
 	fdetcon->StandModeSet(x);
-		}
-		
-	if (cmd == fSourceModeCmd ) {
+    }
+	    
+    if (cmd == fSourceModeCmd ) {
 	G4int x = fSourceModeCmd->GetNewIntValue(newValue);
 	fprigen->SourceModeSet(x);
-		}
+    }
 
-	if (cmd == fQuartzPolishCmd ) {
-		G4double x = fQuartzPolishCmd->GetNewDoubleValue(newValue);
-		fdetcon->fQuartzPolish = x;
-	}
-	
-	if (cmd == fDetAngleCmd ) {
-		G4double x = fDetAngleCmd->GetNewDoubleValue(newValue);
-		fdetcon->fDetAngle = x;
-	}
+    if (cmd == fQuartzPolishCmd ) {
+	G4double x = fQuartzPolishCmd->GetNewDoubleValue(newValue);
+	fdetcon->fQuartzPolish = x;
+    }
+    
+    if (cmd == fDetAngleCmd ) {
+	G4double x = fDetAngleCmd->GetNewDoubleValue(newValue);
+	fdetcon->fDetAngle = x;
+    }
 
-	// POSSCAN
-	
-	if (cmd == fDetPosXCmd ) {
-		G4double x = fDetPosXCmd->GetNewDoubleValue(newValue);
-		fdetcon->fDetPosX = x;
-	}
+    // POSSCAN
+    
+    if (cmd == fDetPosXCmd ) {
+	G4double x = fDetPosXCmd->GetNewDoubleValue(newValue);
+	fdetcon->fDetPosX = x;
+    }
 
-	if (cmd == fDetPosYCmd ) {
-		G4double x = fDetPosYCmd->GetNewDoubleValue(newValue);
-		fdetcon->fDetPosY = x;
-	}
+    if (cmd == fDetPosYCmd ) {
+	G4double x = fDetPosYCmd->GetNewDoubleValue(newValue);
+	fdetcon->fDetPosY = x;
+    }
 
     if( cmd == fXminCmd ){
 	G4double x = fXminCmd->GetNewDoubleValue(newValue);

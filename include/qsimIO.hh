@@ -14,13 +14,14 @@ class TFile;
 class TTree;
 
 class qsimDetectorHit;
+class qsimMonitorDetectorHit;
 class qsimScintDetectorHit;
 
 #define __IO_MAXHIT 10000
 #define __FILENAMELEN 255
 
 // Units for output
-#define __E_UNIT GeV
+#define __E_UNIT MeV
 #define __L_UNIT m
 #define __T_UNIT ns
 #define __ANG_UNIT rad
@@ -96,6 +97,37 @@ class qsimIO {
 	Double_t fDetHit_Vdy[__IO_MAXHIT];
 	Double_t fDetHit_Vdz[__IO_MAXHIT];
 
+
+
+	// Monitor Detector Hit
+    public:
+	void AddMonitorDetectorHit(qsimMonitorDetectorHit *);
+    private:
+	Int_t fNMonDetHit;
+	Int_t fMonDetHit_pid[__IO_MAXHIT];
+
+	Double_t fMonDetHit_X[__IO_MAXHIT];
+	Double_t fMonDetHit_Y[__IO_MAXHIT];
+	Double_t fMonDetHit_Z[__IO_MAXHIT];
+
+	Double_t fMonDetHit_Px[__IO_MAXHIT];
+	Double_t fMonDetHit_Py[__IO_MAXHIT];
+	Double_t fMonDetHit_Pz[__IO_MAXHIT];
+
+	Double_t fMonDetHit_Vx[__IO_MAXHIT];
+	Double_t fMonDetHit_Vy[__IO_MAXHIT];
+	Double_t fMonDetHit_Vz[__IO_MAXHIT];
+
+	Double_t fMonDetHit_Vdx[__IO_MAXHIT];
+	Double_t fMonDetHit_Vdy[__IO_MAXHIT];
+	Double_t fMonDetHit_Vdz[__IO_MAXHIT];
+
+	Double_t fMonDetHit_P[__IO_MAXHIT];
+	Double_t fMonDetHit_E[__IO_MAXHIT];
+	Double_t fMonDetHit_M[__IO_MAXHIT];
+
+
+
 	//  ScintDetectorHit
     public:
 	void AddScintDetectorHit(qsimScintDetectorHit *);
@@ -105,7 +137,6 @@ class qsimIO {
 	Int_t fScintDetHit_id[__IO_MAXHIT];
 
 	Double_t fScintDetHit_edep[__IO_MAXHIT];
-
 };
 
 #endif//qsimIO_HH

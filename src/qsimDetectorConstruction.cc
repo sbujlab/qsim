@@ -1,6 +1,7 @@
 #include "qsimDetectorConstruction.hh"
 #include "G4SystemOfUnits.hh"
 #include "qsimDetector.hh"
+#include "qsimMonitorDetector.hh"
 #include "qsimScintDetector.hh"
 #include "G4SDManager.hh"
 #include "G4Material.hh"
@@ -61,6 +62,7 @@ qsimDetectorConstruction::qsimDetectorConstruction() {
     quartz_y = 115*mm/2; // 117.5 (open) ---> 152.5 (close)
     //Change quartz thickness here.
     quartz_z = 10*mm/2; // REPLACE END
+    quartz_zPos = 0.0*cm;
 
 //========== Quartz Dimensions ==========//
 }
@@ -296,11 +298,11 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     // First, create solids and logical volumes
     
 //========== Upstream Monitoring Vacuum Detector ==========//   
-    G4Box* monitor_box = new G4Box("VirtualDetector", 100*cm, 100*cm, 1*cm);
+    G4Box* monitor_box = new G4Box("VirtualDetector", 200*cm, 200*cm, 1*cm);
     
     G4LogicalVolume* monitor_log = new G4LogicalVolume(monitor_box,Vacuum,"Vacuum",0,0,0);
    
-    qsimDetector* monitorSD = new qsimDetector("monitor", 99);
+    qsimMonitorDetector* monitorSD = new qsimMonitorDetector("monitor", 99);
     
     SDman->AddNewDetector(monitorSD);
     monitor_log->SetSensitiveDetector(monitorSD);
@@ -314,7 +316,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     rotM->rotateX(0*M_PI/2.*rad);
     rotM->rotateZ(0.*deg);
 
-    G4VPhysicalVolume* monitor_phys = new G4PVPlacement(rotM,G4ThreeVector(0,0,-75*cm),monitor_log,"Vacuum", world_log,false,0);
+    G4VPhysicalVolume* monitor_phys = new G4PVPlacement(rotM,G4ThreeVector(0,0,-55*cm),monitor_log,"Vacuum", world_log,false,0);
 
 
 //========== Quartz Volumes ==========//
