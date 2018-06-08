@@ -1,5 +1,6 @@
 #include "qsimEventAction.hh"
 #include "qsimDetectorHit.hh"
+#include "qsimMonitorDetectorHit.hh"
 #include "qsimScintDetectorHit.hh"
 
 #include "G4Event.hh"
@@ -46,8 +47,8 @@ void qsimEventAction::EndOfEventAction(const G4Event* evt ) {
 	  // Dyanmic cast to test types, process however see fit and feed to IO
 	  
 	  ////  Monitor Detector Hits ///////////////////////////////////
-	  if( qsimDetectorHitsCollection *thiscast = 
-		  dynamic_cast<qsimDetectorHitsCollection *>(thiscol)){
+	  if( qsimMonitorDetectorHitsCollection *thiscast = 
+		  dynamic_cast<qsimMonitorDetectorHitsCollection *>(thiscol)){
 	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
 		  fIO->AddMonitorDetectorHit(
 			  (qsimMonitorDetectorHit *) thiscast->GetHit(hidx) );
@@ -82,6 +83,4 @@ void qsimEventAction::EndOfEventAction(const G4Event* evt ) {
 
   return;
 }
-
-
 

@@ -97,21 +97,21 @@ void qsimIO::InitializeTree(){
     fTree->Branch("mon.n",	&fNMonDetHit,	    "mon.n/I");
     fTree->Branch("mon.pid",	&fMonDetHit_pid,    "mon.pid/I");
 
-    fTree->Branch("mon.x",	&fDetHit_X,	    "mon.x/D");
-    fTree->Branch("mon.y",    	&fDetHit_Y,   	    "mon.y/D");
-    fTree->Branch("mon.z",    	&fDetHit_Z,   	    "mon.z/D");
+    fTree->Branch("mon.x",	&fMonDetHit_X,	    "mon.x/D");
+    fTree->Branch("mon.y",    	&fMonDetHit_Y,      "mon.y/D");
+    fTree->Branch("mon.z",    	&fMonDetHit_Z,      "mon.z/D");
 
     fTree->Branch("mon.px",   	&fMonDetHit_Px,	    "mon.px/D");
     fTree->Branch("mon.py",   	&fMonDetHit_Py,	    "mon.py/D");
     fTree->Branch("mon.pz",   	&fMonDetHit_Pz,	    "mon.pz/D");
 
-    fTree->Branch("mon.vx",	&fDetHit_Vx,	    "mon.vx/D");
-    fTree->Branch("mon.vy",   	&fDetHit_Vy,   	    "mon.vy/D");
-    fTree->Branch("mon.vz",   	&fDetHit_Vz,   	    "mon.vz/D");
+    fTree->Branch("mon.vx",	&fMonDetHit_Vx,	    "mon.vx/D");
+    fTree->Branch("mon.vy",   	&fMonDetHit_Vy,     "mon.vy/D");
+    fTree->Branch("mon.vz",   	&fMonDetHit_Vz,     "mon.vz/D");
 
-    fTree->Branch("mon.vdx",	&fDetHit_Vdx,	    "mon.vdx/D");
-    fTree->Branch("mon.vdy",   	&fDetHit_Vdy,       "mon.vdy/D");
-    fTree->Branch("mon.vdz",   	&fDetHit_Vdz,       "mon.vdz/D");
+    fTree->Branch("mon.vdx",	&fMonDetHit_Vdx,       "mon.vdx/D");
+    fTree->Branch("mon.vdy",   	&fMonDetHit_Vdy,       "mon.vdy/D");
+    fTree->Branch("mon.vdz",   	&fMonDetHit_Vdz,       "mon.vdz/D");
 
     fTree->Branch("mon.p",	&fMonDetHit_P,	    "mon.p/D");
     fTree->Branch("mon.e",	&fMonDetHit_E,	    "mon.e/D");
@@ -120,8 +120,8 @@ void qsimIO::InitializeTree(){
     // ScintDetectorHit
     fTree->Branch("sci.n",    &fNScintDetHit,     "sci.n/I");
     fTree->Branch("sci.det",  &fScintDetHit_det,  "sci.det[sci.n]/I");
-    fTree->Branch("sci.id",  &fScintDetHit_id,  "sci.id[sci.n]/I");
-    fTree->Branch("sci.edep",  &fScintDetHit_edep,  "sci.id[sci.n]/D");
+    fTree->Branch("sci.id",   &fScintDetHit_id,   "sci.id[sci.n]/I");
+    fTree->Branch("sci.edep", &fScintDetHit_edep, "sci.id[sci.n]/D");
 
     return;
 }
@@ -140,6 +140,79 @@ void qsimIO::Flush(){
     fNDetHit = 0;
     fNMonDetHit = 0;
     fNScintDetHit = 0;
+
+    // reset vertex
+    fEvPart_X  = 9999.e9;
+    fEvPart_Y  = 9999.e9;
+    fEvPart_Z  = 9999.e9;
+    fEvPart_P  = 9999.e9;
+    fEvPart_Px = 9999.e9;
+    fEvPart_Py = 9999.e9;
+    fEvPart_Pz = 9999.e9;
+    fEvPart_PID= 999999999;
+
+    // reset detector parameters
+    for (int i=0; i<10; ++i){
+	fDetHit_det[i] = 999999999;
+	fDetHit_id[i]   = 999999999;
+
+	fDetHit_trid[i] = 999999999;
+	fDetHit_mtrid[i]= 999999999;
+	fDetHit_pid[i]  = 999999999;
+	fDetHit_gen[i]  = 999999999;
+
+	fDetHit_X[i]  = 9999.e9;
+	fDetHit_Y[i]  = 9999.e9;
+	fDetHit_Z[i]  = 9999.e9;
+
+	fDetHit_Px[i]  = 9999.e9;
+	fDetHit_Py[i]  = 9999.e9;
+	fDetHit_Pz[i]  = 9999.e9;
+
+	fDetHit_Vx[i]  = 9999.e9;
+	fDetHit_Vy[i]  = 9999.e9;
+	fDetHit_Vz[i]  = 9999.e9;
+
+	fDetHit_Vdx[i]  = 9999.e9;
+	fDetHit_Vdy[i]  = 9999.e9;
+	fDetHit_Vdz[i]  = 9999.e9;
+
+	fDetHit_P[i]  = 9999.e9;
+	fDetHit_E[i]  = 9999.e9;
+	fDetHit_M[i]  = 9999.e9;
+    }
+
+    // reset scintillator detector parameters
+    for (int i=0; i<10; ++i){
+	fScintDetHit_det[i] = 999999999;
+	fScintDetHit_edep[i] = 9999.e9;
+	fScintDetHit_id[i] = 999999999;
+    }
+
+    // reset monitor detector parameters
+    for (int i=0; i<10; ++i){
+	fMonDetHit_pid[i]  = 999999999;
+
+	fMonDetHit_X[i]  = 9999.e9;
+	fMonDetHit_Y[i]  = 9999.e9;
+	fMonDetHit_Z[i]  = 9999.e9;
+
+	fMonDetHit_Px[i]  = 9999.e9;
+	fMonDetHit_Py[i]  = 9999.e9;
+	fMonDetHit_Pz[i]  = 9999.e9;
+
+	fMonDetHit_Vx[i]  = 9999.e9;
+	fMonDetHit_Vy[i]  = 9999.e9;
+	fMonDetHit_Vz[i]  = 9999.e9;
+
+	fMonDetHit_Vdx[i]  = 9999.e9;
+	fMonDetHit_Vdy[i]  = 9999.e9;
+	fMonDetHit_Vdz[i]  = 9999.e9;
+
+	fMonDetHit_P[i]  = 9999.e9;
+	fMonDetHit_E[i]  = 9999.e9;
+	fMonDetHit_M[i]  = 9999.e9;
+    }
 }
 
 void qsimIO::WriteTree(){
@@ -288,8 +361,3 @@ void qsimIO::AddScintDetectorHit(qsimScintDetectorHit *hit){
 
     return;
 }
-
-
-
-
-

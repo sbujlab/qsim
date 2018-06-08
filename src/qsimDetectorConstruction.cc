@@ -298,7 +298,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     // First, create solids and logical volumes
     
 //========== Upstream Monitoring Vacuum Detector ==========//   
-    G4Box* monitor_box = new G4Box("VirtualDetector", 200*cm, 200*cm, 1*cm);
+    G4Box* monitor_box = new G4Box("VirtualDetector", 100*cm, 100*cm, 1*mm);
     
     G4LogicalVolume* monitor_log = new G4LogicalVolume(monitor_box,Vacuum,"Vacuum",0,0,0);
    
@@ -316,7 +316,7 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     rotM->rotateX(0*M_PI/2.*rad);
     rotM->rotateZ(0.*deg);
 
-    G4VPhysicalVolume* monitor_phys = new G4PVPlacement(rotM,G4ThreeVector(0,0,-55*cm),monitor_log,"Vacuum", world_log,false,0);
+    G4VPhysicalVolume* monitor_phys = new G4PVPlacement(rotM,G4ThreeVector(0,0,-55*cm),monitor_log,"Vacuum", det_log,false,0);
 
 
 //========== Quartz Volumes ==========//

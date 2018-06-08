@@ -40,5 +40,3 @@ class qsimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 };
 
 #endif
-
-
