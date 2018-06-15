@@ -326,10 +326,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4LogicalVolume* quartz_log = new G4LogicalVolume(quartz_box,Quartz,"Quartz",0,0,0);
     
-    qsimScintDetector* quartzSD = new qsimScintDetector("QuartzSD", 10);
+//    qsimScintDetector* quartzSD = new qsimScintDetector("QuartzSD", 10);
     
-    SDman->AddNewDetector(quartzSD);
-    quartz_log->SetSensitiveDetector(quartzSD);    
+//    SDman->AddNewDetector(quartzSD);
+//    quartz_log->SetSensitiveDetector(quartzSD);    
  
     G4RotationMatrix* rotQ = new G4RotationMatrix;
     
@@ -508,10 +508,10 @@ G4VPhysicalVolume* qsimDetectorConstruction::Construct() {
     
     G4LogicalVolume* cath_log = new G4LogicalVolume(cath,CATH,"CATH",0,0,0);
     
-    qsimDetector* cathSD = new qsimDetector("cath", 2);
+//    qsimDetector* cathSD = new qsimDetector("cath", 2);
     
-    SDman->AddNewDetector(cathSD);
-    cath_log->SetSensitiveDetector(cathSD);
+//    SDman->AddNewDetector(cathSD);
+//    cath_log->SetSensitiveDetector(cathSD);
     
     G4VisAttributes *cathatt = new G4VisAttributes();
     cathatt->SetColour(1.0, 1.0, 0.2);
