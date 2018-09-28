@@ -137,3 +137,25 @@ Currently defined as a function of photon energy only (and possibly incorrect).
 Needs to be defined as a function of photon energy AND photon angle (supposedly possible in Geant 4.10 but not yet implemented in qsim).
 
 
+
+***********************
+*** Added by Weibin *** 
+***********************
+
+
+# If you want to modify the showermax detector, the main files that you need to modify are:
+* qsim.cc				    -- You can control the simulated **Optical Physics** in this file (physlist->RegisterPhysics( new qsimOpticalPhysics() );)
+* src/qsimDetectorConstruction.cc	    -- add or modify geometry and properties of subdetectors
+* src/qsimEventAction.cc		    -- you can add or modify some actions (what to do with simulated particles) here
+* src/qsimIO.cc				    -- If you want more output from the simulation, add your variables here
+Of course, do not forget to change corresponding **head** file.
+
+
+# analysis
+I write a few analysis code in the directory. Please read the corresponding readme.md
+
+
+# macros -- running macros and scripts
+handler.sh	-- submit jobs to computing node
+handler_1.sh	-- run some test jobs at head node
+merger.sh	-- merge the output rootfiles to one rootfile

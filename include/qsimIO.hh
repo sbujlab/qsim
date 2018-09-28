@@ -66,45 +66,13 @@ class qsimIO {
 	Int_t fEvPart_PID;
 
 
-	//  DetectorHit
-    public:
-	void AddDetectorHit(qsimDetectorHit *);
-    private:
-	Int_t fNDetHit;
-	Int_t fDetHit_det[__IO_MAXHIT];
-	Int_t fDetHit_id[__IO_MAXHIT];
-
-	Int_t fDetHit_trid[__IO_MAXHIT];
-	Int_t fDetHit_pid[__IO_MAXHIT];
-	Int_t fDetHit_gen[__IO_MAXHIT];
-	Int_t fDetHit_mtrid[__IO_MAXHIT];
-
-	Double_t fDetHit_X[__IO_MAXHIT];
-	Double_t fDetHit_Y[__IO_MAXHIT];
-	Double_t fDetHit_Z[__IO_MAXHIT];
-
-	Double_t fDetHit_Px[__IO_MAXHIT];
-	Double_t fDetHit_Py[__IO_MAXHIT];
-	Double_t fDetHit_Pz[__IO_MAXHIT];
-	Double_t fDetHit_P[__IO_MAXHIT];
-	Double_t fDetHit_E[__IO_MAXHIT];
-	Double_t fDetHit_M[__IO_MAXHIT];
-
-	Double_t fDetHit_Vx[__IO_MAXHIT];
-	Double_t fDetHit_Vy[__IO_MAXHIT];
-	Double_t fDetHit_Vz[__IO_MAXHIT];
-	Double_t fDetHit_Vdx[__IO_MAXHIT];
-	Double_t fDetHit_Vdy[__IO_MAXHIT];
-	Double_t fDetHit_Vdz[__IO_MAXHIT];
-
-
-
 	// Monitor Detector Hit
     public:
 	void AddMonitorDetectorHit(qsimMonitorDetectorHit *);
     private:
 	Int_t fNMonDetHit;
 	Int_t fMonDetHit_pid[__IO_MAXHIT];
+	Int_t fMonDetHit_TrId[__IO_MAXHIT];
 
 	Double_t fMonDetHit_X[__IO_MAXHIT];
 	Double_t fMonDetHit_Y[__IO_MAXHIT];
@@ -118,25 +86,37 @@ class qsimIO {
 	Double_t fMonDetHit_Vy[__IO_MAXHIT];
 	Double_t fMonDetHit_Vz[__IO_MAXHIT];
 
-	Double_t fMonDetHit_Vdx[__IO_MAXHIT];
-	Double_t fMonDetHit_Vdy[__IO_MAXHIT];
-	Double_t fMonDetHit_Vdz[__IO_MAXHIT];
+//	Double_t fMonDetHit_Vdx[__IO_MAXHIT];
+//	Double_t fMonDetHit_Vdy[__IO_MAXHIT];
+//	Double_t fMonDetHit_Vdz[__IO_MAXHIT];
 
 	Double_t fMonDetHit_P[__IO_MAXHIT];
 	Double_t fMonDetHit_E[__IO_MAXHIT];
 	Double_t fMonDetHit_M[__IO_MAXHIT];
-
-
-
-	//  ScintDetectorHit
+	
+	// Layer Detector Hit
     public:
-	void AddScintDetectorHit(qsimScintDetectorHit *);
+	void AddLayerDetectorHit(qsimMonitorDetectorHit *);
     private:
-	Int_t fNScintDetHit;
-	Int_t fScintDetHit_det[__IO_MAXHIT];
-	Int_t fScintDetHit_id[__IO_MAXHIT];
+	Int_t fNLayerDetHit;
+	Int_t fLayerDetHit_pid[__IO_MAXHIT];
+	Int_t fLayerDetHit_TrId[__IO_MAXHIT];
 
-	Double_t fScintDetHit_edep[__IO_MAXHIT];
+	Double_t fLayerDetHit_X[__IO_MAXHIT];
+	Double_t fLayerDetHit_Y[__IO_MAXHIT];
+	Double_t fLayerDetHit_Z[__IO_MAXHIT];
+
+	Double_t fLayerDetHit_Px[__IO_MAXHIT];
+	Double_t fLayerDetHit_Py[__IO_MAXHIT];
+	Double_t fLayerDetHit_Pz[__IO_MAXHIT];
+
+	Double_t fLayerDetHit_Vx[__IO_MAXHIT];
+	Double_t fLayerDetHit_Vy[__IO_MAXHIT];
+	Double_t fLayerDetHit_Vz[__IO_MAXHIT];
+
+	Double_t fLayerDetHit_P[__IO_MAXHIT];
+	Double_t fLayerDetHit_E[__IO_MAXHIT];
+	Double_t fLayerDetHit_M[__IO_MAXHIT];
 };
 
 #endif//qsimIO_HH

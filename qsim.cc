@@ -89,7 +89,7 @@ int main(int argc, char** argv){
     G4VModularPhysicsList* physlist = factory.GetReferencePhysList("FTFP_BERT");
     physlist->SetVerboseLevel(verbose);
     runManager->SetUserInitialization(physlist);
-    physlist->RegisterPhysics( new qsimOpticalPhysics() );
+//    physlist->RegisterPhysics( new qsimOpticalPhysics() );
 
     //-------------------------------
     // UserAction classes

@@ -49,31 +49,15 @@ void qsimEventAction::EndOfEventAction(const G4Event* evt ) {
 	  ////  Monitor Detector Hits ///////////////////////////////////
 	  if( qsimMonitorDetectorHitsCollection *thiscast = 
 		  dynamic_cast<qsimMonitorDetectorHitsCollection *>(thiscol)){
-	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
-		  fIO->AddMonitorDetectorHit(
-			  (qsimMonitorDetectorHit *) thiscast->GetHit(hidx) );
+	      if (thiscast->GetName() == "genhit_monitor_90")
+		  for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
+		      fIO->AddMonitorDetectorHit( (qsimMonitorDetectorHit *) thiscast->GetHit(hidx) );
+	      }
+	      else if (thiscast->GetName() == "genhit_layer_91")
+		  for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
+		      fIO->AddLayerDetectorHit( (qsimMonitorDetectorHit *) thiscast->GetHit(hidx) );
 	      }
 	  }
-
-	  ////  Detector Hits ///////////////////////////////////
-	  if( qsimDetectorHitsCollection *thiscast = 
-		  dynamic_cast<qsimDetectorHitsCollection *>(thiscol)){
-	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
-		  fIO->AddDetectorHit(
-			  (qsimDetectorHit *) thiscast->GetHit(hidx) );
-	      }
-	  }
-	  
-	  ////  Scint Generic Detector Hits ///////////////////////////////////
-	  if( qsimScintDetectorHitsCollection *thiscast =
-		  dynamic_cast<qsimScintDetectorHitsCollection *>(thiscol)){
-	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
-		  fIO->AddScintDetectorHit(
-			  (qsimScintDetectorHit *) thiscast->GetHit(hidx) );
-	      }
-	  }
-
-
       }
   }
 

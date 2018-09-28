@@ -3,7 +3,7 @@
 
 [ -f "batchexample.mac" ] || echo "!!!	batch example file not fount, please check it."
 
-for i in `seq 1010 1017`;
+for i in `seq 1 100`;
 do
     name="out_$i"
     mkdir $name
