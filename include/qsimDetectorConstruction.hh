@@ -1,10 +1,12 @@
-
+//From brads_qsim branch
 #ifndef qsimDetectorConstruction_h
 #define qsimDetectorConstruction_h 1
 
 #include "globals.hh"
+#include "G4SubtractionSolid.hh"
 #include "G4VUserDetectorConstruction.hh"
-
+#include <iostream>
+#include <fstream>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class qsimDetectorConstruction : public G4VUserDetectorConstruction
@@ -12,19 +14,22 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
   public:
     qsimDetectorConstruction();
    ~qsimDetectorConstruction();
-		//void StandModeSet();
-		void DetModeSet(G4int );
-		void StandModeSet(G4int );
-   public:
+	void DetModeSet(G4int );
+	void StandModeSet(G4int );
+	void LGReflectivitySet(G4double );
+  public:
     G4VPhysicalVolume* Construct();
 
   private:
+	G4int fDetMode;
+	G4int fStandMode;
+    G4double det_x;
+    G4double det_y;
+    G4double det_z;
+
     G4double quartz_x;
     G4double quartz_y;
     G4double quartz_z;
-	//G4int fStandMode;
-	G4int fDetMode;
-	G4int fStandMode;
 
 	G4double quartz_zPos;
 
@@ -40,12 +45,17 @@ class qsimDetectorConstruction : public G4VUserDetectorConstruction
 	G4double rout;
 	G4double lngth;
 
-  public:
-	G4double fDetAngle, fQuartzPolish;
-	// POSSCAN
-	G4double fDetPosX, fDetPosY;
+	std::ifstream myfile;
+	std::ofstream outfile;
+	std::ifstream myfile2;
 
-
+    public:
+	G4int gasType;
+	G4double beam_angle;
+    G4double fDetAngle, fQuartzPolish;
+    G4double fLGReflectivity;
+    // POSSCAN
+    G4double fDetPosX, fDetPosY;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
