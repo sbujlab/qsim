@@ -39,7 +39,7 @@ bool qsimPrimaryGeneratorAction::Thetaspectrum(double Th) {
 //}
 
 // allow user modifications of private member and functional modifiable definition of primary generator variables
-void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
+void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 1) {
 	fSourceMode = mode;
 	// 0 is cosmic mode
 	// 1 is beam mode
@@ -67,8 +67,10 @@ void qsimPrimaryGeneratorAction::SourceModeSet(G4int mode = 0) {
 		fEmin = 855.0*MeV; // = 250 MeV at Mainz
 		fEmax = 855.0*MeV; // = 1.063 Gev for JLab
 	
-		fthetaMin = 0.0*deg;
-		fthetaMax = 0.0*deg;
+		//fthetaMin = 0.*deg;
+		//fthetaMax = 0.*deg;
+		fthetaMin = 0.*deg; //Trying to make the lightguide perp. to the z axis
+		fthetaMax = /*9*/0.*deg;
 	}
 	else if (fSourceMode==2){
 		
@@ -89,6 +91,7 @@ qsimPrimaryGeneratorAction::qsimPrimaryGeneratorAction() {
   fParticleGun = new G4ParticleGun(n_particle);
   fDefaultEvent = new qsimEvent();
 
+	//fZ = -0.11*m;
 	fZ = -0.52*m;
 }
 
@@ -158,18 +161,30 @@ void qsimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	double randTheta, randPhi;
 	double tanth, tanph;
 	
-	if (fSourceMode == 0 || fSourceMode == 1) {
+    if (fSourceMode == 0 /* || fSourceMode == 1*/) {
+        bool goodTheta = false;
+        while ( goodTheta == false ) {
+            randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
+            goodTheta = Thetaspectrum(randTheta);
+        }
+        
+        randPhi = CLHEP::RandFlat::shoot( 0.0,360.0)*deg ;
+    
+            pX = sin(randTheta)*cos(randPhi)*p;
+            pY = sin(randTheta)*sin(randPhi)*p;
+            pZ = cos(randTheta)*p;
+    }
+
+	if (fSourceMode == 1) {
 		bool goodTheta = false;
 		while ( goodTheta == false ) {
 			randTheta = CLHEP::RandFlat::shoot( fthetaMin, fthetaMax );
 			goodTheta = Thetaspectrum(randTheta);
 		}
-		
-		randPhi = CLHEP::RandFlat::shoot( 0.0,360.0)*deg ;
     
-    		pX = sin(randTheta)*cos(randPhi)*p;
-   		pY = sin(randTheta)*sin(randPhi)*p;
-    		pZ = cos(randTheta)*p;
+   		pX = sin(randTheta)*p;
+        pY = 0;
+   		pZ = cos(randTheta)*p;
 	}
 
 	if (fSourceMode == 2) {
