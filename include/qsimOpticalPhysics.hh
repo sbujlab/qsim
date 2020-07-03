@@ -18,10 +18,8 @@ class qsimOpticalPhysics : public G4VPhysicsConstructor
 {
   public:
 
-    qsimOpticalPhysics();
     qsimOpticalPhysics(G4bool toggle=true);
-    ~qsimOpticalPhysics();
-    //virtual ~qsimOpticalPhysics();
+    virtual ~qsimOpticalPhysics();
 
     virtual void ConstructParticle();
     virtual void ConstructProcess();
@@ -34,9 +32,6 @@ class qsimOpticalPhysics : public G4VPhysicsConstructor
     G4OpMieHG* GetMieHGScatteringProcess() {return theMieHGScatteringProcess;}
     G4OpBoundaryProcess* GetBoundaryProcess() { return theBoundaryProcess;}
 
-	void AllowCerenkovSet(G4bool );
-	void AllowScintillationSet(G4bool );
-
     void SetNbOfPhotonsCerenkov(G4int);
 
 private:
@@ -48,9 +43,6 @@ private:
     G4OpRayleigh*        theRayleighScattering;
     G4OpMieHG*           theMieHGScatteringProcess;
     G4OpBoundaryProcess* theBoundaryProcess;
-
-    bool fAllowCerenkov;
-    bool fAllowScintillation;
  
     G4bool AbsorptionOn;
 
