@@ -99,7 +99,7 @@ do
     sed -i 's;'"z -11.0 cm"';'"z ${z_point} cm"';g' sim_${name}.mac
     sed -i 's;'"0.0_degrees_0.0_x.root"';'"${name}.root"';g' sim_${name}.mac
     cd ../
-    source /share/apps/root-5.34.36-build/bin/thisroot.sh
+    #source /share/apps/root-5.34.36-build/bin/thisroot.sh
 #    if [[ "$scintillation" != "1.0" ]] ; then
 #        ./build/qsim-cerenkovOnly macros/sim_${name}.mac
 #    elif [[ "$cerenkov" != "1.0" ]] ; then
@@ -108,7 +108,7 @@ do
         ./build/qsim macros/sim_${name}.mac
 #    fi
     cd -
-    source /share/apps/root-6.14.06-build/bin/thisroot.sh
+    #source /share/apps/root-6.14.06-build/bin/thisroot.sh
     root -l -b -q get_pe.C'("'../qsimout_${name}.root'",'${reflectivity}','${cerenkov}','${scintillation}','${z_point}')'
-    source /share/apps/root-5.34.36-build/bin/thisroot.sh
+    #source /share/apps/root-5.34.36-build/bin/thisroot.sh
 done
