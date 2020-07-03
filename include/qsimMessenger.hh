@@ -16,6 +16,7 @@ class qsimDetectorConstruction;
 class qsimEventAction;
 class qsimPrimaryGeneratorAction;
 class qsimSteppingAction;
+class qsimOpticalPhysics;
 
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
@@ -31,6 +32,7 @@ class qsimMessenger : public G4UImessenger {
 
 	void SetIO( qsimIO *io ){ fIO = io; }
 	void SetPriGen( qsimPrimaryGeneratorAction *pg ){ fprigen = pg; }
+    void SetOptPhys( qsimOpticalPhysics *op ){ foptical = op; }
 	void SetDetCon( qsimDetectorConstruction *dc ){ fdetcon= dc; }
 	void SetEvAct( qsimEventAction *ev ){ fevact = ev; }
 	void SetStepAct( qsimSteppingAction *st ){ fStepAct = st; }
@@ -43,16 +45,20 @@ class qsimMessenger : public G4UImessenger {
 	qsimEventAction *fevact;
 	qsimPrimaryGeneratorAction *fprigen;
 	qsimSteppingAction *fStepAct;
+	qsimOpticalPhysics *foptical;
 
 	G4UIdirectory *fRemollDir;
 	
 	G4UIcmdWithAnInteger *seedCmd;
 	G4UIcmdWithAString   *fileCmd;
 	//
+    G4UIcmdWithABool *fAllowCerenkovCmd;
+    G4UIcmdWithABool *fAllowScintillationCmd;
 	//G4UIcmdWithAnInteger *fStandModeCmd;
 	G4UIcmdWithAnInteger *fDetModeCmd;
 	G4UIcmdWithAnInteger *fStandModeCmd;
 	G4UIcmdWithAnInteger *fSourceModeCmd;
+	G4UIcmdWithADouble *fLGReflectivityCmd;
 	G4UIcmdWithADouble *fQuartzPolishCmd;
 	G4UIcmdWithADoubleAndUnit *fDetAngleCmd;
 	// POSSCAN
