@@ -11,7 +11,6 @@
 #include "qsimEventAction.hh"
 #include "qsimPrimaryGeneratorAction.hh"
 #include "qsimSteppingAction.hh"
-#include "qsimOpticalPhysics.hh"
 
 #include "G4UImanager.hh"
 #include "G4UIdirectory.hh"
@@ -29,7 +28,6 @@ qsimMessenger::qsimMessenger(){
     fevact        = NULL;
     fprigen       = NULL;
     fStepAct      = NULL;
-    foptical      = NULL;
 
     fRemollDir = new G4UIdirectory("/qsim/");
     fRemollDir->SetGuidance("UI commands of this code");
@@ -43,13 +41,6 @@ qsimMessenger::qsimMessenger(){
     seedCmd->SetParameterName("seed", false);
 
 		// new
-    fAllowCerenkovCmd = new G4UIcmdWithABool("/qsim/fAllowCerenkov",this);
-    fAllowCerenkovCmd->SetGuidance("Turn on Cerenkov");
-    fAllowCerenkovCmd->SetParameterName("cerenkov", false);
-
-    fAllowScintillationCmd = new G4UIcmdWithABool("/qsim/fAllowScintillation",this);
-    fAllowScintillationCmd->SetGuidance("Turn on Scintillation");
-    fAllowScintillationCmd->SetParameterName("scintillation", false);
 
 		//fStandModeCmd = new G4UIcmdWithAnInteger("/qsim/fStandMode",this);
 		//fStandModeCmd->SetGuidance("Set fStandMode to an option");
@@ -67,10 +58,6 @@ qsimMessenger::qsimMessenger(){
 		fSourceModeCmd->SetGuidance("Set fSourceMode to an option");
 		fSourceModeCmd->SetParameterName("sourcemode", false);
 
-        fLGReflectivityCmd = new G4UIcmdWithADouble("/qsim/fLGReflectivity",this);
-        fLGReflectivityCmd->SetGuidance("Set fLGReflectivity to a value");
-        fLGReflectivityCmd->SetParameterName("lgreflectivity",false);
-        
 		fQuartzPolishCmd = new G4UIcmdWithADouble("/qsim/fQuartzPolish",this);
 		fQuartzPolishCmd->SetGuidance("Set fQuartzPolish to a value");
 		fQuartzPolishCmd->SetParameterName("quartzpolish",false);
@@ -150,14 +137,6 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	CLHEP::HepRandom::setTheSeed(seed);
     }
 
-    if (cmd == fAllowCerenkovCmd ) {
-        foptical->AllowCerenkovSet(fAllowCerenkovCmd->GetNewBoolValue(newValue));
-    }
-
-    if (cmd == fAllowScintillationCmd ) {
-        foptical->AllowScintillationSet(fAllowScintillationCmd->GetNewBoolValue(newValue));
-    }
-
 /*
 
 		if (cmd == fStandModeCmd ) {
@@ -179,11 +158,6 @@ void qsimMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	G4int x = fSourceModeCmd->GetNewIntValue(newValue);
 	fprigen->SourceModeSet(x);
 		}
-
-    if (cmd == fLGReflectivityCmd ) {
-        G4double x = fLGReflectivityCmd->GetNewDoubleValue(newValue);
-        fdetcon->LGReflectivitySet(x);
-    }
 
 	if (cmd == fQuartzPolishCmd ) {
 		G4double x = fQuartzPolishCmd->GetNewDoubleValue(newValue);

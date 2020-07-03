@@ -89,14 +89,7 @@ int main(int argc, char** argv){
     G4VModularPhysicsList* physlist = factory.GetReferencePhysList("FTFP_BERT");
     physlist->SetVerboseLevel(verbose);
     runManager->SetUserInitialization(physlist);
-
-    G4VPhysicsConstructor * opt_phys = new qsimOpticalPhysics(true);
-    //qsimOpticalPhysics* opt_phys = new qsimOpticalPhysics(true);
-    physlist->RegisterPhysics((qsimOpticalPhysics *)opt_phys );
-    rmmess->SetOptPhys(((qsimOpticalPhysics *)opt_phys));
-
-    //physlist->RegisterPhysics( new qsimOpticalPhysics() );
-
+    physlist->RegisterPhysics( new qsimOpticalPhysics() );
 
     //-------------------------------
     // UserAction classes

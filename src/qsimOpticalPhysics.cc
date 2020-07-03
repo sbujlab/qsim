@@ -3,22 +3,6 @@
 
 #include "qsimOpticalPhysics.hh"
 
-qsimOpticalPhysics::qsimOpticalPhysics()
-{
-  theWLSProcess                = NULL;
-  theScintProcess              = NULL;
-  theCerenkovProcess           = NULL;
-  theBoundaryProcess           = NULL;
-  theAbsorptionProcess         = NULL;
-  theRayleighScattering        = NULL;
-  theMieHGScatteringProcess    = NULL;
-
-  fAllowCerenkov = true;
-  fAllowScintillation = true;
-
-  AbsorptionOn                 = true;
-}
-
 qsimOpticalPhysics::qsimOpticalPhysics(G4bool toggle)
     : G4VPhysicsConstructor("Optical")
 {
@@ -29,9 +13,6 @@ qsimOpticalPhysics::qsimOpticalPhysics(G4bool toggle)
   theAbsorptionProcess         = NULL;
   theRayleighScattering        = NULL;
   theMieHGScatteringProcess    = NULL;
-
-  fAllowCerenkov = true;
-  fAllowScintillation = true;
 
   AbsorptionOn                 = toggle;
 }
@@ -49,12 +30,6 @@ void qsimOpticalPhysics::ConstructParticle()
 }
 
 #include "G4ProcessManager.hh"
-void qsimOpticalPhysics::AllowCerenkovSet(G4bool set = true) {
-    fAllowCerenkov = set;
-}
-void qsimOpticalPhysics::AllowScintillationSet(G4bool set = true) {
-    fAllowScintillation = set;
-}
 
 void qsimOpticalPhysics::ConstructProcess()
 {
@@ -125,11 +100,11 @@ FIXME:  Add to verbosity responsiveness
                     FatalException,o.str().c_str());
     }
 
-    if(fAllowCerenkov && theCerenkovProcess->IsApplicable(*particle)){
+    if(theCerenkovProcess->IsApplicable(*particle)){
       pManager->AddProcess(theCerenkovProcess);
       pManager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
     }
-    if(fAllowScintillation && theScintProcess->IsApplicable(*particle)){
+    if(theScintProcess->IsApplicable(*particle)){
       pManager->AddProcess(theScintProcess);
       pManager->SetProcessOrderingToLast(theScintProcess,idxAtRest);
       pManager->SetProcessOrderingToLast(theScintProcess,idxPostStep);
